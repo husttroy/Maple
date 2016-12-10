@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Process {
 	// use strategy design pattern
-	ProcessStrategy s = new TypeProcessor();
+	ProcessStrategy s;
 	
 	public void processByLine(String path) throws IOException {
 		File f = new File(path);

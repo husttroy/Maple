@@ -8,22 +8,22 @@ public abstract class ProcessStrategy {
 	abstract void process(String line);
 	
 	protected String getRepo(String key){
-		String[] ss = key.split("\\*");
+		String[] ss = key.split("\\*\\*");
 		return ss[0].trim();
 	}
 	
 	protected String getFile(String key){
-		String[] ss = key.split("\\*");
+		String[] ss = key.split("\\*\\*");
 		return ss[1].trim();
 	}
 	
 	protected String getClassName(String key){
-		String[] ss = key.split("\\*");
+		String[] ss = key.split("\\*\\*");
 		return ss[2].trim();
 	}
 	
 	protected String getMethodName(String key){
-		String[] ss = key.split("\\*");
+		String[] ss = key.split("\\*\\*");
 		return ss[3].trim();
 	}
 	
@@ -33,10 +33,10 @@ public abstract class ProcessStrategy {
 		if(Slicer.methods.containsKey(key)){
 			m = Slicer.methods.get(key);
 		} else {
-			String repo = getRepo(line);
-			String file = getFile(line);
-			String className = getClassName(line);
-			String methodName = getMethodName(line);
+			String repo = getRepo(key);
+			String file = getFile(key);
+			String className = getClassName(key);
+			String methodName = getMethodName(key);
 			m = new Method(repo, file, className, methodName);
 			Slicer.methods.put(key, m);
 		}
