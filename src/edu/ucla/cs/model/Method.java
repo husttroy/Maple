@@ -3,6 +3,8 @@ package edu.ucla.cs.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.common.collect.HashMultiset;
+
 public class Method {
 	public String repo;
 	public String file;
@@ -10,6 +12,7 @@ public class Method {
 	public String method;
 	public HashMap<String, String> locals = new HashMap<String, String>();
 	public ArrayList<String> seq = new ArrayList<String>();
+	public HashMap<String, HashMultiset<MethodCall>> calls = new HashMap<String, HashMultiset<MethodCall>>();
 	
 	public Method(String repo, String file, String className, String methodName) {
 		this.repo = repo;
@@ -17,5 +20,4 @@ public class Method {
 		this.clazz = className;
 		this.method = methodName;
 	}
-
 }

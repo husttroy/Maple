@@ -11,7 +11,7 @@ public class SequenceProcessor extends ProcessStrategy {
 	}
 	
 	protected void buildSequenceMap(Method method, String line) {
-		String s = line.substring(line.indexOf("] =")).trim();
+		String s = line.substring(line.indexOf("] =") + 3).trim();
 		String[] ss = s.split("->");
 		// skip the first element because it is empty string
 		for(int i = 1; i < ss.length; i++){

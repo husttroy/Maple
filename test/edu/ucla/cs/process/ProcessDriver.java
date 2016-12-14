@@ -3,10 +3,15 @@ package edu.ucla.cs.process;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.Multiset;
+
+import edu.ucla.cs.model.MethodCall;
 import edu.ucla.cs.slice.Slicer;
 
 public class ProcessDriver {
@@ -56,6 +61,27 @@ public class ProcessDriver {
 					seq.contains("mkdirs");
 			
 			assertEquals(true, b2);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void test3() {
+		try {
+			proc.s = new ArgumentProcessor();
+			proc.processByLine("/home/troy/research/BOA/Slicer/example/argument.txt");
+			Multiset<MethodCall> mset = Slicer.
+					methods.
+					get("https://github.com/fywb251/bsl_impc_android ** cube-android/src/com/foreveross/chameleon/pad/fragment/ChatRoomFragment.java ** ChatRoomFragment ** initValues").
+					calls.get("new File");
+			
+			assertEquals(3, mset.size());
+			assertEquals(2, mset.elementSet().size());
+			
+			// mock objects
+			MethodCall mock = new MethodCall("new File", "v::path");
+			assertEquals(2, mset.count(mock));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
