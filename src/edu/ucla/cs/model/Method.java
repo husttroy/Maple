@@ -13,6 +13,7 @@ public class Method {
 	public HashMap<String, String> locals = new HashMap<String, String>();
 	public ArrayList<String> seq = new ArrayList<String>();
 	public HashMap<String, HashMultiset<MethodCall>> calls = new HashMap<String, HashMultiset<MethodCall>>();
+	public HashMap<String, HashMultiset<Assignment>> assigns = new HashMap<String, HashMultiset<Assignment>>();
 	
 	public Method(String repo, String file, String className, String methodName) {
 		this.repo = repo;

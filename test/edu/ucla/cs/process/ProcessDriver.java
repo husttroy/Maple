@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Multiset;
 
+import edu.ucla.cs.model.Assignment;
 import edu.ucla.cs.model.MethodCall;
 import edu.ucla.cs.slice.Slicer;
 
@@ -82,6 +83,26 @@ public class ProcessDriver {
 			// mock objects
 			MethodCall mock = new MethodCall("new File", "v::path");
 			assertEquals(2, mset.count(mock));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void test4() {
+		try {
+			proc.s = new AssignmentProcessor();
+			proc.processByLine("/home/troy/research/BOA/Slicer/example/assignment.txt");
+			Multiset<Assignment> mset = Slicer.
+					methods.
+					get("https://github.com/fywb251/bsl_impc_android ** cube-android/src/com/foreveross/chameleon/pad/fragment/ChatRoomFragment.java ** ChatRoomFragment ** initValues").
+					assigns.get("dir");
+			
+			assertEquals(1, mset.size());
+			
+			// mock objects
+			Assignment mock = new Assignment("dir", "|new File|path");
+			assertEquals(1, mset.count(mock));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
