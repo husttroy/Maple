@@ -10,10 +10,10 @@ public class AssignmentProcessor extends ProcessStrategy{
 	@Override
 	void process(String line) {
 		Method m = getMethodInstance(line);
-		buildArgumentMap(m, line);
+		buildAssignmentMap(m, line);
 	}
 
-	protected void buildArgumentMap(Method m, String line) {
+	protected void buildAssignmentMap(Method m, String line) {
 		String s = line.substring(line.indexOf("] =") + 3).trim();
 		String[] ss = s.split("@@");
 		for(int i = 0; i < ss.length; i++){

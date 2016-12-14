@@ -13,6 +13,7 @@ import com.google.common.collect.Multiset;
 
 import edu.ucla.cs.model.Assignment;
 import edu.ucla.cs.model.MethodCall;
+import edu.ucla.cs.model.Receiver;
 import edu.ucla.cs.slice.Slicer;
 
 public class ProcessDriver {
@@ -102,6 +103,26 @@ public class ProcessDriver {
 			
 			// mock objects
 			Assignment mock = new Assignment("dir", "|new File|path");
+			assertEquals(1, mset.count(mock));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void test5() {
+		try {
+			proc.s = new ReceiverProcessor();
+			proc.processByLine("/home/troy/research/BOA/Slicer/example/receiver.txt");
+			Multiset<Receiver> mset = Slicer.
+					methods.
+					get("https://github.com/fywb251/bsl_impc_android ** cube-android/src/com/foreveross/chameleon/pad/fragment/ChatRoomFragment.java ** ChatRoomFragment ** initValues").
+					receivers.get("exists");
+			
+			assertEquals(3, mset.size());
+			
+			// mock objects
+			Receiver mock = new Receiver("dir", "exists");
 			assertEquals(1, mset.count(mock));
 		} catch (IOException e) {
 			e.printStackTrace();
