@@ -6,13 +6,9 @@ public class MethodCall {
 	public ArrayList<String> args;
 	public String name;
 	
-	public MethodCall(String name, String args) {
+	public MethodCall(String name, ArrayList<String> args) {
 		this.name = name;
-		this.args = new ArrayList<String>();
-		String[] arr = args.split(",");
-		for(int i = 0; i < arr.length; i++) {
-			this.args.add(arr[i]);
-		}
+		this.args = args;
 	}
 	
 	@Override

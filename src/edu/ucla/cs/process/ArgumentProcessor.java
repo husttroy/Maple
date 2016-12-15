@@ -1,5 +1,7 @@
 package edu.ucla.cs.process;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.HashMultiset;
 
 import edu.ucla.cs.model.Method;
@@ -25,7 +27,23 @@ public class ArgumentProcessor extends ProcessStrategy{
 			String[] arr = calls.split(";;;");
 			for(int j = 0; j < arr.length; j++) {
 				String args = arr[j];
-				MethodCall mc = new MethodCall(name, args);
+				ArrayList<String> l = new ArrayList<String>();
+				// create a MethodCall instance first so we can use the same instance in the reverse map
+				MethodCall mc = new MethodCall(name, l);
+				String[] arr2 = args.split(",");
+				for(int k = 0; k < arr2.length; k++) {
+					l.add(arr2[k]);
+					// update the reverse map
+					HashMultiset<MethodCall> set;
+					if(m.rev_calls.containsKey(arr2[k])) {
+						set = m.rev_calls.get(arr2[k]);
+					} else {
+						set = HashMultiset.create();
+					}
+					set.add(mc);
+					m.rev_calls.put(arr2[k], set);
+				}
+				
 				mcs.add(mc);
 			}
 			

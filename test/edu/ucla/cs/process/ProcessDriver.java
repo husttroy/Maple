@@ -83,8 +83,18 @@ public class ProcessDriver {
 			assertEquals(2, mset.elementSet().size());
 			
 			// mock objects
-			MethodCall mock = new MethodCall("new File", "v::path");
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("v::path");
+			MethodCall mock = new MethodCall("new File", list);
 			assertEquals(2, mset.count(mock));
+			
+			// test the reverse argument map
+			Multiset<MethodCall> rev_mset = Slicer.methods.get(mkey).rev_calls.get("v::path");
+			HashSet<String> apis = new HashSet<String>();
+			rev_mset.forEach(mc -> {apis.add(mc.name);});
+			assertEquals(2, rev_mset.size());
+			assertEquals(1, apis.size());
+			assertTrue(apis.contains("new File"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
