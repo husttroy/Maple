@@ -1,6 +1,9 @@
 package edu.ucla.cs.process;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 
 import edu.ucla.cs.model.Assignment;
 import edu.ucla.cs.model.Method;
@@ -25,7 +28,25 @@ public class AssignmentProcessor extends ProcessStrategy{
 			String[] arr = rs.split(";;;");
 			for(int j = 0; j < arr.length; j++) {
 				String rhs = arr[j];
-				Assignment assign = new Assignment(lhs, rhs);
+				
+				ArrayList<String> uses = new ArrayList<String>();
+				// create an Assignment instance first so we can also use the same instance in the reverse map
+				Assignment assign = new Assignment(lhs, uses);
+				String[] arr2 = rhs.split("\\|");
+				// skip the first element because it is empty
+				for(int k = 1; k < arr2.length; k++) {
+					uses.add(arr2[k]);
+					// update the reverse map
+					HashMultiset<Assignment> set;
+					if(m.rev_assigns.containsKey(arr2[k])) {
+						set = m.rev_assigns.get(arr2[k]);
+					} else {
+						set = HashMultiset.create();
+					}
+					set.add(assign);
+					m.rev_assigns.put(arr2[k], set);
+				}
+				
 				as.add(assign);
 			}
 			

@@ -1,8 +1,11 @@
 package edu.ucla.cs.process;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
@@ -38,7 +41,7 @@ public class ProcessDriver {
 			
 			Set<String> vars = Slicer.methods.get(mkey).rev_locals.get("File");
 			assertEquals(1, vars.size());
-			assertEquals(true, vars.contains("dir"));
+			assertTrue(vars.contains("dir"));
 			
 			vars = Slicer.methods.get(mkey).rev_locals.get("String");
 			assertEquals(6, vars.size());
@@ -60,10 +63,10 @@ public class ProcessDriver {
 			assertEquals("IF {", m1);
 			boolean b1 = Slicer.methods.get(mkey).seq.contains("createNewFile");
 			
-			assertEquals(true, b1);
+			assertTrue(b1);
 			boolean b2 = Slicer.methods.get(mkey).seq.contains("mkdirs");
 			
-			assertEquals(true, b2);
+			assertTrue(b2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -97,8 +100,19 @@ public class ProcessDriver {
 			assertEquals(1, mset.size());
 			
 			// mock objects
-			Assignment mock = new Assignment("dir", "|new File|path");
+			ArrayList<String> uses = new ArrayList<String>();
+			uses.add("new File");
+			uses.add("path");
+			Assignment mock = new Assignment("dir", uses);
 			assertEquals(1, mset.count(mock));
+			
+			// test reverse assignment map
+			Multiset<Assignment> rev_mset = Slicer.methods.get(mkey).rev_assigns.get("path");
+			HashSet<String> vars = new HashSet<String>();
+			rev_mset.forEach(assign -> {vars.add(assign.lhs);});
+			assertEquals(2, vars.size());
+			assertTrue(vars.contains("dir"));
+			assertTrue(vars.contains("mFileTemp"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

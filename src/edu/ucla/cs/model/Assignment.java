@@ -3,17 +3,12 @@ package edu.ucla.cs.model;
 import java.util.ArrayList;
 
 public class Assignment {
-	String lhs;
-	ArrayList<String> rhs;
+	public String lhs;
+	public ArrayList<String> rhs;
 	
-	public Assignment(String var, String expr) {
+	public Assignment(String var, ArrayList<String> uses) {
 		this.lhs = var;
-		this.rhs = new ArrayList<String>();
-		String[] arr = expr.split("|");
-		// skip the first element because it is empty
-		for(int i = 1; i < arr.length; i++) {
-			this.rhs.add(arr[i]);
-		}
+		this.rhs = uses;
 	}
 	
 	@Override
