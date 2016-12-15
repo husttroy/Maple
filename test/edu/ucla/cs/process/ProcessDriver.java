@@ -3,8 +3,7 @@ package edu.ucla.cs.process;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,8 @@ import edu.ucla.cs.model.Receiver;
 import edu.ucla.cs.slice.Slicer;
 
 public class ProcessDriver {
-	final String key = "https://github.com/fywb251/bsl_impc_android ** cube-android/src/com/foreveross/chameleon/pad/fragment/ChatRoomFragment.java ** ChatRoomFragment ** initValues";
+	final String mkey = "https://github.com/fywb251/bsl_impc_android ** cube-android/src/com/foreveross/chameleon/pad/fragment/ChatRoomFragment.java ** ChatRoomFragment ** initValues";
+	final String ckey = "https://github.com/fywb251/bsl_impc_android ** cube-android/src/com/foreveross/chameleon/pad/fragment/ChatRoomFragment.java ** ChatRoomFragment";
 	
 	Process proc;
 	
@@ -32,8 +32,19 @@ public class ProcessDriver {
 		try {
 			proc.s = new TypeProcessor(); 
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/type.txt");
-			String type = Slicer.methods.get(key).locals.get("dir");
+			
+			String type = Slicer.methods.get(mkey).locals.get("dir");
 			assertEquals("File", type);
+			
+			Set<String> vars = Slicer.methods.get(mkey).rev_locals.get("File");
+			assertEquals(1, vars.size());
+			assertEquals(true, vars.contains("dir"));
+			
+			vars = Slicer.methods.get(mkey).rev_locals.get("String");
+			assertEquals(6, vars.size());
+			
+			vars = Slicer.classes.get(ckey).rev_fields.get("File");
+			assertEquals(3, vars.size());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -45,12 +56,12 @@ public class ProcessDriver {
 		try {
 			proc.s = new SequenceProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/sequence.txt");
-			String m1 = Slicer.methods.get(key).seq.get(0);
+			String m1 = Slicer.methods.get(mkey).seq.get(0);
 			assertEquals("IF {", m1);
-			boolean b1 = Slicer.methods.get(key).seq.contains("createNewFile");
+			boolean b1 = Slicer.methods.get(mkey).seq.contains("createNewFile");
 			
 			assertEquals(true, b1);
-			boolean b2 = Slicer.methods.get(key).seq.contains("mkdirs");
+			boolean b2 = Slicer.methods.get(mkey).seq.contains("mkdirs");
 			
 			assertEquals(true, b2);
 		} catch (IOException e) {
@@ -63,7 +74,7 @@ public class ProcessDriver {
 		try {
 			proc.s = new ArgumentProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/argument.txt");
-			Multiset<MethodCall> mset = Slicer.methods.get(key).calls.get("new File");
+			Multiset<MethodCall> mset = Slicer.methods.get(mkey).calls.get("new File");
 			
 			assertEquals(3, mset.size());
 			assertEquals(2, mset.elementSet().size());
@@ -81,7 +92,7 @@ public class ProcessDriver {
 		try {
 			proc.s = new AssignmentProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/assignment.txt");
-			Multiset<Assignment> mset = Slicer.methods.get(key).assigns.get("dir");
+			Multiset<Assignment> mset = Slicer.methods.get(mkey).assigns.get("dir");
 			
 			assertEquals(1, mset.size());
 			
@@ -98,7 +109,7 @@ public class ProcessDriver {
 		try {
 			proc.s = new ReceiverProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/receiver.txt");
-			Multiset<Receiver> mset = Slicer.methods.get(key).receivers.get("exists");
+			Multiset<Receiver> mset = Slicer.methods.get(mkey).receivers.get("exists");
 			
 			assertEquals(3, mset.size());
 			
@@ -115,7 +126,7 @@ public class ProcessDriver {
 		try {
 			proc.s = new PredicateProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/predicate.txt");
-			Multiset<Predicate> mset = Slicer.methods.get(key).predicates.get("createNewFile");
+			Multiset<Predicate> mset = Slicer.methods.get(mkey).predicates.get("createNewFile");
 			
 			assertEquals(1, mset.size());
 			

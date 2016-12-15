@@ -3,6 +3,7 @@ package edu.ucla.cs.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 
 public class Method {
@@ -11,6 +12,8 @@ public class Method {
 	public String clazz;
 	public String method;
 	public HashMap<String, String> locals = new HashMap<String, String>();
+	public HashMultimap<String, String> rev_locals = HashMultimap.create();
+	
 	public ArrayList<String> seq = new ArrayList<String>();
 	public HashMap<String, HashMultiset<MethodCall>> calls = new HashMap<String, HashMultiset<MethodCall>>();
 	public HashMap<String, HashMultiset<Assignment>> assigns = new HashMap<String, HashMultiset<Assignment>>();
