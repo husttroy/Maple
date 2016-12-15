@@ -32,5 +32,4 @@ public class ReceiverProcessor extends ProcessStrategy{
 			m.receivers.put(call, rs);
 		}
 	}
-	
 }

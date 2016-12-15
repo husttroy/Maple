@@ -29,7 +29,6 @@ public class Receiver {
 
 	@Override
 	public String toString() {
-		return this.obj + "." + this.method.toString();
+		return this.obj + "." + this.method;
 	}
-
 }

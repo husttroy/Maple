@@ -15,6 +15,7 @@ public class Method {
 	public HashMap<String, HashMultiset<MethodCall>> calls = new HashMap<String, HashMultiset<MethodCall>>();
 	public HashMap<String, HashMultiset<Assignment>> assigns = new HashMap<String, HashMultiset<Assignment>>();
 	public HashMap<String, HashMultiset<Receiver>> receivers = new HashMap<String, HashMultiset<Receiver>>();
+	public HashMap<String, HashMultiset<Predicate>> predicates = new HashMap<String, HashMultiset<Predicate>>();
 	
 	public Method(String repo, String file, String className, String methodName) {
 		this.repo = repo;
