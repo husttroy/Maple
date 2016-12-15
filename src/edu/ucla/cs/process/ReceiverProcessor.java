@@ -27,6 +27,14 @@ public class ReceiverProcessor extends ProcessStrategy{
 				String var = arr[j];
 				Receiver rcv = new Receiver(var, call);
 				rs.add(rcv);
+				HashMultiset<Receiver> rev_rs;
+				if(m.rev_receivers.containsKey(var)) {
+					rev_rs = m.rev_receivers.get(var);
+				} else {
+					rev_rs = HashMultiset.create();
+				}
+				rev_rs.add(rcv);
+				m.rev_receivers.put(var, rev_rs);
 			}
 			
 			m.receivers.put(call, rs);

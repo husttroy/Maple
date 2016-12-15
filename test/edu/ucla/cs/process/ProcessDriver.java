@@ -130,6 +130,14 @@ public class ProcessDriver {
 			// mock objects
 			Receiver mock = new Receiver("dir", "exists");
 			assertEquals(1, mset.count(mock));
+			
+			// test reverse receiver map
+			Multiset<Receiver> rev_mset = Slicer.methods.get(mkey).rev_receivers.get("dir");
+			HashSet<String> apis = new HashSet<String>();
+			rev_mset.forEach(rcv -> {apis.add(rcv.method);});
+			assertEquals(2, apis.size());
+			assertTrue(apis.contains("exists"));
+			assertTrue(apis.contains("mkdirs"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
