@@ -3,10 +3,16 @@ package edu.ucla.cs.slice;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multiset;
+import edu.ucla.cs.model.Assignment;
 import edu.ucla.cs.model.Method;
 import edu.ucla.cs.model.Class;
+import edu.ucla.cs.model.MethodCall;
+import edu.ucla.cs.model.Receiver;
 import edu.ucla.cs.process.AssignmentProcessor;
 import edu.ucla.cs.process.PredicateProcessor;
 import edu.ucla.cs.process.Process;
@@ -15,6 +21,8 @@ import edu.ucla.cs.process.SequenceProcessor;
 import edu.ucla.cs.process.TypeProcessor;
 
 public class Slicer {
+	final static String pattern = "IF \\{;\\};|ELSE \\{;\\};|LOOP \\{;\\};|TRY \\{;\\};(CATCH \\{;\\};)+(FINALLY \\{;\\};)*";
+	
 	public static HashMap<String, Method> methods = new HashMap<String, Method>();
 	public static HashMap<String, Class> classes = new HashMap<String, Class>();
 	
@@ -52,17 +60,180 @@ public class Slicer {
 		}
 	}
 	
-	public static void slice(Set<String> api_query, Set<String> type_query){
-		// find 
+	public static Multimap<String, String> slice(Set<String> api_query){
+		Multimap<String, String> res = ArrayListMultimap.create();
+		
+		for(Entry<String, Method> entry : methods.entrySet()){
+			String mkey = entry.getKey();
+			Method m = entry.getValue();
+			Set<String> apis = fixpoint(m, api_query);
+			
+			StringBuilder sb = new StringBuilder();
+			for(String api : m.seq) {
+				if(api.contains("{") || api.contains("}")) {
+					// keep all blocks for now
+					sb.append(api + ";");
+				} else if(apis.contains(api)) {
+					// keep the api call if it is relevant
+					sb.append(api + ";");
+				}
+			}
+			
+			String s = sb.toString();
+			while(true) {
+				String temp = s.replaceAll(pattern, "");
+				if(!temp.equals(s)) {
+					s = temp;
+				} else {
+					// fix point
+					s = temp;
+					break;
+				}
+			}
+			
+			if(!s.isEmpty()){
+				String[] arr = s.split(";");
+				for(String a : arr){
+					res.put(mkey, a);
+				}
+			}
+		}
+		
+		return res;
+	}
+	
+	private static Set<String> fixpoint(Method m, Set<String> query) {
+		HashSet<String> res = new HashSet<String>(query);
+		
+		// fresh a temporary set to solve the concurrent modification exception on Java collections
+		Set<String> temp = new HashSet<String>();
+		
+		// 1. query the receiver map to find all variables that each API in the query set calls on
+		HashSet<String> vars = new HashSet<String>();
+		for(String api : query) {
+			if(m.receivers.containsKey(api)){
+				Multiset<Receiver> rset = m.receivers.get(api);
+				for(Receiver r : rset){
+					vars.add(r.obj);
+				}
+			}
+		}
+		
+		// 2. query the argument map to find all variables and apis that each API in the query set uses as argument
+		for(String api : query) {
+			if(m.calls.containsKey(api)) {
+				Multiset<MethodCall> mcset = m.calls.get(api);
+				for(MethodCall mc : mcset) {
+					for(String arg : mc.args) {
+						if(arg.startsWith("v::")){
+							// variable
+							String vname = arg.substring(arg.indexOf("v::") + 3);
+							vars.add(vname);
+						} else if(arg.startsWith("m::")) {
+							// method
+							String mname = arg.substring(arg.indexOf("m::") + 3);
+							res.add(mname);
+						}
+					}
+				}
+			}
+		}
+		
+		// 3. query the reverse argument map to find all APIs that take any variable in vars or any API in query as argument
+		for(String api : query) {
+			if(m.rev_calls.containsKey("m::" + api)){
+				Multiset<MethodCall> mcset = m.rev_calls.get("m::" + api);
+				for(MethodCall mc : mcset) {
+					res.add(mc.name);
+				}
+			}
+		}
+		
+		for(String var : vars) {
+			if(m.rev_calls.containsKey("v::" + var)){
+				Multiset<MethodCall> mcset = m.rev_calls.get("v::" + var);
+				for(MethodCall mc : mcset) {
+					res.add(mc.name);
+				}
+			}
+		}
+		
+		// 4. Query the reverse assignment map to find all variables that the values of variables in vars and API calls in query flow to. 
+		for(String api : query) {
+			if(m.rev_assigns.containsKey(api)){
+				Multiset<Assignment> aset = m.rev_assigns.get(api);
+				for(Assignment a : aset) {
+					vars.add(a.lhs);
+				}
+			}
+		}
+		
+		 
+		for(String var : vars) {
+			if(m.rev_assigns.containsKey(var)){
+				Multiset<Assignment> aset = m.rev_assigns.get(var);
+				for(Assignment a : aset) {
+					// stores it in a temporary set for now to avoid concurrently modifying vars
+					temp.add(a.lhs);
+				}
+			}
+		}
+		
+		// flush elements in the temporary set to vars
+		vars.addAll(temp);
+		temp.clear();
+		
+		// 5. Query the assignment map to find all variables and APIs that are assigned to each variable in vars 
+		for(String var : vars) {
+			if(m.assigns.containsKey(var)) {
+				Multiset<Assignment> aset = m.assigns.get(var);
+				for(Assignment a : aset) {
+					for(String s : a.rhs) {
+						if(s.startsWith("v::")){
+							// variable
+							String vname = s.substring(s.indexOf("v::") + 3);
+							// stores it in a temporary set for now to avoid concurrently modifying vars
+							temp.add(vname);
+						} else if(s.startsWith("m::")) {
+							// method
+							String mname = s.substring(s.indexOf("m::") + 3);
+							res.add(mname);
+						}
+					}
+				}
+			}
+		}
+		// flush elements in the temporary set to vars
+		vars.addAll(temp);
+		temp.clear();
+		
+		
+		// 6. Query the reverse receiver map to find all APIs in query that each variable in vars calls.
+		for(String var : vars) {
+			if(m.rev_receivers.containsKey(var)) {
+				Multiset<Receiver> rset = m.rev_receivers.get(var);
+				for(Receiver r : rset) {
+					res.add(r.method);
+				}
+			}
+		} 
+		
+		// keep calling itself until reaching a fix point
+		if(res.equals(query)) {
+			return res;
+		} else {
+			return fixpoint(m, res);
+		}
 	}
 	
 	public static void main(String[] args){
 		Set<String> api_query = new HashSet<String>();
 		api_query.add("createNewFile");
-		Set<String> type_query = new HashSet<String>();
-		type_query.add("File");
 		
 		Slicer.setup();
-		Slicer.slice(api_query, type_query);
+		Multimap<String, String> seqs = Slicer.slice(api_query);
+		for(String s : seqs.keySet()) {
+			System.out.println(s + "---" + seqs.get(s));
+		}
 	}
 }
