@@ -20,9 +20,9 @@ public class Method {
 	public ArrayList<String> seq = new ArrayList<String>();
 	
 	// api -> arguments (var or another api)
-	public HashMap<String, HashMultiset<MethodCall>> calls = new HashMap<String, HashMultiset<MethodCall>>();
+	public HashMap<String, HashMultiset<MethodCall>> args = new HashMap<String, HashMultiset<MethodCall>>();
 	// argument (var or another api) -> apis
-	public HashMap<String, HashMultiset<MethodCall>> rev_calls = new HashMap<String, HashMultiset<MethodCall>>();
+	public HashMap<String, HashMultiset<MethodCall>> rev_args = new HashMap<String, HashMultiset<MethodCall>>();
 	
 	// var (lhs) -> vars or apis or both (rhs)
 	public HashMap<String, HashMultiset<Assignment>> assigns = new HashMap<String, HashMultiset<Assignment>>();

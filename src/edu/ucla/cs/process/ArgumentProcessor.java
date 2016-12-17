@@ -35,19 +35,19 @@ public class ArgumentProcessor extends ProcessStrategy{
 					l.add(arr2[k]);
 					// update the reverse map
 					HashMultiset<MethodCall> set;
-					if(m.rev_calls.containsKey(arr2[k])) {
-						set = m.rev_calls.get(arr2[k]);
+					if(m.rev_args.containsKey(arr2[k])) {
+						set = m.rev_args.get(arr2[k]);
 					} else {
 						set = HashMultiset.create();
 					}
 					set.add(mc);
-					m.rev_calls.put(arr2[k], set);
+					m.rev_args.put(arr2[k], set);
 				}
 				
 				mcs.add(mc);
 			}
 			
-			m.calls.put(name, mcs);
+			m.args.put(name, mcs);
 		}
 	}
 }

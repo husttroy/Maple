@@ -77,7 +77,7 @@ public class ProcessDriver {
 		try {
 			proc.s = new ArgumentProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/argument.txt");
-			Multiset<MethodCall> mset = Slicer.methods.get(mkey).calls.get("new File");
+			Multiset<MethodCall> mset = Slicer.methods.get(mkey).args.get("new File");
 			
 			assertEquals(3, mset.size());
 			assertEquals(2, mset.elementSet().size());
@@ -89,7 +89,7 @@ public class ProcessDriver {
 			assertEquals(2, mset.count(mock));
 			
 			// test the reverse argument map
-			Multiset<MethodCall> rev_mset = Slicer.methods.get(mkey).rev_calls.get("v::path");
+			Multiset<MethodCall> rev_mset = Slicer.methods.get(mkey).rev_args.get("v::path");
 			HashSet<String> apis = new HashSet<String>();
 			rev_mset.forEach(mc -> {apis.add(mc.name);});
 			assertEquals(2, rev_mset.size());
@@ -111,13 +111,13 @@ public class ProcessDriver {
 			
 			// mock objects
 			ArrayList<String> uses = new ArrayList<String>();
-			uses.add("new File");
-			uses.add("path");
+			uses.add("m::new File");
+			uses.add("v::path");
 			Assignment mock = new Assignment("dir", uses);
 			assertEquals(1, mset.count(mock));
 			
 			// test reverse assignment map
-			Multiset<Assignment> rev_mset = Slicer.methods.get(mkey).rev_assigns.get("path");
+			Multiset<Assignment> rev_mset = Slicer.methods.get(mkey).rev_assigns.get("v::path");
 			HashSet<String> vars = new HashSet<String>();
 			rev_mset.forEach(assign -> {vars.add(assign.lhs);});
 			assertEquals(2, vars.size());
