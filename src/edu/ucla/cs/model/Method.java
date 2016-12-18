@@ -29,9 +29,9 @@ public class Method {
 	// var or api (rhs) -> vars (lhs)
 	public HashMap<String, HashMultiset<Assignment>> rev_assigns = new HashMap<String, HashMultiset<Assignment>>();
 	
-	// api -> vars
+	// api -> vars or apis
 	public HashMap<String, HashMultiset<Receiver>> receivers = new HashMap<String, HashMultiset<Receiver>>();
-	// var -> apis
+	// var or api -> apis
 	public HashMap<String, HashMultiset<Receiver>> rev_receivers = new HashMap<String, HashMultiset<Receiver>>();
 	
 	public HashMap<String, HashMultiset<Predicate>> predicates = new HashMap<String, HashMultiset<Predicate>>();

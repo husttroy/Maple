@@ -29,7 +29,6 @@ public class SlicerTest{
 		
 		Slicer.setup();
 		Multimap<String, String> seqs = Slicer.slice(api_query);
-		System.out.println(seqs.get(mkey).toString());
 		assertEquals("[getExternalStorageDirectory, new File, exists, new File, exists, IF {, TRY {, createNewFile, }, CATCH {, }, }]", 
 				seqs.get(mkey).toString());
 	}

@@ -24,17 +24,17 @@ public class ReceiverProcessor extends ProcessStrategy{
 			
 			String[] arr = vars.split(";;;");
 			for(int j = 0; j < arr.length; j++) {
-				String var = arr[j];
-				Receiver rcv = new Receiver(var, call);
+				String receiver = arr[j];
+				Receiver rcv = new Receiver(receiver, call);
 				rs.add(rcv);
 				HashMultiset<Receiver> rev_rs;
-				if(m.rev_receivers.containsKey(var)) {
-					rev_rs = m.rev_receivers.get(var);
+				if(m.rev_receivers.containsKey(receiver)) {
+					rev_rs = m.rev_receivers.get(receiver);
 				} else {
 					rev_rs = HashMultiset.create();
 				}
 				rev_rs.add(rcv);
-				m.rev_receivers.put(var, rev_rs);
+				m.rev_receivers.put(receiver, rev_rs);
 			}
 			
 			m.receivers.put(call, rs);

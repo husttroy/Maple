@@ -15,6 +15,7 @@ import edu.ucla.cs.model.Method;
 import edu.ucla.cs.model.Class;
 import edu.ucla.cs.model.MethodCall;
 import edu.ucla.cs.model.Receiver;
+import edu.ucla.cs.process.ArgumentProcessor;
 import edu.ucla.cs.process.AssignmentProcessor;
 import edu.ucla.cs.process.PredicateProcessor;
 import edu.ucla.cs.process.Process;
@@ -45,11 +46,15 @@ public class Slicer {
 			// process api call sequences
 			proc.s = new SequenceProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/sequence.txt");
-
-			// process method call arguments
+			
+			// process assignment
 			proc.s = new AssignmentProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/assignment.txt");
-
+			
+			// process method call arguments
+			proc.s = new ArgumentProcessor();
+			proc.processByLine("/home/troy/research/BOA/Slicer/example/argument.txt");
+			
 			// process method call receivers
 			proc.s = new ReceiverProcessor();
 			proc.processByLine("/home/troy/research/BOA/Slicer/example/receiver.txt");
@@ -137,7 +142,7 @@ public class Slicer {
 	private static Set<String> find_affected_elements(Method m, Set<String> set) {
 		HashSet<String> res = new HashSet<String>();
 		
-		for(String s : set) {
+ 		for(String s : set) {
 			// 1. Query the reverse assignment map to find all variables that the
 			// values of affected variables and APIs flow to
 			if(m.rev_assigns.containsKey(s)){
@@ -153,11 +158,11 @@ public class Slicer {
 			}
 			
 			
-			// 3. Query the receiver map to find all variables that each affected 
+			// 3. Query the receiver map to find all variables and APIs that each affected 
 			// APIs calls on
 			if(s.startsWith("m::") && m.receivers.containsKey(s.substring(3))) {
 				Multiset<Receiver> rcvs = m.receivers.get(s.substring(3));
-				rcvs.forEach(item -> res.add("v::" + item.obj));
+				rcvs.forEach(item -> res.add(item.obj));
 			}
 		}
 		
@@ -198,8 +203,8 @@ public class Slicer {
 			
 			// 3. Query the reverse receiver map to find all APIs that each target 
 			// variable calls on
-			if(s.startsWith("v::") && m.rev_receivers.containsKey(s.substring(3))) {
-				Multiset<Receiver> rcvs = m.rev_receivers.get(s.substring(3));
+			if(m.rev_receivers.containsKey(s)) {
+				Multiset<Receiver> rcvs = m.rev_receivers.get(s);
 				rcvs.forEach(item -> res.add("m::" + item.method));
 			}
 		}
