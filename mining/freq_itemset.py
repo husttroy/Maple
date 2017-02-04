@@ -17,4 +17,4 @@ for s in lines:
 relim_input = itemmining.get_relim_input(seqs)
 report = itemmining.relim(relim_input, min_support=int(sys.argv[2]))
 for p in report:
-	print(p)
+	print(p, report[p])
