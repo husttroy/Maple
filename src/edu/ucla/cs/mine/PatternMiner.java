@@ -4,18 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class PatternMiner {
 	final private String script_path;
 	final private String seqs_path;
 	final private int min_support;
 	ArrayList<String> query;
+	protected HashMap<ArrayList<String>, Integer> patterns;
 	
 	public PatternMiner(String script_path, String seqs_path, int min_support, ArrayList<String> filter){
 		this.script_path = script_path;
 		this.seqs_path = seqs_path;
 		this.min_support = min_support;
 		this.query = filter;
+		this.patterns = new HashMap<ArrayList<String>, Integer>();
 	}
 	
 	protected String run() {
@@ -35,11 +38,11 @@ public abstract class PatternMiner {
 		return output;
 	}
 	
-	public ArrayList<ArrayList<String>> mine(){
+	public HashMap<ArrayList<String>, Integer> mine(){
 		String output = run();
-		ArrayList<ArrayList<String>> patterns = process(output);
-		filter(patterns, query);
-		return patterns;
+		process(output);
+		filter();
+		return this.patterns;
 	}
 	
 	/**
@@ -85,7 +88,7 @@ public abstract class PatternMiner {
 		else return true;
 	}
 	
-	abstract protected void filter(ArrayList<ArrayList<String>> patterns, ArrayList<String> query); 
+	abstract protected void filter(); 
 	
-	abstract protected ArrayList<ArrayList<String>> process(String patterns);
+	abstract protected void process(String patterns);
 }
