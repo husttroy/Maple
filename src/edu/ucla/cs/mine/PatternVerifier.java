@@ -1,4 +1,4 @@
-package edu.ucla.cs.slice;
+package edu.ucla.cs.mine;
 
 import java.io.BufferedReader;
 import java.io.File;

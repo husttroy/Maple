@@ -1,0 +1,91 @@
+package edu.ucla.cs.mine;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+public abstract class PatternMiner {
+	final private String script_path;
+	final private String seqs_path;
+	final private int min_support;
+	ArrayList<String> query;
+	
+	public PatternMiner(String script_path, String seqs_path, int min_support, ArrayList<String> filter){
+		this.script_path = script_path;
+		this.seqs_path = seqs_path;
+		this.min_support = min_support;
+		this.query = filter;
+	}
+	
+	protected String run() {
+		String output = "";
+		try {
+			Process p = Runtime.getRuntime().exec("python " + script_path + " " + seqs_path + " " + min_support);
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			
+			String s = null;
+			while((s = stdInput.readLine()) != null) {
+				output += s + System.lineSeparator();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return output;
+	}
+	
+	public ArrayList<ArrayList<String>> mine(){
+		String output = run();
+		ArrayList<ArrayList<String>> patterns = process(output);
+		filter(patterns, query);
+		return patterns;
+	}
+	
+	/**
+	 * Check whether the pattern has balanced parentheses
+	 * @param pattern
+	 * @return
+	 */
+	protected boolean isBalanced(ArrayList<String> pattern) {
+		int count = 0;
+		for(String s : pattern) {
+			if(count < 0) return false;
+			
+			if(s.contains("{")) {
+				count ++;
+			} else if (s.contains("}")) {
+				count --;
+			}
+		}
+		
+		if(count != 0) return false;
+		else return true;
+	}
+	
+	/**
+	 * Check whether the pattern has complete try catch
+	 * 
+	 * @param pattern
+	 * @return
+	 */
+	protected boolean isComplete(ArrayList<String> pattern) {
+		int count = 0;
+		for(String s : pattern) {
+			if(count < 0) return false;
+			
+			if(s.contains("TRY")) {
+				count ++;
+			} else if (s.contains("CATCH")) {
+				count --;
+			}
+		}
+		
+		if(count != 0) return false;
+		else return true;
+	}
+	
+	abstract protected void filter(ArrayList<ArrayList<String>> patterns, ArrayList<String> query); 
+	
+	abstract protected ArrayList<ArrayList<String>> process(String patterns);
+}
