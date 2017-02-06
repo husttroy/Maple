@@ -59,7 +59,7 @@ public class FrequentItemMiner extends PatternMiner{
 				query);
 		pm.mine();
 		for(ArrayList<String> pattern : pm.patterns.keySet()) {
-			System.out.println(pattern + ":" + pm.patterns.get(pattern));
+			System.out.println(pattern + " : " + pm.patterns.get(pattern));
 		}
 	}
 }
