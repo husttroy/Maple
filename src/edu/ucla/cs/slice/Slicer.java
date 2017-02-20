@@ -14,6 +14,7 @@ import edu.ucla.cs.model.Assignment;
 import edu.ucla.cs.model.Method;
 import edu.ucla.cs.model.Class;
 import edu.ucla.cs.model.MethodCall;
+import edu.ucla.cs.model.Predicate;
 import edu.ucla.cs.model.Receiver;
 import edu.ucla.cs.process.ArgumentProcessor;
 import edu.ucla.cs.process.AssignmentProcessor;
@@ -156,7 +157,6 @@ public class Slicer {
 				Multiset<MethodCall> args = m.rev_args.get(s);
 				args.forEach(item -> res.add("m::" + item.name));
 			}
-			
 			
 			// 3. Query the receiver map to find all variables and APIs that each affected 
 			// APIs calls on

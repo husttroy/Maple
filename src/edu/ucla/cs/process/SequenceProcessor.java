@@ -1,8 +1,7 @@
 package edu.ucla.cs.process;
 
-import org.apache.commons.lang3.StringUtils;
-
 import edu.ucla.cs.model.Method;
+import org.apache.commons.lang3.StringUtils;
 
 public class SequenceProcessor extends ProcessStrategy {
 
