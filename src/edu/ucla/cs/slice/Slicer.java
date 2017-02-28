@@ -16,13 +16,13 @@ import edu.ucla.cs.model.Class;
 import edu.ucla.cs.model.MethodCall;
 import edu.ucla.cs.model.Predicate;
 import edu.ucla.cs.model.Receiver;
-import edu.ucla.cs.process.ArgumentProcessor;
-import edu.ucla.cs.process.AssignmentProcessor;
-import edu.ucla.cs.process.PredicateProcessor;
-import edu.ucla.cs.process.Process;
-import edu.ucla.cs.process.ReceiverProcessor;
-import edu.ucla.cs.process.SequenceProcessor;
-import edu.ucla.cs.process.TypeProcessor;
+import edu.ucla.cs.process.lightweight.ArgumentProcessor;
+import edu.ucla.cs.process.lightweight.AssignmentProcessor;
+import edu.ucla.cs.process.lightweight.PredicateProcessor;
+import edu.ucla.cs.process.lightweight.Process;
+import edu.ucla.cs.process.lightweight.ReceiverProcessor;
+import edu.ucla.cs.process.lightweight.SequenceProcessor;
+import edu.ucla.cs.process.lightweight.TypeProcessor;
 
 public class Slicer {
 	final static String pattern = "IF \\{;\\};|ELSE \\{;\\};|LOOP \\{;\\};|TRY \\{;\\};(CATCH \\{;\\};)+(FINALLY \\{;\\};)*";
@@ -42,27 +42,27 @@ public class Slicer {
 		try {
 			// process type info
 			proc.s = new TypeProcessor();
-			proc.processByLine("/home/troy/research/BOA/Slicer/example/type.txt");
+			proc.processByLine("/home/troy/research/BOA/Maple/example/type.txt");
 
 			// process api call sequences
 			proc.s = new SequenceProcessor();
-			proc.processByLine("/home/troy/research/BOA/Slicer/example/sequence.txt");
+			proc.processByLine("/home/troy/research/BOA/Maple/example/sequence.txt");
 			
 			// process assignment
 			proc.s = new AssignmentProcessor();
-			proc.processByLine("/home/troy/research/BOA/Slicer/example/assignment.txt");
+			proc.processByLine("/home/troy/research/BOA/Maple/example/assignment.txt");
 			
 			// process method call arguments
 			proc.s = new ArgumentProcessor();
-			proc.processByLine("/home/troy/research/BOA/Slicer/example/argument.txt");
+			proc.processByLine("/home/troy/research/BOA/Maple/example/argument.txt");
 			
 			// process method call receivers
 			proc.s = new ReceiverProcessor();
-			proc.processByLine("/home/troy/research/BOA/Slicer/example/receiver.txt");
+			proc.processByLine("/home/troy/research/BOA/Maple/example/receiver.txt");
 
 			// process method call predicates
 			proc.s = new PredicateProcessor();
-			proc.processByLine("/home/troy/research/BOA/Slicer/example/predicate.txt");
+			proc.processByLine("/home/troy/research/BOA/Maple/example/predicate.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

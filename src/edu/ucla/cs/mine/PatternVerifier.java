@@ -77,9 +77,9 @@ public class PatternVerifier {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("new File");
 		//pattern.add("exists");
-		pattern.add("IF {");
+		//pattern.add("IF {");
 		pattern.add("createNewFile");
-		pattern.add("}");
+		//pattern.add("}");
 		PatternVerifier pv = new PatternVerifier(pattern);
 		pv.verify(output);
 		System.out.print(pv.support.size());

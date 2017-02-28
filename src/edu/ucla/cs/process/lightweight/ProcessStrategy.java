@@ -1,4 +1,4 @@
-package edu.ucla.cs.process;
+package edu.ucla.cs.process.lightweight;
 
 import edu.ucla.cs.model.Method;
 import edu.ucla.cs.model.Class;

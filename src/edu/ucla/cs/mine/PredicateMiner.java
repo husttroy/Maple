@@ -1,9 +1,6 @@
 package edu.ucla.cs.mine;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -21,30 +18,14 @@ import edu.ucla.cs.model.PredicateCluster;
 import edu.ucla.cs.utils.FileUtils;
 import edu.ucla.cs.utils.InfixToPrefixConvertor;
 
-public class PredicateMiner {
-	HashMap<String, HashMap<String, ArrayList<String>>> predicates; // id ->
-																	// predicates
-																	// (filtered
-																	// +
-																	// normalized)
-	HashMap<String, HashMap<String, ArrayList<String>>> arguments; // id ->
-																	// arguments
-	HashMap<String, HashMap<String, ArrayList<String>>> receivers; // id ->
-																	// receivers
+public abstract class PredicateMiner {
+	// id -> predicates (filtered + normalized)
+	HashMap<String, HashMap<String, ArrayList<String>>> predicates; 
 	ArrayList<String> pattern;
-	HashMap<String, ArrayList<PredicateCluster>> clusters; // api -> clusters of
-															// predicates
-
-	final String predicate_path = "/home/troy/research/BOA/Slicer/example/predicate.txt";
-	final String sequence_path = "/home/troy/research/BOA/Slicer/example/output.txt";
-	final String argument_path = "/home/troy/research/BOA/Slicer/example/argument.txt";
-	final String receiver_path = "/home/troy/research/BOA/Slicer/example/receiver.txt";
-	final String logicSeparator = "&&|\\|\\|";
-
-	public PredicateMiner(ArrayList<String> pattern) {
-		predicates = new HashMap<String, HashMap<String, ArrayList<String>>>();
-		arguments = new HashMap<String, HashMap<String, ArrayList<String>>>();
-		receivers = new HashMap<String, HashMap<String, ArrayList<String>>>();
+	// api -> clusters of predicates
+	HashMap<String, ArrayList<PredicateCluster>> clusters;
+	
+	public PredicateMiner (ArrayList<String> pattern) {
 		this.pattern = new ArrayList<String>();
 		for (String p : pattern) {
 			if (p.contains("{") || p.contains("}")) {
@@ -53,65 +34,11 @@ public class PredicateMiner {
 				this.pattern.add(p);
 			}
 		}
-		clusters = new HashMap<String, ArrayList<PredicateCluster>>();
+		this.clusters = new HashMap<String, ArrayList<PredicateCluster>>();
+		this.predicates = new HashMap<String, HashMap<String, ArrayList<String>>>();
 	}
-
-	/**
-	 * 1. find all method call sequences that satisfy the given pattern 2. for
-	 * each API call sequence, find the arguments and receiver of each API in
-	 * the pattern 3. for each predicate, filter out those clauses that do not
-	 * include these arguments and receiver 4. initially cluster identical
-	 * predicates 5. for every two clusters, merge them if they are semantically
-	 * equivalent using z3 6. keep merging until a fix point
-	 */
-	public void process() {
-		// find API call sequences that follow the pattern
-		PatternVerifier pv = new PatternVerifier(pattern);
-		pv.verify(sequence_path);
-
-		// load arguments and receivers
-		loadArugmentInfo(pv.support.keySet());
-		loadReceiverInfo(pv.support.keySet());
-
-		// load and filter predicates, and normalize variable names
-		loadAndFilterPredicate(pv.support.keySet());
-
-		// cluster based on textual similarity
-		setup();
-
-		// print initial clusters
-		System.out
-				.println("Before checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
-
-		// keep merging predicates until reaching a fix point
-		merge();
-
-		System.out.println("After checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
-	}
-
-	private void merge() {
+	
+	protected void merge() {
 		Set<String> apis = this.clusters.keySet();
 		for(String api : apis) {
 			ArrayList<PredicateCluster> arr = this.clusters.get(api);
@@ -276,7 +203,7 @@ public class PredicateMiner {
 		for (String e : arr) {
 			e = e.trim();
 
-			if (e.isEmpty()) {
+			if (e.isEmpty() || e.equals("(") || e.equals(")")) {
 				continue;
 			} else {
 				e = stripUnbalancedParentheses(e);
@@ -399,7 +326,7 @@ public class PredicateMiner {
 		return rel;
 	}
 
-	private String stripUnbalancedParentheses(String expr) {
+	protected String stripUnbalancedParentheses(String expr) {
 		String rel = expr;
 
 		int left = StringUtils.countMatches(rel, "(");
@@ -423,7 +350,7 @@ public class PredicateMiner {
 		return rel;
 	}
 
-	private void setup() {
+	protected void setup() {
 		HashMap<String, ArrayList<String>> ps = new HashMap<String, ArrayList<String>>();
 
 		// group predicates based on api first
@@ -460,92 +387,93 @@ public class PredicateMiner {
 			clusters.put(api, hs);
 		}
 	}
+	
+	protected abstract void loadAndFilterPredicate();
+	
+	/**
+	 * 1. find all method call sequences that satisfy the given pattern 2. for
+	 * each API call sequence, find the arguments and receiver of each API in
+	 * the pattern 3. for each predicate, filter out those clauses that do not
+	 * include these arguments and receiver 4. initially cluster identical
+	 * predicates 5. for every two clusters, merge them if they are semantically
+	 * equivalent using z3 6. keep merging until a fix point
+	 */
+	public void process() {
+		// load predicates and normalize variable names and condition irrelevant clauses
+		loadAndFilterPredicate();
+		
+		// cluster based on textual similarity
+		setup();
 
-	private void loadAndFilterPredicate(Set<String> ref) {
-		File output = new File(predicate_path);
-		try (BufferedReader br = new BufferedReader(new FileReader(output))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.startsWith("conds[")) {
-					String id = line.substring(line.indexOf("[") + 1,
-							line.indexOf("] =")).trim();
-					if (!ref.contains(id)) {
-						continue;
-					}
-
-					HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-
-					String tmp = line.substring(line.indexOf("] =") + 3).trim();
-					String[] records = tmp.split(";;;");
-					for (String record : records) {
-						String api = record.split("::")[0];
-						if (!pattern.contains(api)) {
-							continue;
-						}
-
-						HashSet<String> relevant_elements = new HashSet<String>();
-						ArrayList<String> rcv_candidates = find_receivers(id,
-								api);
-						relevant_elements.addAll(rcv_candidates);
-						ArrayList<ArrayList<String>> args_candidates = find_arguments(
-								id, api);
-						for (ArrayList<String> a : args_candidates) {
-							relevant_elements.addAll(a);
-						}
-
-						String conds = record.split("::")[1];
-
-						ArrayList<String> arr = new ArrayList<String>();
-
-						String[] ss = conds.split("\\*\\*\\*");
-						for (String s : ss) {
-							boolean flag = false;
-							for (String var : relevant_elements) {
-								if (s.contains(var)) {
-									flag = true;
-									break;
-								}
-							}
-
-							if (flag) {
-								// condition on the relevant variables (i.e.,
-								// receivers, arguments)
-								// in order to compute the weakest precondition
-								s = condition(relevant_elements, s);
-								// normalize names
-								s = normalize(s, rcv_candidates,
-										args_candidates);
-								arr.add(s);
-							}
-						}
-
-						if (arr.isEmpty()) {
-							arr.add("true");
-						}
-
-						map.put(api, arr);
-					}
-
-					for (String api : pattern) {
-						if (!map.containsKey(api)) {
-							// no predicate for this api => the precondition for
-							// this api is true
-							ArrayList<String> arr = new ArrayList<String>();
-							arr.add("true");
-							map.put(api, arr);
-						}
-					}
-
-					predicates.put(id, map);
+		// print initial clusters
+		System.out
+				.println("Before checking predicate equivalence and merging:");
+		for (String api : clusters.keySet()) {
+			System.out.println("[" + api + "]");
+			int count = 0;
+			for (PredicateCluster pc : clusters.get(api)) {
+				System.out.print("Cluster" + count + ": ");
+				for (String p : pc.cluster.elementSet()) {
+					System.out.println(p + "---" + pc.cluster.count(p));
 				}
+				count++;
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+
+		// keep merging predicates until reaching a fix point
+		merge();
+
+		System.out.println("After checking predicate equivalence and merging:");
+		for (String api : clusters.keySet()) {
+			System.out.println("[" + api + "]");
+			int count = 0;
+			for (PredicateCluster pc : clusters.get(api)) {
+				System.out.print("Cluster" + count + ": ");
+				for (String p : pc.cluster.elementSet()) {
+					System.out.println(p + "---" + pc.cluster.count(p));
+				}
+				count++;
+			}
 		}
 	}
+	
+	public String condition(Set<String> vars, String predicate) {
+		String[] arr = predicate.split("&&|\\|\\||\\!(?!=)");
+		String res = predicate;
+		for (String c : arr) {
+			c = c.trim();
+			if (c.isEmpty() || c.equals("(") || c.equals(")")) {
+				continue;
+			} else {
+				c = stripUnbalancedParentheses(c);
 
+				boolean flag = false;
+				for (String var : vars) {
+					if (c.contains(var)) {
+						flag = true;
+					}
+				}
+
+				if (!flag) {
+					// this clause is irrelevant
+					res = res.replace(c, "true");
+				}
+			}
+		}
+		
+		// a && !b | a ==> a && !true, which is always evaluated to false
+		// Such conditioning  is incomplete because !b should be replaced with true instead of b 
+		// So we add the following replacement statement to replace !true with true
+		while(res.matches("^.*\\!true.*$") || res.matches("^.*\\!\\(true\\).*$")) {
+			if(res.matches("^.*\\!true.*$")) {
+				res = res.replaceAll("\\!true", "true");
+			} else {
+				res = res.replaceAll("\\!\\(true\\)", "true");
+			}
+		}
+		return res;
+	}
+	
 	public String normalize(String predicate, ArrayList<String> rcv_candidates,
 			ArrayList<ArrayList<String>> args_candidates) {
 		String norm = predicate;
@@ -564,159 +492,5 @@ public class PredicateMiner {
 		}
 
 		return norm;
-	}
-
-	public String condition(Set<String> vars, String predicate) {
-		String[] arr = predicate.split("&&|\\|\\||\\!(?!=)");
-		String res = predicate;
-		for (String c : arr) {
-			c = c.trim();
-			if (c.isEmpty()) {
-				continue;
-			} else {
-				c = stripUnbalancedParentheses(c);
-
-				boolean flag = false;
-				for (String var : vars) {
-					if (c.contains(var)) {
-						flag = true;
-					}
-				}
-
-				if (!flag) {
-					// this clause is irrelevant
-					res = res.replace(c, "true");
-				}
-			}
-		}
-
-		return res.replaceAll("\\!(\\(*)true(\\)*)", "true");
-	}
-
-	private ArrayList<String> find_receivers(String id, String api) {
-		HashMap<String, ArrayList<String>> all_rcvs = this.receivers.get(id);
-
-		ArrayList<String> vars = new ArrayList<String>();
-		ArrayList<String> rcvs = all_rcvs.get(api);
-		for (String rcv : rcvs) {
-			if (rcv.startsWith("v::")) {
-				vars.add(rcv.substring(3));
-			}
-		}
-
-		return vars;
-	}
-
-	private ArrayList<ArrayList<String>> find_arguments(String id, String api) {
-		HashMap<String, ArrayList<String>> all_args = this.arguments.get(id);
-
-		ArrayList<ArrayList<String>> vars = new ArrayList<ArrayList<String>>();
-		ArrayList<String> argss = all_args.get(api);
-		for (String args : argss) {
-			String[] arr = args.split(",");
-			ArrayList<String> temp = new ArrayList<String>();
-			for (int i = 0; i < arr.length; i++) {
-				String arg = arr[i];
-				if (arg.startsWith("v::")) {
-					temp.add(arg.substring(3));
-				}
-			}
-			vars.add(temp);
-		}
-
-		return vars;
-	}
-
-	private void loadArugmentInfo(Set<String> ref) {
-		File output = new File(argument_path);
-		try (BufferedReader br = new BufferedReader(new FileReader(output))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.startsWith("margs[")) {
-					String id = line.substring(line.indexOf("[") + 1,
-							line.indexOf("] =")).trim();
-					if (!ref.contains(id)) {
-						// this sequence does not follow the given pattern
-						continue;
-					}
-
-					String tmp = line.substring(line.indexOf("] =") + 3).trim();
-					String[] ss = tmp.split("@@");
-
-					HashMap<String, ArrayList<String>> call_args_map = new HashMap<String, ArrayList<String>>();
-					for (int i = 0; i < ss.length; i++) {
-						String name = ss[i].split("->")[0];
-						String calls = ss[i].split("->")[1];
-
-						String[] arr = calls.split(";;;");
-						ArrayList<String> al = new ArrayList<String>();
-						for (int j = 0; j < arr.length; j++) {
-							String args = arr[j];
-							al.add(args);
-						}
-						call_args_map.put(name, al);
-					}
-
-					arguments.put(id, call_args_map);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void loadReceiverInfo(Set<String> ref) {
-		File output = new File(receiver_path);
-		try (BufferedReader br = new BufferedReader(new FileReader(output))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.startsWith("receivers[")) {
-					String id = line.substring(line.indexOf("[") + 1,
-							line.indexOf("] =")).trim();
-					if (!ref.contains(id)) {
-						// this sequence does not follow the given pattern
-						continue;
-					}
-
-					String tmp = line.substring(line.indexOf("] =") + 3).trim();
-					String[] ss = tmp.split("@@");
-
-					HashMap<String, ArrayList<String>> call_receivers_map = new HashMap<String, ArrayList<String>>();
-					for (int i = 0; i < ss.length; i++) {
-						String call = ss[i].split("->")[0];
-						String vars = ss[i].split("->")[1];
-
-						String[] arr = vars.split(";;;");
-						ArrayList<String> rcvs = new ArrayList<String>();
-						for (int j = 0; j < arr.length; j++) {
-							String receiver = arr[j];
-							rcvs.add(receiver);
-						}
-						call_receivers_map.put(call, rcvs);
-					}
-
-					receivers.put(id, call_receivers_map);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void print() {
-		for (String key : predicates.keySet()) {
-			System.out.println(key);
-			System.out.println(predicates.get(key));
-		}
-	}
-
-	public static void main(String[] args) {
-		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("IF {");
-		pattern.add("createNewFile");
-		pattern.add("}");
-		PredicateMiner pm = new PredicateMiner(pattern);
-		pm.process();
-		// pm.print();
 	}
 }

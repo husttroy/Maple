@@ -17,6 +17,13 @@ import edu.ucla.cs.model.Assignment;
 import edu.ucla.cs.model.MethodCall;
 import edu.ucla.cs.model.Predicate;
 import edu.ucla.cs.model.Receiver;
+import edu.ucla.cs.process.lightweight.ArgumentProcessor;
+import edu.ucla.cs.process.lightweight.AssignmentProcessor;
+import edu.ucla.cs.process.lightweight.PredicateProcessor;
+import edu.ucla.cs.process.lightweight.Process;
+import edu.ucla.cs.process.lightweight.ReceiverProcessor;
+import edu.ucla.cs.process.lightweight.SequenceProcessor;
+import edu.ucla.cs.process.lightweight.TypeProcessor;
 import edu.ucla.cs.slice.Slicer;
 
 public class ProcessDriver {
