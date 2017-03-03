@@ -21,7 +21,7 @@ import edu.ucla.cs.model.PredicateCluster;
 import edu.ucla.cs.utils.FileUtils;
 import edu.ucla.cs.utils.InfixToPrefixConvertor;
 
-public class LightweihgtPredicateMiner extends PredicateMiner{
+public class LightweightPredicateMiner extends PredicateMiner{
 	// id -> arguments
 	HashMap<String, HashMap<String, ArrayList<String>>> arguments;
 	// id -> receivers
@@ -33,7 +33,7 @@ public class LightweihgtPredicateMiner extends PredicateMiner{
 	final String receiver_path = "/home/troy/research/BOA/Maple/example/receiver.txt";
 	final String logicSeparator = "&&|\\|\\|";
 
-	public LightweihgtPredicateMiner(ArrayList<String> pattern) {
+	public LightweightPredicateMiner(ArrayList<String> pattern) {
 		super(pattern);
 		arguments = new HashMap<String, HashMap<String, ArrayList<String>>>();
 		receivers = new HashMap<String, HashMap<String, ArrayList<String>>>();
@@ -143,9 +143,11 @@ public class LightweihgtPredicateMiner extends PredicateMiner{
 
 		ArrayList<String> vars = new ArrayList<String>();
 		ArrayList<String> rcvs = all_rcvs.get(api);
-		for (String rcv : rcvs) {
-			if (rcv.startsWith("v::")) {
-				vars.add(rcv.substring(3));
+		if(rcvs != null) {
+			for (String rcv : rcvs) {
+				if (rcv.startsWith("v::")) {
+					vars.add(rcv.substring(3));
+				}
 			}
 		}
 
@@ -260,8 +262,12 @@ public class LightweihgtPredicateMiner extends PredicateMiner{
 		pattern.add("IF {");
 		pattern.add("createNewFile");
 		pattern.add("}");
-		LightweihgtPredicateMiner pm = new LightweihgtPredicateMiner(pattern);
+		LightweightPredicateMiner pm = new LightweightPredicateMiner(pattern);
 		pm.process();
+		HashMap<String, String> predicate_patterns = pm.find_the_most_common_predicate();
+		for(String api: predicate_patterns.keySet()) {
+			System.out.println(api + ":" + predicate_patterns.get(api));
+		}
 		//pm.print();
 	}
 }

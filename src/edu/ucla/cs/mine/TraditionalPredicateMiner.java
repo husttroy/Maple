@@ -60,7 +60,9 @@ public class TraditionalPredicateMiner extends PredicateMiner{
 							ArrayList<String> args = getArguments(api);
 							
 							HashSet<String> relevant_elements = new HashSet<String>();
-							relevant_elements.add(receiver);
+							if(receiver != null) {
+								relevant_elements.add(receiver);
+							}
 							relevant_elements.addAll(args);
 							
 							// remove irrelevant clauses
@@ -134,10 +136,10 @@ public class TraditionalPredicateMiner extends PredicateMiner{
 		
 		if(api.contains(".")) {
 			String[] arr = api.split("\\.");
-			rcv = arr[0];
+			rcv = arr[0].trim();
 		}
 		
-		return rcv.trim();
+		return rcv;
 	}
 	
 	private ArrayList<String> getArguments(String api) {
