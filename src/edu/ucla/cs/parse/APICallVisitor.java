@@ -33,18 +33,22 @@ public class APICallVisitor extends ASTVisitor {
 		// visit receiver first just in case if the receiver is also a method
 		// call
 		Expression expr = node.getExpression();
+		String receiver = null;
 		if (expr != null) {
+			receiver = expr.toString();
 			expr.accept(this);
 		}
 
 		// visit arguments first to chain up any method calls in the argument
 		// list
 		List<Expression> args = node.arguments();
+		ArrayList<String> arguments = new ArrayList<String>();
 		for (Expression arg : args) {
+			arguments.add(arg.toString());
 			arg.accept(this);
 		}
 
-		seq.add(new APICall(node.getName().toString(), condition));
+		seq.add(new APICall(node.getName().toString(), condition, receiver, arguments));
 
 		return false;
 	}
@@ -55,11 +59,13 @@ public class APICallVisitor extends ASTVisitor {
 		// visit arguments first to chain up any method calls in the argument
 		// list
 		List<Expression> args = node.arguments();
+		ArrayList<String> arguments = new ArrayList<String>();
 		for (Expression arg : args) {
+			arguments.add(arg.toString());
 			arg.accept(this);
 		}
 
-		seq.add(new APICall("super." + node.getName().toString(), condition));
+		seq.add(new APICall("super." + node.getName().toString(), condition, null, arguments));
 
 		return false;
 	}
@@ -70,11 +76,13 @@ public class APICallVisitor extends ASTVisitor {
 		// visit arguments first to chain up any method calls in the argument
 		// list
 		List<Expression> args = node.arguments();
+		ArrayList<String> arguments = new ArrayList<String>();
 		for (Expression arg : args) {
+			arguments.add(arg.toString());
 			arg.accept(this);
 		}
 
-		seq.add(new APICall("new " + node.getType().toString(), condition));
+		seq.add(new APICall("new " + node.getType().toString(), condition, null, arguments));
 
 		return false;
 	}
