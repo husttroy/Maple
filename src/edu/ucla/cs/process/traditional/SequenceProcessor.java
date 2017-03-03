@@ -1,7 +1,5 @@
 package edu.ucla.cs.process.traditional;
 
-import org.apache.commons.lang3.StringUtils;
-
 import edu.ucla.cs.model.Method;
 
 public class SequenceProcessor extends ProcessStrategy{
@@ -18,14 +16,20 @@ public class SequenceProcessor extends ProcessStrategy{
 		// skip the first element because it is empty string
 		for(int i = 1; i < ss.length; i++){
 			if (ss[i].contains("}")){
-				String api = ss[i].split("}")[0];
-				method.seq.add(normalizeAPICall(api));
-				// count how many curly braces
-				int n = StringUtils.countMatches(ss[i], '}');
-				for(int j = 0; j < n; j++) {
+				String str = ss[i];
+				while(str.contains("}")) {
+					String sub1 = str.substring(0, str.indexOf("}"));
+					if(!sub1.trim().isEmpty()) {
+						method.seq.add(normalizeAPICall(sub1.trim()));
+					}
 					method.seq.add("}");
+					str = str.substring(str.indexOf("}") + 1);
 				}
-			}else{
+				
+				if(!str.trim().isEmpty()) {
+					method.seq.add(normalizeAPICall(str.trim()));
+				}
+			} else{
 				method.seq.add(normalizeAPICall(ss[i].trim()));
 			}
 		}

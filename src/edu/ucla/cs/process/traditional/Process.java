@@ -58,12 +58,12 @@ public class Process {
 				p.processByLine("/home/troy/research/BOA/Maple/example/new_sequence.txt");
 				
 				// cross-check
-				p.crosscheck();
+				// p.crosscheck();
 				
 				// print the split method calls
-//				for(String key : methods.keySet()) {
-//					System.out.println(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq);
-//				}
+				for(String key : methods.keySet()) {
+					System.out.println(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq);
+				}
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
