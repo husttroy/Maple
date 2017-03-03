@@ -5,15 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
-public abstract class PatternMiner {
+public abstract class SequencePatternMiner {
 	final private String script_path;
 	final private String seqs_path;
 	final private int min_support;
-	ArrayList<String> query;
+	//ArrayList<String> query;
+	HashSet<String> query;
 	protected HashMap<ArrayList<String>, Integer> patterns;
 	
-	public PatternMiner(String script_path, String seqs_path, int min_support, ArrayList<String> filter){
+	public SequencePatternMiner(String script_path, String seqs_path, int min_support, HashSet<String> filter){
 		this.script_path = script_path;
 		this.seqs_path = seqs_path;
 		this.min_support = min_support;

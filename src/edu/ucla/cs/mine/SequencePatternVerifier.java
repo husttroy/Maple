@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PatternVerifier {
+public class SequencePatternVerifier {
 	public HashMap<String, ArrayList<String>> seqs;
 	public ArrayList<String> pattern;
 	public HashMap<String, ArrayList<String>> support;
 	
-	public PatternVerifier(ArrayList<String> pattern) {
+	public SequencePatternVerifier(ArrayList<String> pattern) {
 		this.pattern = pattern;
 		this.seqs = new HashMap<String, ArrayList<String>>();
 		this.support = new HashMap<String, ArrayList<String>>();
@@ -80,7 +80,7 @@ public class PatternVerifier {
 		//pattern.add("IF {");
 		pattern.add("createNewFile");
 		//pattern.add("}");
-		PatternVerifier pv = new PatternVerifier(pattern);
+		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(output);
 		System.out.print(pv.support.size());
 	}

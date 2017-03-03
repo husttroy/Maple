@@ -1,11 +1,12 @@
 package edu.ucla.cs.mine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-public class FrequentSequenceMiner extends PatternMiner {
+public class FrequentSequenceMiner extends SequencePatternMiner {
 
 	public FrequentSequenceMiner(String script_path, String seqs_path,
-			int min_support, ArrayList<String> filter) {
+			int min_support, HashSet<String> filter) {
 		super(script_path, seqs_path, min_support, filter);
 	}
 
@@ -39,7 +40,7 @@ public class FrequentSequenceMiner extends PatternMiner {
 		
 		// check whether each pattern is satisfiable
 		for(ArrayList<String> pattern : this.patterns.keySet()) {
-			if(!isSubsequence(pattern, this.query) || !isBalanced(pattern) || !isComplete(pattern)){
+			if(!pattern.containsAll(this.query) || !isBalanced(pattern) || !isComplete(pattern)){
 				remove.add(pattern);
 			}
 		}
@@ -71,7 +72,7 @@ public class FrequentSequenceMiner extends PatternMiner {
 	}
 	
 	public static void main(String[] args){
-		ArrayList<String> query = new ArrayList<String>();
+		HashSet<String> query = new HashSet<String>();
 		query.add("createNewFile");
 		// learn from the output of the light-weight output
 		//PatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
@@ -80,9 +81,9 @@ public class FrequentSequenceMiner extends PatternMiner {
 		//		query);
 		
 		// learn from the output of the traditional output
-		PatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-						"/home/troy/research/BOA/Maple/example/new_output.txt",
-						47,
+		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
+						"/home/troy/research/BOA/Maple/example/output.txt",
+						40,
 						query);
 		
 		pm.mine();

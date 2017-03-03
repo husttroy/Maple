@@ -1,11 +1,12 @@
 package edu.ucla.cs.mine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-public class FrequentItemMiner extends PatternMiner{
+public class FrequentItemMiner extends SequencePatternMiner{
 	
 	public FrequentItemMiner(String script_path, String seqs_path,
-			int min_support, ArrayList<String> query) {
+			int min_support, HashSet<String> query) {
 		super(script_path, seqs_path, min_support, query);
 	}
 
@@ -51,9 +52,9 @@ public class FrequentItemMiner extends PatternMiner{
 	}
 	
 	public static void main(String[] args){
-		ArrayList<String> query = new ArrayList<String>();
+		HashSet<String> query = new HashSet<String>();
 		query.add("createNewFile");
-		PatternMiner pm = new FrequentItemMiner("/home/troy/research/BOA/Slicer/mining/freq_itemset.py", 
+		SequencePatternMiner pm = new FrequentItemMiner("/home/troy/research/BOA/Slicer/mining/freq_itemset.py", 
 				"/home/troy/research/BOA/Slicer/example/output.txt",
 				40,
 				query);

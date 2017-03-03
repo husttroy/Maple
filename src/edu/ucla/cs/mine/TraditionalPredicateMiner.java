@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class TraditionalPredicateMiner extends PredicateMiner{
+public class TraditionalPredicateMiner extends PredicatePatternMiner{
 	
 	final String path = "/home/troy/research/BOA/Maple/example/new_sequence.txt";
 	final String sequence_path = "/home/troy/research/BOA/Maple/example/new_output.txt";
@@ -20,7 +20,7 @@ public class TraditionalPredicateMiner extends PredicateMiner{
 	@Override
 	protected void loadAndFilterPredicate() {
 		// find API call sequences that follow the pattern
-		PatternVerifier pv = new PatternVerifier(pattern);
+		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(sequence_path);
 		
 		// read the full output of the traditional analysis
@@ -93,7 +93,6 @@ public class TraditionalPredicateMiner extends PredicateMiner{
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

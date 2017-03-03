@@ -5,23 +5,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-
-import edu.ucla.cs.model.PredicateCluster;
-import edu.ucla.cs.utils.FileUtils;
-import edu.ucla.cs.utils.InfixToPrefixConvertor;
-
-public class LightweightPredicateMiner extends PredicateMiner{
+public class LightweightPredicateMiner extends PredicatePatternMiner{
 	// id -> arguments
 	HashMap<String, HashMap<String, ArrayList<String>>> arguments;
 	// id -> receivers
@@ -42,7 +31,7 @@ public class LightweightPredicateMiner extends PredicateMiner{
 	@Override
 	protected void loadAndFilterPredicate() {
 		// find API call sequences that follow the pattern
-		PatternVerifier pv = new PatternVerifier(pattern);
+		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(sequence_path);
 
 		// load arguments and receivers
