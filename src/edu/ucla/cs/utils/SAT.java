@@ -72,10 +72,51 @@ public class SAT {
 	
 	/***** Check Implication *****/
 	
+	/**
+	 * Check if p1 => p2
+	 * 
+	 * @param p1
+	 * @param p2
+	 * @return
+	 */
 	public boolean checkImplication(String p1, String p2) {
-		return false;
+		// clear previous maps
+		bool_symbol_map.clear();
+		int_symbol_map.clear();
+		
+		String p1_sym = symbolize(p1);
+		String p2_sym = symbolize(p2);
+		String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
+		String p2_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p2_sym);
+		
+		String query = generateImplicationQueryInZ3(p1_prefix, p2_prefix);
+		return !isSAT(query);
 	}
 	
+	public String generateImplicationQueryInZ3(String p1, String p2) {
+		String p1_smt = encodeToSMTLibStandard(p1);
+		String p2_smt = encodeToSMTLibStandard(p2);
+
+		String query = "";
+		// dump boolean symbols to a hashset to remove duplicated symbols
+		HashSet<String> bool_sym_set = new HashSet<String>(bool_symbol_map.values());
+		// declare boolean symbols in Z3
+		for (String sym : bool_sym_set) {
+			query += "(declare-const " + sym + " Bool)"
+					+ System.lineSeparator();
+		}
+
+		// dump integer symbols to a hashset to remove duplicated symbols
+		HashSet<String> int_sym_set = new HashSet<String>(int_symbol_map.values());
+		for (String sym : int_sym_set) {
+			query += "(declare-const " + sym + " Int)" + System.lineSeparator();
+		}
+
+		query += "(assert (and " + p1_smt + " (not " + p2_smt + ")))"
+				+ System.lineSeparator();
+		query += "(check-sat)";
+		return query;
+	}
 
 	/***** General Utility *****/
 	

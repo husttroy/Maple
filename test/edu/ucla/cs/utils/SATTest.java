@@ -86,4 +86,11 @@ public class SATTest {
 		assertFalse(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists)",
 				"true"));
 	}
+	
+	@Test
+	public void testImplicationChecker() {
+		SAT sat = new SAT();
+		assertTrue(sat.checkImplication("a&&c", "a"));
+		assertFalse(sat.checkImplication("a", "a&&c"));
+	}
 }
