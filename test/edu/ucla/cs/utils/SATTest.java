@@ -9,9 +9,16 @@ import org.junit.Test;
 public class SATTest {
 	
 	@Test
+	public void testStripOffUnnecessaryParentheses() {
+		SAT sat = new SAT();
+		String rel = sat.stripUnnecessaryParentheses("(rcv.exists())");
+		assertEquals("rcv.exists()", rel);
+	}
+	
+	@Test
 	public void testSymbolizeBasic() {
 		SAT sat = new SAT();
-		String rel = sat.symbolize("!rcv.exists");
+		String rel = sat.symbolize("!rcv.exists()");
 		assertEquals("!b0", rel);
 	}
 	
@@ -25,14 +32,14 @@ public class SATTest {
 	@Test
 	public void testSymbolizeDoubleNegation() {
 		SAT sat = new SAT();
-		String rel = sat.symbolize("!(!rcv.exists) && !rcv.exists");
+		String rel = sat.symbolize("!(!rcv.exists()) && !rcv.exists()");
 		assertEquals("!(!b0) && !b0", rel);
 	}
 
 	@Test
 	public void testSymbolizeWithUncessaryParentheses() {
 		SAT sat = new SAT();
-		String rel = sat.symbolize("!(rcv.exists)");
+		String rel = sat.symbolize("!(rcv.exists())");
 		assertEquals("!b0", rel);
 	}
 
@@ -40,14 +47,14 @@ public class SATTest {
 	public void testSymbolizeWithUnbalancedParentheses() {
 		SAT sat = new SAT();
 		String rel = sat
-				.symbolize("((s.length + 1 > 0) || flag) && Environment.SSS");
+				.symbolize("((s.length() + 1 > 0) || flag) && Environment.SSS");
 		assertEquals("((i0 + 1 > 0) || b0) && b1", rel);
 	}
 	
 	@Test
 	public void testSymbolizeWithLiterals() {
 		SAT sat = new SAT();
-		String rel = sat.symbolize("((s.length + 1 > 0) || (true)) && false");
+		String rel = sat.symbolize("((s.length() + 1 > 0) || (true)) && false");
 		assertEquals("((i0 + 1 > 0) || true) && false", rel);
 	}
 	
@@ -70,20 +77,20 @@ public class SATTest {
 	@Test
 	public void testEquivalenceChecker() {
 		SAT sat = new SAT();
-		assertTrue(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists)",
-				"1 <= arg0 && !rcv.exists"));
+		assertTrue(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists())",
+				"1 <= arg0 && !rcv.exists()"));
 	}
 
 	@Test
 	public void testEquivalenceWithFalse() {
 		SAT sat = new SAT();
-		assertFalse(sat.checkEquivalence("false", "1 <= arg0 && !rcv.exists"));
+		assertFalse(sat.checkEquivalence("false", "1 <= arg0 && !rcv.exists()"));
 	}
 
 	@Test
 	public void testEquivalenceWithTrue() {
 		SAT sat = new SAT();
-		assertFalse(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists)",
+		assertFalse(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists())",
 				"true"));
 	}
 	

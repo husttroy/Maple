@@ -160,7 +160,7 @@ public abstract class PredicatePatternMiner {
 		}
 	}
 	
-	public String condition(Set<String> vars, String predicate) {
+	public static String condition(Set<String> vars, String predicate) {
 		String[] arr = predicate.split("&&|\\|\\||\\!(?!=)");
 		String res = predicate;
 		for (String c : arr) {
@@ -197,7 +197,7 @@ public abstract class PredicatePatternMiner {
 		return res;
 	}
 	
-	public String normalize(String predicate, ArrayList<String> rcv_candidates,
+	public static String normalize(String predicate, ArrayList<String> rcv_candidates,
 			ArrayList<ArrayList<String>> args_candidates) {
 		String norm = predicate;
 		for (String rcv : rcv_candidates) {

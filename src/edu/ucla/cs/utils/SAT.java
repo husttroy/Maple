@@ -3,10 +3,8 @@ package edu.ucla.cs.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -299,14 +297,11 @@ public class SAT {
 	 * @param expr
 	 * @return
 	 */
-	private String stripUnnecessaryParentheses(String expr) {
+	protected String stripUnnecessaryParentheses(String expr) {
 		String rel = expr;
 
-		if (expr.matches("^(\\()+[a-zA-Z0-9_\\.]+(\\))+$")) {
-			int count = StringUtils.countMatches(expr, '(');
-			for (int i = 0; i < count; i++) {
-				rel = rel.substring(1, rel.length() - 1);
-			}
+		while (rel.startsWith("(") && rel.endsWith(")")) {
+			rel = rel.substring(1, rel.length() - 1);
 		}
 
 		return rel;

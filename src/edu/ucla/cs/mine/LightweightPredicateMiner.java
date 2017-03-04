@@ -75,6 +75,10 @@ public class LightweightPredicateMiner extends PredicatePatternMiner{
 						}
 
 						String conds = record.split("::")[1];
+						
+						if(conds.contains(",)")) {
+							conds = conds.replaceAll(",\\)", ")");
+						}
 
 						ArrayList<String> arr = new ArrayList<String>();
 
