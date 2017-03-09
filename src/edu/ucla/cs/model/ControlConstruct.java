@@ -1,6 +1,6 @@
 package edu.ucla.cs.model;
 
-public enum ControlContruct implements APISeqItem{
+public enum ControlConstruct implements APISeqItem{
 	TRY,
 	CATCH,
 	FINALLY,

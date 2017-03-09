@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
-import edu.ucla.cs.model.ControlContruct;
+import edu.ucla.cs.model.ControlConstruct;
 
 public class APICallVisitor extends ASTVisitor {
 	public ArrayList<APISeqItem> seq = new ArrayList<APISeqItem>();
@@ -90,10 +90,10 @@ public class APICallVisitor extends ASTVisitor {
 	// visit control-flow structures
 	public boolean visit(TryStatement node) {
 		// System.out.println("Try");
-		seq.add(ControlContruct.TRY);
+		seq.add(ControlConstruct.TRY);
 
 		node.getBody().accept(this);
-		this.seq.add(ControlContruct.END_BLOCK);
+		this.seq.add(ControlConstruct.END_BLOCK);
 
 		List<CatchClause> catches = node.catchClauses();
 		for (CatchClause c : catches) {
@@ -103,9 +103,9 @@ public class APICallVisitor extends ASTVisitor {
 		Block fblock = node.getFinally();
 		if (fblock != null) {
 			// System.out.println("Finally");
-			seq.add(ControlContruct.FINALLY);
+			seq.add(ControlConstruct.FINALLY);
 			fblock.accept(this);
-			seq.add(ControlContruct.END_BLOCK);
+			seq.add(ControlConstruct.END_BLOCK);
 		}
 
 		return false;
@@ -113,17 +113,17 @@ public class APICallVisitor extends ASTVisitor {
 
 	public boolean visit(CatchClause node) {
 		// System.out.println("catch");
-		seq.add(ControlContruct.CATCH);
+		seq.add(ControlConstruct.CATCH);
 		return true;
 	}
 
 	public void endVisit(CatchClause node) {
-		this.seq.add(ControlContruct.END_BLOCK);
+		this.seq.add(ControlConstruct.END_BLOCK);
 	}
 
 	public boolean visit(IfStatement node) {
 		// System.out.println("If");
-		seq.add(ControlContruct.IF);
+		seq.add(ControlConstruct.IF);
 
 		String oldCond = condition;
 		Expression expr = node.getExpression();
@@ -136,7 +136,7 @@ public class APICallVisitor extends ASTVisitor {
 
 		Statement thenStmt = node.getThenStatement();
 		thenStmt.accept(this);
-		this.seq.add(ControlContruct.END_BLOCK);
+		this.seq.add(ControlConstruct.END_BLOCK);
 
 		Statement elseStmt = node.getElseStatement();
 		if (elseStmt != null) {
@@ -147,9 +147,9 @@ public class APICallVisitor extends ASTVisitor {
 				condition = oldCond + " && !(" + expr.toString() + ")";
 			}
 
-			seq.add(ControlContruct.ELSE);
+			seq.add(ControlConstruct.ELSE);
 			elseStmt.accept(this);
-			this.seq.add(ControlContruct.END_BLOCK);
+			this.seq.add(ControlConstruct.END_BLOCK);
 		}
 
 		condition = oldCond;
@@ -159,7 +159,7 @@ public class APICallVisitor extends ASTVisitor {
 
 	public boolean visit(ForStatement node) {
 		// System.out.println("Loop");
-		seq.add(ControlContruct.LOOP);
+		seq.add(ControlConstruct.LOOP);
 
 		String oldCond = condition;
 		Expression expr = node.getExpression();
@@ -180,12 +180,12 @@ public class APICallVisitor extends ASTVisitor {
 	}
 
 	public void endVisit(ForStatement node) {
-		this.seq.add(ControlContruct.END_BLOCK);
+		this.seq.add(ControlConstruct.END_BLOCK);
 	}
 
 	public boolean visit(EnhancedForStatement node) {
 		// System.out.println("Loop");
-		seq.add(ControlContruct.LOOP);
+		seq.add(ControlConstruct.LOOP);
 
 		Expression expr = node.getExpression();
 		String oldCond = condition;
@@ -204,12 +204,12 @@ public class APICallVisitor extends ASTVisitor {
 	}
 
 	public void endVisit(EnhancedForStatement node) {
-		this.seq.add(ControlContruct.END_BLOCK);
+		this.seq.add(ControlConstruct.END_BLOCK);
 	}
 
 	public boolean visit(WhileStatement node) {
 		// System.out.println("Loop");
-		seq.add(ControlContruct.LOOP);
+		seq.add(ControlConstruct.LOOP);
 
 		Expression expr = node.getExpression();
 		String oldCond = condition;
@@ -230,6 +230,6 @@ public class APICallVisitor extends ASTVisitor {
 	}
 
 	public void endVisit(WhileStatement node) {
-		this.seq.add(ControlContruct.END_BLOCK);
+		this.seq.add(ControlConstruct.END_BLOCK);
 	}
 }
