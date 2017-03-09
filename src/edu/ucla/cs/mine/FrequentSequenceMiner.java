@@ -73,7 +73,7 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 	
 	public static void main(String[] args){
 		HashSet<String> query = new HashSet<String>();
-		query.add("createNewFile");
+		query.add("get");
 		// learn from the output of the light-weight output
 		//PatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
 		//		"/home/troy/research/BOA/Maple/example/output.txt",
@@ -81,10 +81,14 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		//		query);
 		
 		// learn from the output of the traditional output
+//		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
+//						"/home/troy/research/BOA/Maple/example/new_output.txt",
+//						41,
+//						query);
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-						"/home/troy/research/BOA/Maple/example/new_output.txt",
-						41,
-						query);
+				"/home/troy/research/BOA/Maple/example/HashMap.get/output.txt",
+				8,
+				query);
 		
 		pm.mine();
 		for(ArrayList<String> pattern : pm.patterns.keySet()) {

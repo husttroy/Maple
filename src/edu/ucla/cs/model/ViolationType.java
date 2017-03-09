@@ -4,6 +4,6 @@ public enum ViolationType {
 	IncorrectPrecondition,
 	MissingMethodCall,
 	MissingStructure,
-	MisorderMethodCall,
-	MisorderStructure
+	DisorderMethodCall,
+	DisorderStructure
 }

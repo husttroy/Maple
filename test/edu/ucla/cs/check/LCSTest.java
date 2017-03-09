@@ -25,28 +25,28 @@ public class LCSTest {
 		pattern.add(ControlConstruct.END_BLOCK);
 		
 		ArrayList<APISeqItem> seq = new ArrayList<APISeqItem>();
-		assertEquals(0, UseChecker.LCS(pattern, seq).size());
+		assertEquals(0, new UseChecker().LCS(pattern, seq).size());
 		
 		seq.add(ControlConstruct.IF);
-		assertEquals(1, UseChecker.LCS(pattern, seq).size());
+		assertEquals(1, new UseChecker().LCS(pattern, seq).size());
 		
 		seq.add(ControlConstruct.IF);
-		assertEquals(1, UseChecker.LCS(pattern, seq).size());
+		assertEquals(1, new UseChecker().LCS(pattern, seq).size());
 		
 
 		seq.add(call2);
 		seq.add(call3);
-		assertEquals(1, UseChecker.LCS(pattern, seq).size());
+		assertEquals(1, new UseChecker().LCS(pattern, seq).size());
 		
 		seq.add(ControlConstruct.END_BLOCK);
-		assertEquals(2, UseChecker.LCS(pattern, seq).size());
+		assertEquals(2, new UseChecker().LCS(pattern, seq).size());
 	
 		seq.add(call4);
 		seq.add(call1);
 		seq.add(call5);
-		assertEquals(2, UseChecker.LCS(pattern, seq).size());
+		assertEquals(2, new UseChecker().LCS(pattern, seq).size());
 		
 		seq.add(ControlConstruct.END_BLOCK);
-		assertEquals(3, UseChecker.LCS(pattern, seq).size());
+		assertEquals(3, new UseChecker().LCS(pattern, seq).size());
 	}
 }

@@ -24,7 +24,7 @@ public class Maple {
 		Search search = new Search();
 		ArrayList<Answer> answers = search.search(apis);
 		
-		System.out.println("There are " + answers.size() + " relevant Java snippets.");
+		System.out.println("Total number of relevant Java snippets: " + answers.size());
 
 		// 2. mine sequence patterns and predicate patterns from Github
 		// TODO: currently we assume that we have already retrieved code
@@ -90,18 +90,13 @@ public class Maple {
 		}
 		
 		// 3. use the patterns to check for the code snippets in the answers
-//		HashMap<Answer, ArrayList<Violation>> violations = UseChecker.check(lp, answers);
-//		for(Answer a : violations.keySet()) {
-//			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);
-//			for(Violation v : violations.get(a)) {
-//				System.out.println("Violation: " + v.type + ", " + v.item);
-//			}
-//		}
-		HashSet<Answer> violations = UseChecker.check(lp, answers);
-		System.out.println("Total Violations: " + violations.size());
-		for(Answer a : violations) {
+		HashMap<Answer, ArrayList<Violation>> violations = new UseChecker().check(lp, answers);
+		System.out.println("Total number of unreliable Java snippets: " + violations.keySet().size());
+		for(Answer a : violations.keySet()) {
 			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);
+			for(Violation v : violations.get(a)) {
+				System.out.println("Violation: " + v.type + ", " + v.item);
+			}
 		}
-		
 	}
 }

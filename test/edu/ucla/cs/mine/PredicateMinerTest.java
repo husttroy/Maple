@@ -9,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.ucla.cs.model.PredicateCluster;
+import edu.ucla.cs.utils.SAT;
 
 public class PredicateMinerTest {
 	@Test
@@ -93,5 +94,49 @@ public class PredicateMinerTest {
 		vars.add("file");
 		assertEquals("!file.exists() && true",
 				pm.condition(vars, "!file.exists() && !(!destDir.exists())"));
+	}
+
+	@Test
+	public void testNormalizePost17149392() {
+		String predicate = "files != null && files.length > 0";
+		ArrayList<String> rcv_candidates = new ArrayList<String>();
+		rcv_candidates.add("f");
+		ArrayList<ArrayList<String>> args_candidates = new ArrayList<ArrayList<String>>();
+		String norm = PredicatePatternMiner.normalize(predicate, rcv_candidates, args_candidates);
+		assertEquals(predicate, norm);
+	}
+	
+	@Test
+	public void testConditionPost17149392() {
+		LightweightPredicateMiner pm = new LightweightPredicateMiner(
+				new ArrayList<String>());
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("f");
+		assertEquals("true && true",
+				pm.condition(vars, "files != null && files.length > 0"));
+	}
+	
+	@Test
+	public void testContainsVar() {
+		String var1 = "f";
+		String var2 = "file";
+		String var3 = "files";
+		String clause = "files!=null";
+		
+		assertFalse(PredicatePatternMiner.containsVar(var1, clause));
+		assertFalse(PredicatePatternMiner.containsVar(var2, clause));
+		assertTrue(PredicatePatternMiner.containsVar(var3, clause));
+	}
+	
+	@Test
+	public void testReplaceVar() {
+		String var1 = "f";
+		String var2 = "file";
+		String var3 = "files";
+		String clause = "files!=null";
+		
+		assertEquals("files!=null", PredicatePatternMiner.replaceVar(var1, clause, "rcv"));
+		assertEquals("files!=null", PredicatePatternMiner.replaceVar(var2, clause, "rcv"));
+		assertEquals("rcv!=null", PredicatePatternMiner.replaceVar(var3, clause, "rcv"));
 	}
 }

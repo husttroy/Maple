@@ -174,7 +174,7 @@ public abstract class PredicatePatternMiner {
 
 				boolean flag = false;
 				for (String var : vars) {
-					if (c.contains(var)) {
+					if (containsVar(var, c)) {
 						flag = true;
 					}
 				}
@@ -204,19 +204,116 @@ public abstract class PredicatePatternMiner {
 		String norm = predicate;
 		for (String rcv : rcv_candidates) {
 			if (norm.contains(rcv)) {
-				norm = norm.replaceAll(Pattern.quote(rcv), "rcv");
+				// cannot simply call replaceAll since some name be appear as part of other names
+				//norm = norm.replaceAll(Pattern.quote(rcv), "rcv");
+				norm = replaceVar(rcv, norm, "rcv");
 			}
 		}
 
 		for (ArrayList<String> args : args_candidates) {
 			for (int i = 0; i < args.size(); i++) {
 				if (norm.contains(args.get(i))) {
-					norm = norm.replaceAll(Pattern.quote(args.get(i)), "arg" + i);
+					// cannot simply call replaceAll since some name be appear as part of other names
+					//norm = norm.replaceAll(Pattern.quote(args.get(i)), "arg" + i);
+					norm = replaceVar(args.get(i), norm, "arg" + i);
 				}
 			}
 		}
 
 		return norm;
+	}
+	
+	public static boolean containsVar(String var, String clause) {
+		if(clause.contains(var)) {
+			boolean flag1 = false;
+			boolean flag2 = false;
+			// a small trick to avoid the case where a condition variable name is part of a variable name in the clause
+			int ahead = clause.indexOf(var) - 1;
+			int behind = clause.indexOf(var) + var.length();
+			if (ahead >= 0 && ahead < clause.length()) {
+				char c = clause.charAt(ahead);
+				if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+					// something contains the variable name as part of it
+					flag1 = false;
+				} else {
+					flag1 = true;
+				}
+			} else {
+				flag1 = true;
+			}
+			
+			if (behind >= 0 && behind < clause.length()) {
+				char c = clause.charAt(behind);
+				if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+					// something contains the variable name as part of it
+					flag2 = false;
+				} else {
+					flag2 = true;
+				}
+			} else {
+				flag2 = true;
+			}
+			
+			if(flag1 && flag2) {
+				return true;
+			} else {
+				// keep looking forward
+				if(behind < clause.length()) {
+					return containsVar(var, clause.substring(behind));
+				} else {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	public static String replaceVar(String var, String predicate, String substitute) {
+		if(!containsVar(var, predicate)) {
+			return predicate;
+		}
+		
+		boolean flag1 = false;
+		boolean flag2 = false;
+		// a small trick to avoid the case where a condition variable name is part of a variable name in the clause
+		int ahead = predicate.indexOf(var) - 1;
+		int behind = predicate.indexOf(var) + var.length();
+		
+		if (ahead >= 0 && ahead < predicate.length()) {
+			char c = predicate.charAt(ahead);
+			if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+				// something contains the variable name as part of it
+				flag1 = false;
+			} else {
+				flag1 = true;
+			}
+		} else {
+			flag1 = true;
+		}
+		
+		if (behind >= 0 && behind < predicate.length()) {
+			char c = predicate.charAt(behind);
+			if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+				// something contains the variable name as part of it
+				flag2 = false;
+			} else {
+				flag2 = true;
+			}
+		} else {
+			flag2 = true;
+		}
+		
+
+		String sub1 = predicate.substring(0, ahead + 1);
+		String sub2 = predicate.substring(behind);
+		if(flag1 && flag2) {
+			// replace it
+			return sub1 + substitute + replaceVar(var, sub2, substitute);
+		} else {
+			// keep looking forward
+			return sub1 + var + replaceVar(var, sub2, substitute);
+		}
 	}
 	
 	public HashMap<String, String> find_the_most_common_predicate() {

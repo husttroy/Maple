@@ -55,7 +55,8 @@ public class Process {
 			Process p = new Process();
 			try {
 				p.s = new SequenceProcessor();
-				p.processByLine("/home/troy/research/BOA/Maple/example/new_sequence.txt");
+//				p.processByLine("/home/troy/research/BOA/Maple/example/new_sequence.txt");
+				p.processByLine("/home/troy/research/BOA/Maple/example/HashMap.get/sequence.txt");
 				
 				// cross-check
 				// p.crosscheck();

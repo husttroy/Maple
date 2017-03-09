@@ -26,4 +26,22 @@ public class APICall implements APISeqItem{
 	public String toString() {
 		return name + "@" + condition;
 	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 31;
+		hash += 37 * this.name.hashCode();
+		hash += 43 * this.condition.hashCode();
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof APICall) {
+			APICall call = (APICall)obj;
+			return this.name.equals(call.name) && this.condition.equals(call.condition);
+		} else {
+			return false;
+		}
+	}
 }
