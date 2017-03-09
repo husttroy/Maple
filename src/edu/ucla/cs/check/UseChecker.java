@@ -30,7 +30,15 @@ public class UseChecker {
 			for (ArrayList<APISeqItem> seq : answer.seq.values()) {
 				ArrayList<Violation> vios = validate(pattern, seq);
 				if(!vios.isEmpty()) {
-					violations.put(answer, vios);
+					ArrayList<Violation> value;
+					if(violations.containsKey(answer)) {
+						value = violations.get(answer);
+					} else {
+						value = new ArrayList<Violation>();
+					}
+					value.addAll(vios);
+					violations.put(answer, value);
+					answer.buggy_seq_count++;
 				}
 				
 				// reset

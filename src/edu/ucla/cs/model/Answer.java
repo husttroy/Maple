@@ -14,6 +14,7 @@ public class Answer {
 	public int viewCount;
 	
 	public HashMap<String, ArrayList<APISeqItem>> seq;
+	public int buggy_seq_count = 0;
 
 	public Answer(String id, String parentId, String body, String score,
 			String isAccepted, String tags, String viewCount) {

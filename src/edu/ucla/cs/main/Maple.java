@@ -14,6 +14,7 @@ import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
 import edu.ucla.cs.model.ControlConstruct;
 import edu.ucla.cs.model.Violation;
+import edu.ucla.cs.model.ViolationType;
 import edu.ucla.cs.search.Search;
 
 public class Maple {
@@ -24,7 +25,12 @@ public class Maple {
 		Search search = new Search();
 		ArrayList<Answer> answers = search.search(apis);
 		
-		System.out.println("Total number of relevant Java snippets: " + answers.size());
+		int count = 0;
+		for(Answer answer : answers) {
+			count += answer.seq.keySet().size();
+		}
+		
+		System.out.println("Total number of relevant Java snippets: " + count);
 
 		// 2. mine sequence patterns and predicate patterns from Github
 		// TODO: currently we assume that we have already retrieved code
@@ -91,12 +97,46 @@ public class Maple {
 		
 		// 3. use the patterns to check for the code snippets in the answers
 		HashMap<Answer, ArrayList<Violation>> violations = new UseChecker().check(lp, answers);
-		System.out.println("Total number of unreliable Java snippets: " + violations.keySet().size());
+		int buggy_snippet_count = 0;
+		for(Answer a : violations.keySet()) {
+			buggy_snippet_count += a.buggy_seq_count;
+		}
+		System.out.println("Total number of unreliable Java snippets: " + buggy_snippet_count);
+		
 		for(Answer a : violations.keySet()) {
 			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);
 			for(Violation v : violations.get(a)) {
 				System.out.println("Violation: " + v.type + ", " + v.item);
 			}
 		}
+		
+		// 4. Group violations based on their types
+		HashSet<Answer> miss_structure = new HashSet<Answer>();
+		HashSet<Answer> disorder_structure = new HashSet<Answer>();
+		HashSet<Answer> miss_api = new HashSet<Answer>();
+		HashSet<Answer> disorder_api = new HashSet<Answer>();
+		HashSet<Answer> wrong_precondition = new HashSet<Answer>();
+		for(Answer a : violations.keySet()) {
+			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);
+			for(Violation v : violations.get(a)) {
+				if(v.type.equals(ViolationType.MissingStructure)) {
+					miss_structure.add(a);
+				} else if (v.type.equals(ViolationType.DisorderStructure)) {
+					disorder_structure.add(a);
+				} else if (v.type.equals(ViolationType.MissingMethodCall)) {
+					miss_api.add(a);
+				} else if (v.type.equals(ViolationType.DisorderMethodCall)) {
+					disorder_api.add(a);
+				} else if (v.type.equals(ViolationType.IncorrectPrecondition)) {
+					wrong_precondition.add(a);
+				}
+			}
+		}
+		
+		System.out.println("Missing Control-flow Structure: " + miss_structure.size());
+		System.out.println("Disorder Control-flow Structure: " + disorder_structure.size());
+		System.out.println("Missing API Call: " + miss_api.size());
+		System.out.println("Disorder API Call: " + disorder_api.size());
+		System.out.println("Incorrect Predicates: " + wrong_precondition.size());
 	}
 }
