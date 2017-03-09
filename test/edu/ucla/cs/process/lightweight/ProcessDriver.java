@@ -1,4 +1,4 @@
-package edu.ucla.cs.process;
+package edu.ucla.cs.process.lightweight;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

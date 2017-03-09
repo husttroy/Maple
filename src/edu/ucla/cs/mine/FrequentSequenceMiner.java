@@ -82,8 +82,8 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		
 		// learn from the output of the traditional output
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-						"/home/troy/research/BOA/Maple/example/output.txt",
-						40,
+						"/home/troy/research/BOA/Maple/example/new_output.txt",
+						41,
 						query);
 		
 		pm.mine();

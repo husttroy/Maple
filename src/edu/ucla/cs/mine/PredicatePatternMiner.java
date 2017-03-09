@@ -3,6 +3,8 @@ package edu.ucla.cs.mine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.regex.Pattern;
+
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
@@ -202,14 +204,14 @@ public abstract class PredicatePatternMiner {
 		String norm = predicate;
 		for (String rcv : rcv_candidates) {
 			if (norm.contains(rcv)) {
-				norm = norm.replaceAll(rcv, "rcv");
+				norm = norm.replaceAll(Pattern.quote(rcv), "rcv");
 			}
 		}
 
 		for (ArrayList<String> args : args_candidates) {
 			for (int i = 0; i < args.size(); i++) {
 				if (norm.contains(args.get(i))) {
-					norm = norm.replaceAll(args.get(i), "arg" + i);
+					norm = norm.replaceAll(Pattern.quote(args.get(i)), "arg" + i);
 				}
 			}
 		}

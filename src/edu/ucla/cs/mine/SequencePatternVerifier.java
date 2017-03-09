@@ -73,15 +73,23 @@ public class SequencePatternVerifier {
 	}
 	
 	public static void main(String[] args){
-		String output = "/home/troy/research/BOA/Slicer/example/output_with_call_in_predicates.txt";
+//		String output = "/home/troy/research/BOA/Slicer/example/output_with_call_in_predicates.txt";
+		String output = "/home/troy/research/BOA/Maple/example/new_output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("new File");
+//		pattern.add("new File");
 		//pattern.add("exists");
 		//pattern.add("IF {");
 		pattern.add("createNewFile");
 		//pattern.add("}");
 		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(output);
-		System.out.print(pv.support.size());
+		System.out.println(pv.support.size());
+		for(String id : pv.seqs.keySet()) {
+			if(!pv.support.containsKey(id)) {
+				// print violations
+				System.out.println(id);
+				System.out.println(pv.seqs.get(id));
+			}
+		}
 	}
 }
