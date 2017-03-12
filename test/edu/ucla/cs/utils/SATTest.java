@@ -51,6 +51,18 @@ public class SATTest {
 		assertEquals("((i0 + 1 > 0) || b0) && b1", rel);
 	}
 	
+
+	@Test
+	public void testSymbolizeBug1() {
+		SAT sat = new SAT();
+		String p1 = "rcv.size()<firstSet.size()";
+		String p2 = "true&&rcv!=null&&rcv.size()>0";
+		String p1_sym = sat.symbolize(p1);
+		String p2_sym = sat.symbolize(p2);
+		assertEquals("i0<i1", p1_sym);
+		assertEquals("true&&i2!=0&&i0>0", p2_sym);
+	}
+	
 	@Test
 	public void testSymbolizeWithLiterals() {
 		SAT sat = new SAT();

@@ -3,8 +3,11 @@ package edu.ucla.cs.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -276,15 +279,41 @@ public class SAT {
 		}
 
 		// replace function calls and variable names with symbols
-		for (String s : bool_symbol_map.keySet()) {
-			String sym = bool_symbol_map.get(s);
+		// sort the keys first based on the length to avoid the case one key is part of the other key
+		Comparator<String> comparator = new Comparator<String>() {
+			  public int compare(String s1, String s2) { 
+			    int diff = s1.length() - s2.length();
+			    if(diff > 0) {
+			    	diff = -1;
+			    } else if (diff < 0) {
+			    	diff = 1;
+			    }
+			    return diff;
+			  } 
+			};
+		Set<String> ks = new HashSet<String>(bool_symbol_map.keySet());
+		ks.addAll(int_symbol_map.keySet());
+		String[] sorted = ks.toArray(new String[0]);
+		Arrays.sort(sorted, comparator);
+		for (String s : sorted) {
+			String sym;
+			if(bool_symbol_map.containsKey(s)) {
+				sym = bool_symbol_map.get(s);
+			} else {
+				sym = int_symbol_map.get(s);
+			}
 			expr = expr.replaceAll(Pattern.quote(s), sym);
 		}
-
-		for (String s : int_symbol_map.keySet()) {
-			String sym = int_symbol_map.get(s);
-			expr = expr.replaceAll(Pattern.quote(s), sym);
-		}
+		
+//		for (String s : bool_symbol_map.keySet()) {
+//			String sym = bool_symbol_map.get(s);
+//			expr = expr.replaceAll(Pattern.quote(s), sym);
+//		}
+//
+//		for (String s : int_symbol_map.keySet()) {
+//			String sym = int_symbol_map.get(s);
+//			expr = expr.replaceAll(Pattern.quote(s), sym);
+//		}
 
 		return expr;
 	}
