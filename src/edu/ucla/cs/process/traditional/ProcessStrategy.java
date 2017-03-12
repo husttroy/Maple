@@ -26,7 +26,7 @@ public abstract class ProcessStrategy {
 	}
 	
 	protected Method getMethodInstance(String line){
-		String key = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+		String key = line.substring(line.indexOf("[") + 1, line.indexOf("][SEQ]"));
 		Method m = null;
 		if(Process.methods.containsKey(key)){
 			m = Process.methods.get(key);
