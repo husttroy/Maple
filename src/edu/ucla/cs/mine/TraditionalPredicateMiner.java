@@ -118,25 +118,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner{
 				continue;
 			}
 			
-			String receiver = null;
-			if(!apiName.startsWith("new ")) {
-				// make sure this is not a call to class constructor since class constructors do not have receivers
-				int index = expr.indexOf(apiName);
-				String sub = expr.substring(0, index);
-				if(sub.endsWith(".")) {
-					// make sure it is not a call to local method since local method calls also do not have receivers
-					if(sub.startsWith("return ")) {
-						// return statement
-						receiver = sub.substring(7, sub.length() - 1);
-					} else if (sub.matches("[a-zA-Z0-9_]+=.+")) {
-						// assignment statement
-						receiver = sub.substring(sub.indexOf("=") + 1, sub.length() - 1);
-					} else {
-						// regular method call
-						receiver = sub.substring(0, sub.length() - 1);
-					}
-				}
-			}
+			String receiver = getReceiver(expr, apiName);
 			
 			// extract the arguments 
 			String args = m.group(3);
@@ -189,6 +171,36 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner{
 		}
 		
 		return predicates;
+	}
+
+	public String getReceiver(String expr, String apiName) {
+		String receiver = null;
+		if(!apiName.startsWith("new ")) {
+			// make sure this is not a call to class constructor since class constructors do not have receivers
+			int index = expr.indexOf(apiName);
+			String sub = expr.substring(0, index);
+			if(sub.endsWith(".")) {
+				// make sure it is not a call to local method since local method calls also do not have receivers
+				if(sub.startsWith("return ")) {
+					// return statement
+					receiver = sub.substring(7, sub.length() - 1);
+				} else if (sub.matches("[a-zA-Z0-9_]+=.+")) {
+					// assignment statement
+					receiver = sub.substring(sub.indexOf("=") + 1, sub.length() - 1);
+				} else {
+					// regular method call
+					receiver = sub.substring(0, sub.length() - 1);
+				}
+				
+				// strip off any type casting before the receiver
+				receiver = receiver.trim();
+				if(receiver.startsWith("(")) {
+					receiver = receiver.substring(receiver.indexOf(')') + 1);
+					receiver = receiver.trim();
+				}
+			}
+		}
+		return receiver;
 	}
 	
 	public ArrayList<String> getArguments(String args) {

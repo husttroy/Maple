@@ -117,6 +117,17 @@ public class PredicateMinerTest {
 	}
 	
 	@Test
+	public void testNormalizeNameInTheMiddle() {
+		String predicate = "it.hasNext() && entity==null";
+		ArrayList<String> rcv_candidates = new ArrayList<String>();
+		rcv_candidates.add("it");
+		ArrayList<ArrayList<String>> args_candidates = new ArrayList<ArrayList<String>>();
+		String norm = PredicatePatternMiner.normalize(predicate, rcv_candidates, args_candidates);
+		String expected = "rcv.hasNext() && entity==null";
+		assertEquals(expected, norm);
+	}
+	
+	@Test
 	public void testContainsVar() {
 		String var1 = "f";
 		String var2 = "file";
@@ -138,5 +149,15 @@ public class PredicateMinerTest {
 		assertEquals("files!=null", PredicatePatternMiner.replaceVar(var1, clause, "rcv"));
 		assertEquals("files!=null", PredicatePatternMiner.replaceVar(var2, clause, "rcv"));
 		assertEquals("rcv!=null", PredicatePatternMiner.replaceVar(var3, clause, "rcv"));
+	}
+	
+	@Test
+	public void testExtractReceiverWithTypeCasting() {
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(
+				new ArrayList<String>());
+		String expr = "e=(Map.Entry) i.next()";
+		String apiName = "next";
+		assertEquals("i",
+				pm.getReceiver(expr, apiName));
 	}
 }
