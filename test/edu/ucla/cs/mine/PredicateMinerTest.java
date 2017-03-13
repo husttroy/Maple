@@ -39,7 +39,7 @@ public class PredicateMinerTest {
 				new ArrayList<String>());
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("c");
-		assertEquals("true && true",
+		assertEquals("true",
 				pm.condition(vars, "a && b"));
 	}
 
@@ -49,7 +49,7 @@ public class PredicateMinerTest {
 				new ArrayList<String>());
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("c");
-		assertEquals("(true || true) && c",
+		assertEquals("(true) && c",
 				pm.condition(vars, "(a || b) && c"));
 	}
 
@@ -85,6 +85,16 @@ public class PredicateMinerTest {
 		assertEquals("!file.exists && true",
 				pm.condition(vars, "!file.exists && !(!destDir.exists)"));
 	}
+	
+	@Test
+	public void testConditionPredicateNegationOfTwoTrue() {
+		LightweightPredicateMiner pm = new LightweightPredicateMiner(
+				new ArrayList<String>());
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("file");
+		assertEquals("!file.exists && true",
+				pm.condition(vars, "!file.exists && !(a && b) && !(b || c) && !(a&&b&&c) && !(a||b&&c)"));
+	}
 
 	@Test
 	public void conditionPredicateWithArguments() {
@@ -112,7 +122,7 @@ public class PredicateMinerTest {
 				new ArrayList<String>());
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("f");
-		assertEquals("true && true",
+		assertEquals("true",
 				pm.condition(vars, "files != null && files.length > 0"));
 	}
 	

@@ -25,6 +25,12 @@ public class Search {
 			boolean flag1 = false;
 			while(iter2.hasNext()) {
 				String snippet = iter2.next();
+				// coarse-grained filtering by checking whether it is just a single code term
+				if(!snippet.contains(System.lineSeparator()) && !snippet.contains(";")) {
+					iter2.remove();
+					continue;
+				}
+				
 				// coarse-grained filtering by checking whether the snippet contains all keywords
 				boolean flag2 = false;
 				for(String keyword: keywords) {

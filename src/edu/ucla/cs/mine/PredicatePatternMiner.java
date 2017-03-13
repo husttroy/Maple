@@ -189,13 +189,19 @@ public abstract class PredicatePatternMiner {
 		// a && !b | a ==> a && !true, which is always evaluated to false
 		// Such conditioning  is incomplete because !b should be replaced with true instead of b 
 		// So we add the following replacement statement to replace !true with true
-		while(res.matches("^.*\\!true.*$") || res.matches("^.*\\!\\(true\\).*$")) {
-			if(res.matches("^.*\\!true.*$")) {
+		// we also need to handle cases such as !(true && true), !(true || true), !(true || true && true), etc.
+		while(res.matches("^.*true(\\s)*&&(\\s)*true.*$") || res.matches("^.*true(\\s)*\\|\\|(\\s)*true.*$") || res.matches("^.*\\!true.*$") || res.matches("^.*\\!\\(true\\).*$")) {
+			if(res.matches("^.*true(\\s)*&&(\\s)*true.*$")) {
+				res = res.replaceAll("true(\\s)*&&(\\s)*true", "true");
+			} else if (res.matches("^.*true(\\s)*\\|\\|(\\s)*true.*$")) {
+				res = res.replaceAll("true(\\s)*\\|\\|(\\s)*true", "true");
+			} else if(res.matches("^.*\\!true.*$")) {
 				res = res.replaceAll("\\!true", "true");
 			} else {
 				res = res.replaceAll("\\!\\(true\\)", "true");
 			}
 		}
+		
 		return res;
 	}
 	
