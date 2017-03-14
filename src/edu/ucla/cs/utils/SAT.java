@@ -185,8 +185,12 @@ public class SAT {
 	 * @return
 	 */
 	public String symbolize(String expr) {
+		// type erasure---get rid of '<' and '>' in parameterized types to avoid them messing up splitting based on arithmetic operators
+		expr = expr.replaceAll("<[a-zA-Z0-9\\?\\s]*>", "");
+		
 		// first tokenize this expression by logic operators
 		String[] arr = expr.split("&&|\\|\\||\\!(?!=)");
+		
 		for (String e : arr) {
 			e = e.trim();
 

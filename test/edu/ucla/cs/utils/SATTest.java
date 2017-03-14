@@ -50,7 +50,6 @@ public class SATTest {
 				.symbolize("((s.length() + 1 > 0) || flag) && Environment.SSS");
 		assertEquals("((i0 + 1 > 0) || b0) && b1", rel);
 	}
-	
 
 	@Test
 	public void testSymbolizeBug1() {
@@ -61,6 +60,17 @@ public class SATTest {
 		String p2_sym = sat.symbolize(p2);
 		assertEquals("i0<i1", p1_sym);
 		assertEquals("true&&i2!=0&&i0>0", p2_sym);
+	}
+	
+	/**
+	 * http://stackoverflow.com/questions/12625038
+	 */
+	@Test
+	public void testSymbolizePredicateWithParameterizedTypes() {
+		SAT sat = new SAT();
+		String p1 = "new ArrayList<>(rcv).size()>0";
+		String p1_sym = sat.symbolize(p1);
+		assertEquals("i0>0", p1_sym);
 	}
 	
 	@Test
