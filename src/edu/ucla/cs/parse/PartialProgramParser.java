@@ -25,7 +25,12 @@ public class PartialProgramParser {
 			// no class header, try to parse
 			String s1 = "public class sample{\n" + code + "\n}";
 			parser = getASTParser(s1);
-			cu = parser.createAST(null);
+			try {
+				cu = parser.createAST(null);
+			} catch(Exception e) {
+				// parse error
+				return null;
+			}
 			cu.accept(new ASTVisitor() {
 				public boolean visit(MethodDeclaration node) {
 					// find the method header
@@ -40,7 +45,13 @@ public class PartialProgramParser {
 						+ "\n}\n}";
 				cutype = 2;
 				parser = getASTParser(s1);
-				cu = parser.createAST(null);
+				try {
+					cu = parser.createAST(null);
+				} catch(Exception e) {
+					// parse error
+					return null;
+				}
+				
 			}
 			
 			if (flag == 2) {
@@ -48,13 +59,23 @@ public class PartialProgramParser {
 				s1 = "public class sample{\n" + code + "\n}";
 				cutype = 1;
 				parser = getASTParser(s1);
-				cu = parser.createAST(null);
+				try {
+					cu = parser.createAST(null);
+				} catch(Exception e) {
+					// parse error
+					return null;
+				}
 			}
 		} else {
 			// this code snippet has both class header and method header
 			cutype = 0;
 			parser = getASTParser(code);
-			cu = parser.createAST(null);
+			try {
+				cu = parser.createAST(null);
+			} catch(Exception e) {
+				// parse error
+				return null;
+			}
 		}
 		return (CompilationUnit) cu;
 	}

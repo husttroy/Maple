@@ -74,13 +74,16 @@ public class SequencePatternVerifier {
 	
 	public static void main(String[] args){
 //		String output = "/home/troy/research/BOA/Slicer/example/output_with_call_in_predicates.txt";
-		String output = "/home/troy/research/BOA/Maple/example/new_output.txt";
+//		String output = "/home/troy/research/BOA/Maple/example/new_output.txt";
+		String output = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
 //		pattern.add("new File");
 		//pattern.add("exists");
 		//pattern.add("IF {");
-		pattern.add("createNewFile");
+		//pattern.add("createNewFile");
 		//pattern.add("}");
+		pattern.add("hasNext");
+		pattern.add("next");
 		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(output);
 		System.out.println(pv.support.size());

@@ -3,6 +3,7 @@ package edu.ucla.cs.process.traditional;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
@@ -53,10 +54,10 @@ public class Process {
 		
 		public static void main(String[] args) {
 			Process p = new Process();
+			String seq = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
 			try {
 				p.s = new SequenceProcessor();
-//				p.processByLine("/home/troy/research/BOA/Maple/example/new_sequence.txt");
-				p.processByLine("/home/troy/research/BOA/Maple/example/HashMap.get/sequence.txt");
+				p.processByLine(seq);
 				
 				// cross-check
 				// p.crosscheck();
@@ -65,6 +66,22 @@ public class Process {
 				for(String key : methods.keySet()) {
 					System.out.println(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq);
 				}
+				
+				// write to file
+//				File f_seq = new File(seq);
+//				String dir = f_seq.getParent();
+//				File output = new File(dir + "large-output.txt");
+//				
+//				if(output.exists()) {
+//					output.delete();
+//					output.createNewFile();
+//				}
+//				
+//				try (FileWriter fw = new FileWriter(output, true)) {
+//					for(String key : methods.keySet()) {
+//						fw.append(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq + System.lineSeparator());
+//					}
+//				}
 			} catch(IOException e) {
 				e.printStackTrace();
 			}

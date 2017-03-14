@@ -15,13 +15,13 @@ import org.apache.commons.lang3.StringUtils;
 public class TraditionalPredicateMiner extends PredicatePatternMiner{
 	static final Pattern METHOD_CALL = Pattern.compile("((new )?[a-zA-Z0-9_]+)\\(((.+),)*\\)");
 
-//	final String path = "/home/troy/research/BOA/Maple/example/new_sequence.txt";
-//	final String sequence_path = "/home/troy/research/BOA/Maple/example/new_output.txt";
-	final String path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
-	final String sequence_path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
+	String path;
+	String sequence_path;
 	
-	public TraditionalPredicateMiner(ArrayList<String> pattern) {
+	public TraditionalPredicateMiner(ArrayList<String> pattern, String raw_output, String seq) {
 		super(pattern);
+		this.path = raw_output;
+		this.sequence_path = seq;
 	}
 
 	@Override
@@ -229,7 +229,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner{
 		pattern.add("LOOP {");
 		pattern.add("next");
 		pattern.add("}");
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern);
+		String path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		pm.process();
 	}
 }

@@ -330,6 +330,7 @@ public abstract class PredicatePatternMiner {
 			ArrayList<PredicateCluster> pcs = clusters.get(api);
 			for(PredicateCluster pc : pcs) {
 				if(pc.cluster.size() > max) {
+					max = pc.cluster.size();
 					pred = pc.shortest;
 				}
 			}

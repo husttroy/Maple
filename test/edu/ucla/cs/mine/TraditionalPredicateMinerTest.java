@@ -13,7 +13,9 @@ public class TraditionalPredicateMinerTest {
 		String args = "getMyPath(a,c,d)+File.separator+SAVE_FILE_NAME,File.separator(d,)+SAVE_FILE_NAME,";
 		// mock pattern
 		ArrayList<String> pattern = new ArrayList<String>();
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern);
+		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		ArrayList<String> list = pm.getArguments(args);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("getMyPath(a,c,d)+File.separator+SAVE_FILE_NAME");
@@ -26,7 +28,9 @@ public class TraditionalPredicateMinerTest {
 		String args = "\"index=\"+curIndexthis+\"\\n\",";
 		// mock pattern
 		ArrayList<String> pattern = new ArrayList<String>();
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern);
+		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		ArrayList<String> list = pm.getArguments(args);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("\"index=\"+curIndexthis+\"\\n\"");
@@ -39,7 +43,9 @@ public class TraditionalPredicateMinerTest {
 		String predicate = "!file.exists()";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("createNewFile");
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern);
+		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, predicate);
 		ArrayList<String> predicates = map.get("createNewFile");
 		ArrayList<String> expected = new ArrayList<String>();
@@ -54,7 +60,9 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("new String");
 		pattern.add("getBytes");
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern);
+		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, predicate);
 		ArrayList<String> predicates1 = map.get("new String");
 		ArrayList<String> expected1 = new ArrayList<String>();
@@ -73,7 +81,9 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("createNewFile");
 		pattern.add("getMyPath");
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern);
+		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, predicate);
 		ArrayList<String> predicates1 = map.get("createNewFile");
 		ArrayList<String> expected1 = new ArrayList<String>();

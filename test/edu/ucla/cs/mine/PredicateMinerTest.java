@@ -163,8 +163,10 @@ public class PredicateMinerTest {
 	
 	@Test
 	public void testExtractReceiverWithTypeCasting() {
+		String path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(
-				new ArrayList<String>());
+				new ArrayList<String>(), path, sequence_path);
 		String expr = "e=(Map.Entry) i.next()";
 		String apiName = "next";
 		assertEquals("i",
