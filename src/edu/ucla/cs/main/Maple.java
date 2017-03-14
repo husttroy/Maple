@@ -9,6 +9,7 @@ import edu.ucla.cs.mine.FrequentSequenceMiner;
 import edu.ucla.cs.mine.LightweightPredicateMiner;
 import edu.ucla.cs.mine.SequencePatternMiner;
 import edu.ucla.cs.mine.PredicatePatternMiner;
+import edu.ucla.cs.mine.TraditionalPredicateMiner;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
@@ -18,12 +19,24 @@ import edu.ucla.cs.model.ViolationType;
 import edu.ucla.cs.search.Search;
 
 public class Maple {
-	public static void main(String[] args) {
+	HashSet<String> types;
+	HashSet<String> apis;
+	String raw_output;
+	String seq;
+	int min_support;
+	
+	public Maple(HashSet<String> types, HashSet<String> apis, String raw_output, String seq, int min_support) {
+		this.types = types;
+		this.apis = apis;
+		this.raw_output = raw_output;
+		this.seq = seq;
+		this.min_support = min_support;
+	}
+	
+	public void run() {
 		// 1. find relevant code snippets given one or more APIs
-		HashSet<String> apis = new HashSet<String>();
-		apis.add("createNewFile");
 		Search search = new Search();
-		ArrayList<Answer> answers = search.search(apis);
+		ArrayList<Answer> answers = search.search(types, apis);
 		
 		int count = 0;
 		for(Answer answer : answers) {
@@ -39,17 +52,29 @@ public class Maple {
 		// TODO: we also assume that the raw output from BOA has been
 		// pre-processed, e.g., sliced for the lightweight approach, formatted
 		// for the traditional approach
+		ArrayList<APISeqItem> lp = find_longest_common_pattern();
+		
+		// 3. detect API usage anomalies
+		HashMap<Answer, ArrayList<Violation>> violations = detectAnomaly(
+				answers, lp);
+		
+		// 4. classify these API usage anomalies
+		classify(violations);
+	}
+
+	public ArrayList<APISeqItem> find_longest_common_pattern() {
 		SequencePatternMiner pm = new FrequentSequenceMiner(
 				"/home/troy/research/BOA/Maple/mining/freq_seq.py",
-				"/home/troy/research/BOA/Maple/example/output.txt",
-				40, apis);
+				seq,
+				min_support, apis);
 		HashMap<ArrayList<String>, Integer>  patterns = pm.mine();
 		ArrayList<ArrayList<APISeqItem>> composed_patterns = new ArrayList<ArrayList<APISeqItem>>();
 		for(ArrayList<String> pattern : patterns.keySet()) {
 			// print the sequence patterns
 			System.out.println(pattern + ":" + patterns.get(pattern));
 			
-			PredicatePatternMiner pm2 = new LightweightPredicateMiner(pattern);
+//			PredicatePatternMiner pm2 = new LightweightPredicateMiner(pattern);
+			PredicatePatternMiner pm2 = new TraditionalPredicateMiner(pattern, raw_output, seq);
 			pm2.process();
 			HashMap<String, String> predicate_patterns = pm2.find_the_most_common_predicate();
 			ArrayList<APISeqItem> p = new ArrayList<APISeqItem>();
@@ -94,9 +119,20 @@ public class Maple {
 				lp = pattern;
 			}
 		}
-		
-		// 3. use the patterns to check for the code snippets in the answers
-		HashMap<Answer, ArrayList<Violation>> violations = new UseChecker().check(lp, answers);
+		return lp;
+	}
+
+	/**
+	 * 
+	 * use the pattern to check for the code snippets in the answers
+	 * 
+	 * @param snippets
+	 * @param pattern
+	 * @return
+	 */
+	public static HashMap<Answer, ArrayList<Violation>> detectAnomaly(
+			ArrayList<Answer> snippets, ArrayList<APISeqItem> pattern) {
+		HashMap<Answer, ArrayList<Violation>> violations = new UseChecker().check(pattern, snippets);
 		int buggy_snippet_count = 0;
 		for(Answer a : violations.keySet()) {
 			buggy_snippet_count += a.buggy_seq_count;
@@ -109,8 +145,17 @@ public class Maple {
 				System.out.println("Violation: " + v.type + ", " + v.item);
 			}
 		}
-		
-		// 4. Group violations based on their types
+		return violations;
+	}
+
+	/**
+	 * 
+	 * Group violations based on their types
+	 * 
+	 * @param violations
+	 */
+	public static void classify(
+			HashMap<Answer, ArrayList<Violation>> violations) {
 		HashSet<Answer> miss_structure = new HashSet<Answer>();
 		HashSet<Answer> disorder_structure = new HashSet<Answer>();
 		HashSet<Answer> miss_api = new HashSet<Answer>();

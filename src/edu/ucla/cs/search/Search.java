@@ -10,9 +10,12 @@ import edu.ucla.cs.model.Answer;
 import edu.ucla.cs.parse.PartialProgramAnalyzer;
 
 public class Search {
-	public ArrayList<Answer> search(HashSet<String> keywords) {
+	public ArrayList<Answer> search(HashSet<String> types, HashSet<String> apis) {
 		MySQLAccess access = new MySQLAccess();
 		access.connect();
+		HashSet<String> keywords = new HashSet<String>();
+		keywords.addAll(types);
+		keywords.addAll(apis);
 		ArrayList<Answer> answers = access.searchCodeSnippets(keywords);
 		access.close();
 		
@@ -46,10 +49,20 @@ public class Search {
 				}
 				
 				// fine-grained filtering by parsing the code snippet to check for ambiguous names
-				PartialProgramAnalyzer analyzer = new PartialProgramAnalyzer();
-				ArrayList<APISeqItem> seq = analyzer.analyze(snippet);
+				PartialProgramAnalyzer analyzer;
+				ArrayList<APISeqItem> seq = null;
+				try {
+					analyzer = new PartialProgramAnalyzer(snippet);
+					seq = analyzer.retrieveAPICallSequences();
+				} catch (Exception e) {
+					// parse error
+					iter2.remove();
+					continue;
+				}
+				
 				if(seq == null) {
 					iter2.remove();
+					continue;
 				} else {
 					// check whether the API call sequences contain all queried keywords
 					HashSet<String> calls = new HashSet<String>();
@@ -60,14 +73,26 @@ public class Search {
 						}
 					}
 					
-					if(calls.containsAll(keywords)) {
-						flag1 = true;
-						answer.seq.put(snippet, seq);
-					} else {
+					if(!calls.containsAll(apis)) {
 						// the code snippet does not contain all queried keywords, remove it
 						iter2.remove();
+						continue;
+					} else {
+						if(!types.isEmpty()) {
+							// additional check on types to handle ambiguous API calls
+							HashSet<String> ts = analyzer.retrieveTypes();
+							if(!ts.containsAll(types)) {
+								iter2.remove();
+								continue;
+							} else {
+								answer.seq.put(snippet, seq);
+								flag1 = true;
+							}
+						} else {
+							answer.seq.put(snippet, seq);
+							flag1 = true;
+						}
 					}
-					
 				}
 			}
 			
