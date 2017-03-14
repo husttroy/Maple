@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.TryStatement;
+import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
 import edu.ucla.cs.model.APICall;
@@ -92,6 +93,11 @@ public class APICallVisitor extends ASTVisitor {
 		// System.out.println("Try");
 		seq.add(ControlConstruct.TRY);
 
+		List<VariableDeclarationExpression> rsrcs = node.resources();
+		for(VariableDeclarationExpression rsrc : rsrcs) {
+			rsrc.accept(this);
+		}
+		
 		node.getBody().accept(this);
 		this.seq.add(ControlConstruct.END_BLOCK);
 
@@ -159,6 +165,11 @@ public class APICallVisitor extends ASTVisitor {
 
 	public boolean visit(ForStatement node) {
 		// System.out.println("Loop");
+		List<VariableDeclarationExpression> inits = node.initializers();
+		for(VariableDeclarationExpression init : inits) {
+			init.accept(this);
+		}
+		
 		seq.add(ControlConstruct.LOOP);
 
 		String oldCond = condition;
