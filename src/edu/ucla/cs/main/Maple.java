@@ -69,11 +69,11 @@ public class Maple {
 				min_support, apis);
 		HashMap<ArrayList<String>, Integer>  patterns = pm.mine();
 		ArrayList<ArrayList<APISeqItem>> composed_patterns = new ArrayList<ArrayList<APISeqItem>>();
+		HashMap<String, String> cache_predicate_patterns = new HashMap<String, String>();
 		for(ArrayList<String> pattern : patterns.keySet()) {
 			// print the sequence patterns
 			System.out.println(pattern + ":" + patterns.get(pattern));
-			
-//			PredicatePatternMiner pm2 = new LightweightPredicateMiner(pattern);
+			// TODO: can be optimized by caching the mined weakest precondition of an API call
 			PredicatePatternMiner pm2 = new TraditionalPredicateMiner(pattern, raw_output, seq);
 			pm2.process();
 			HashMap<String, String> predicate_patterns = pm2.find_the_most_common_predicate();

@@ -73,6 +73,17 @@ public class SATTest {
 		assertEquals("i0>0", p1_sym);
 	}
 	
+	/**
+	 * http://stackoverflow.com/questions/26032257
+	 */
+	@Test
+	public void testSymbolizeVariableNamedAsI() {
+		SAT sat = new SAT();
+		String p1 = "i <= rcv.count()";
+		String p1_sym = sat.symbolize(p1);
+		assertEquals("i0 <= i1", p1_sym);
+	}
+	
 	@Test
 	public void testSymbolizeWithLiterals() {
 		SAT sat = new SAT();

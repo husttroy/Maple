@@ -283,7 +283,17 @@ public class SAT {
 		}
 
 		// replace function calls and variable names with symbols
-		// sort the keys first based on the length to avoid the case one key is part of the other key
+		// first check whether there are any variables named as i or b
+		if(bool_symbol_map.keySet().contains("b")) {
+			// replace it first
+			expr = expr.replaceAll("(?<![a-zA-Z0-9_])b(?![a-zA-Z0-9_])", bool_symbol_map.get("b"));
+		}
+		if(int_symbol_map.keySet().contains("i")) {
+			// replace it first
+			expr = expr.replaceAll("(?<![a-zA-Z0-9_])i(?![a-zA-Z0-9_])", int_symbol_map.get("i"));
+		}
+		
+		// then sort the keys first based on the length to avoid the case one key is part of the other key
 		Comparator<String> comparator = new Comparator<String>() {
 			  public int compare(String s1, String s2) { 
 			    int diff = s1.length() - s2.length();
@@ -297,6 +307,9 @@ public class SAT {
 			};
 		Set<String> ks = new HashSet<String>(bool_symbol_map.keySet());
 		ks.addAll(int_symbol_map.keySet());
+		// remove b and i (if any) because we have already symbolized them
+		ks.remove("b");
+		ks.remove("i");
 		String[] sorted = ks.toArray(new String[0]);
 		Arrays.sort(sorted, comparator);
 		for (String s : sorted) {
