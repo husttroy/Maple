@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class FileUtils {
 	
@@ -39,11 +41,73 @@ public class FileUtils {
 		}
 	}
 	
+	public static void writeArrayToFile(ArrayList<String> ss, String path) {
+		String content = "";
+		for(int i = 0; i < ss.size() - 1; i++) {
+			content += ss.get(i) + System.lineSeparator();
+		}
+		
+		if(ss.size() - 1 >= 0) {
+			content += ss.get(ss.size());
+		}
+		
+		writeStringToFile(content, path);;
+	}
+	
 	public static void delete(String path) {
 		File f = new File(path);
 		if(f.exists()) {
 			f.delete();
 		}
+	}
+	
+	public static void removeLines(String path, HashSet<String> lines) {
+		File file = new File(path);
+		File temp = new File(path + ".temp");
+		
+		if(temp.exists()) {
+			temp.delete();
+		}
+		
+		try {
+			temp.createNewFile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		BufferedReader reader = null;
+		BufferedWriter writer = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			writer = new BufferedWriter(new FileWriter(temp));
+			String line;
+			while((line = reader.readLine()) != null) {
+				if(lines.contains(line)) {
+					continue;
+				}
+				
+				writer.write(line + System.lineSeparator());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		temp.renameTo(file);
 	}
 
 }

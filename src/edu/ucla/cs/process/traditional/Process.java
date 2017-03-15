@@ -26,8 +26,6 @@ public class Process {
 			    	if(line.startsWith("results[")) {
 			    		s.process(line);
 			    	}
-			    	// DEBUG
-			    	System.out.println(line);
 			    }      
 			}
 		}
@@ -59,7 +57,7 @@ public class Process {
 		public static void main(String[] args) {
 			Process p = new Process();
 //			String seq = "/home/troy/research/BOA/Maple/example/Iterator.next/large-sequence.txt";
-			String seq = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
+			String seq = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence-with-troubled-lines.txt";
 			try {
 				p.s = new SequenceProcessor();
 				p.processByLine(seq);
@@ -97,5 +95,8 @@ public class Process {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
+			
+			// make sure to exit and kill all the other threads
+			System.exit(0);
 		}
 }
