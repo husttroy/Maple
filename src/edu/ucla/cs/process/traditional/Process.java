@@ -23,7 +23,11 @@ public class Process {
 				String line = null;
 			    while ((line = br.readLine()) != null) {
 			        //process each line based on the strategy
-			        s.process(line);
+			    	if(line.startsWith("results[")) {
+			    		s.process(line);
+			    	}
+			    	// DEBUG
+			    	System.out.println(line);
 			    }      
 			}
 		}
@@ -54,7 +58,8 @@ public class Process {
 		
 		public static void main(String[] args) {
 			Process p = new Process();
-			String seq = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
+//			String seq = "/home/troy/research/BOA/Maple/example/Iterator.next/large-sequence.txt";
+			String seq = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
 			try {
 				p.s = new SequenceProcessor();
 				p.processByLine(seq);
@@ -63,25 +68,32 @@ public class Process {
 				// p.crosscheck();
 				
 				// print the split method calls
-				for(String key : methods.keySet()) {
-					System.out.println(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq);
-				}
+//				for(String key : methods.keySet()) {
+//					System.out.println(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq);
+//				}
 				
 				// write to file
-//				File f_seq = new File(seq);
-//				String dir = f_seq.getParent();
-//				File output = new File(dir + "large-output.txt");
-//				
-//				if(output.exists()) {
-//					output.delete();
-//					output.createNewFile();
-//				}
-//				
-//				try (FileWriter fw = new FileWriter(output, true)) {
-//					for(String key : methods.keySet()) {
-//						fw.append(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq + System.lineSeparator());
-//					}
-//				}
+				File f_seq = new File(seq);
+				String dir = f_seq.getParent();
+				File output = new File(dir + File.separator + "/large-output.txt");
+				
+				if(output.exists()) {
+					output.delete();
+					output.createNewFile();
+				}
+				
+				try (FileWriter fw = new FileWriter(output, true)) {
+					int size = methods.keySet().size();
+					int count = 0;
+					for(String key : methods.keySet()) {
+						if(count < size - 1) {
+							fw.append(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq + System.lineSeparator());
+						} else {
+							fw.append(key.replaceAll("\\!", " ** ") + "---" + methods.get(key).seq);
+						}
+						count++;
+					}
+				}
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
