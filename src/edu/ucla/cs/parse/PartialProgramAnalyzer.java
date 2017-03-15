@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import edu.ucla.cs.model.APISeqItem;
@@ -19,6 +20,11 @@ public class PartialProgramAnalyzer {
 		this.cu = parser.getCompilationUnitFromString(code);
 		if(this.cu == null) {
 			throw new Exception("Partial Program Parse Error!");
+		} else {
+			IProblem[] errors = this.cu.getProblems();
+			if(errors != null && errors.length != 0) {
+				throw new Exception("Partial Program Parse Error!");
+			}
 		}
 	}
 	

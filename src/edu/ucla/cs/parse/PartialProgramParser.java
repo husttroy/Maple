@@ -1,7 +1,9 @@
 package edu.ucla.cs.parse;
 
 import java.io.IOException;
+import java.util.Map;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -82,10 +84,12 @@ public class PartialProgramParser {
 
 	private ASTParser getASTParser(String sourceCode) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
-		parser.setResolveBindings(true);
 		parser.setStatementsRecovery(true);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(sourceCode.toCharArray());
+		Map options = JavaCore.getOptions();
+		JavaCore.setComplianceOptions(JavaCore.VERSION_1_5, options);
+		parser.setCompilerOptions(options);
 		return parser;
 	}
 }
