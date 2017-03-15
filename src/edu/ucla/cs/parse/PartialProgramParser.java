@@ -81,7 +81,7 @@ public class PartialProgramParser {
 	}
 
 	private ASTParser getASTParser(String sourceCode) {
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		parser.setResolveBindings(true);
 		parser.setStatementsRecovery(true);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);

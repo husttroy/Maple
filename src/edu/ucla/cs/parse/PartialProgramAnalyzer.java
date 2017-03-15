@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import edu.ucla.cs.model.APISeqItem;
+import edu.ucla.cs.utils.FileUtils;
 
 public class PartialProgramAnalyzer {
 	CompilationUnit cu;
@@ -39,5 +40,12 @@ public class PartialProgramAnalyzer {
 		APITypeVisitor visitor = new APITypeVisitor();
 		this.cu.accept(visitor);
 		return visitor.types;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		String sample = "/home/troy/research/BOA/Maple/example/sample.txt";
+		String snippet = FileUtils.readFileToString(sample);
+		PartialProgramAnalyzer a = new PartialProgramAnalyzer(snippet);
+		System.out.println(a.retrieveAPICallSequences());	
 	}
 }

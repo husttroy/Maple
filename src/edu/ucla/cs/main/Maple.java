@@ -162,7 +162,6 @@ public class Maple {
 		HashSet<Answer> disorder_api = new HashSet<Answer>();
 		HashSet<Answer> wrong_precondition = new HashSet<Answer>();
 		for(Answer a : violations.keySet()) {
-			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);
 			for(Violation v : violations.get(a)) {
 				if(v.type.equals(ViolationType.MissingStructure)) {
 					miss_structure.add(a);

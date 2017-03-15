@@ -3,6 +3,7 @@ package edu.ucla.cs.parse;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CatchClause;
@@ -12,8 +13,10 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.WhileStatement;
@@ -25,6 +28,7 @@ import edu.ucla.cs.model.ControlConstruct;
 public class APICallVisitor extends ASTVisitor {
 	public ArrayList<APISeqItem> seq = new ArrayList<APISeqItem>();
 	public String condition = "true";
+	public ArrayList<String> exits = new ArrayList<String>(); // remember the path conditions of all previous exits
 
 	// visit method calls including regular method calls, calls to super
 	// methods, and class instantiation
@@ -49,7 +53,11 @@ public class APICallVisitor extends ASTVisitor {
 			arg.accept(this);
 		}
 
-		seq.add(new APICall(node.getName().toString(), condition, receiver, arguments));
+		String path_condition = condition;
+		for(String exit : exits) {
+			path_condition += " && !(" + exit + ")";
+		}
+		seq.add(new APICall(node.getName().toString(), path_condition, receiver, arguments));
 
 		return false;
 	}
@@ -65,8 +73,12 @@ public class APICallVisitor extends ASTVisitor {
 			arguments.add(arg.toString());
 			arg.accept(this);
 		}
-
-		seq.add(new APICall("super." + node.getName().toString(), condition, null, arguments));
+		
+		String path_condition = condition;
+		for(String exit : exits) {
+			path_condition += " && !(" + exit + ")"; 
+		}
+		seq.add(new APICall("super." + node.getName().toString(), path_condition, null, arguments));
 
 		return false;
 	}
@@ -82,8 +94,12 @@ public class APICallVisitor extends ASTVisitor {
 			arguments.add(arg.toString());
 			arg.accept(this);
 		}
-
-		seq.add(new APICall("new " + node.getType().toString(), condition, null, arguments));
+		
+		String path_condition = condition;
+		for(String exit : exits) {
+			path_condition += " && !(" + exit + ")";
+		}
+		seq.add(new APICall("new " + node.getType().toString(), path_condition, null, arguments));
 
 		return false;
 	}
@@ -139,11 +155,13 @@ public class APICallVisitor extends ASTVisitor {
 		} else {
 			condition = oldCond + " && " + expr.toString();
 		}
-
+		
+		// reset the exit flag for the if branch
 		Statement thenStmt = node.getThenStatement();
 		thenStmt.accept(this);
 		this.seq.add(ControlConstruct.END_BLOCK);
 
+		// reset the exit flag for the if branch
 		Statement elseStmt = node.getElseStatement();
 		if (elseStmt != null) {
 			// System.out.println("else");
@@ -242,5 +260,17 @@ public class APICallVisitor extends ASTVisitor {
 
 	public void endVisit(WhileStatement node) {
 		this.seq.add(ControlConstruct.END_BLOCK);
+	}
+	
+	public void endVisit(ReturnStatement node) {
+		if(!condition.equals("true") && !(node.getParent() instanceof Block && node.getParent().getParent() instanceof CatchClause)) {
+			exits.add(condition);
+		}
+	}
+	
+	public void endVisit(ThrowStatement node) {
+		if(!condition.equals("true") && !(node.getParent() instanceof Block && node.getParent().getParent() instanceof CatchClause)) {
+			exits.add(condition);
+		}
 	}
 }
