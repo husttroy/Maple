@@ -39,6 +39,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		try (BufferedReader br = new BufferedReader(new FileReader(output))) {
 			String line;
 			while ((line = br.readLine()) != null) {
+				if(!line.startsWith("results[")) {
+					continue;
+				}
 				String key = line.substring(line.indexOf("[") + 1,
 						line.indexOf("][SEQ]"));
 				key = key.replaceAll("\\!", " ** ");
