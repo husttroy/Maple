@@ -255,6 +255,11 @@ public class SAT {
 					// treat these sub-subexpressions as integers
 					for (String sub : arr2) {
 						sub = sub.trim();
+						if(sub.isEmpty()) {
+							// saw this happen when there is a negative integer like -1
+							// the negative sign is treated as a subtraction operator and split, leading to an empty string between - and 1
+							continue;
+						}
 						// strip unbalanced parentheses
 						sub = stripUnbalancedParentheses(sub);
 

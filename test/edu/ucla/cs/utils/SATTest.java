@@ -116,6 +116,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizeNegativeIntegers() {
+		SAT sat = new SAT();
+		String p = "!(from.equals(rcv,)) && true && !(rcv.getName().indexOf('.',)==-1) && !rcv.exists()";
+		String s = sat.symbolize(p);
+		assertEquals("!b0 && true && !(i0==-1) && !b2", s);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";
