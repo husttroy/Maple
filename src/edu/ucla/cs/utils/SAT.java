@@ -1,8 +1,10 @@
 package edu.ucla.cs.utils;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -188,6 +190,9 @@ public class SAT {
 		// type erasure---get rid of '<' and '>' in parameterized types to avoid them messing up splitting based on arithmetic operators
 		expr = expr.replaceAll("<[a-zA-Z0-9\\?\\s]*>", "");
 		
+		// strip off string literals and the concatenation of strings
+		expr = stripOffStringLiteralsAndConcatenations(expr);
+		
 		// first tokenize this expression by logic operators
 		String[] arr = expr.split("&&|\\|\\||\\!(?!=)");
 		
@@ -361,19 +366,87 @@ public class SAT {
 			expr = expr.replaceAll(Pattern.quote(s), sym);
 		}
 		
-//		for (String s : bool_symbol_map.keySet()) {
-//			String sym = bool_symbol_map.get(s);
-//			expr = expr.replaceAll(Pattern.quote(s), sym);
-//		}
-//
-//		for (String s : int_symbol_map.keySet()) {
-//			String sym = int_symbol_map.get(s);
-//			expr = expr.replaceAll(Pattern.quote(s), sym);
-//		}
-
 		return expr;
 	}
 	
+	private String stripOffStringLiteralsAndConcatenations(String expr) {
+		ArrayList<Point> ranges = new ArrayList<Point>();
+		char[] chars = expr.toCharArray();
+		boolean inQuote = false;
+		int current_quote_starts = -1;
+		for(int i = 0; i < chars.length; i++) {
+			char cur = chars[i];
+			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
+				// escape quote, still in quote
+			} else if(cur == '"' && !inQuote) {
+				// quote starts
+				current_quote_starts = i;
+				inQuote = true;
+			} else if(cur == '"' && inQuote) {
+				// quote ends
+				// add ranges of the quoted string to the list
+				ranges.add(new Point(current_quote_starts, i));
+				// reset
+				inQuote = false;
+				current_quote_starts = -1;
+			} else if(cur == '+' && !inQuote) {
+				boolean isStringConcatenation = false;
+				// look backward to check if it is string concatenation
+				int backward = i - 1;
+				while(backward >= 0) {
+					char c = chars[backward];
+					if(c == ' ') {
+						// continue to look backward
+						backward --;
+					} else if (c == '"') {
+						// quote ends
+						isStringConcatenation = true;
+						break;
+					} else {
+						// not a string concatenation
+						break;
+					}
+				}
+				
+				// look forward to check if it is string concatenation
+				int forward = i + 1;
+				while(forward < chars.length) {
+					char c = chars[forward];
+					if(c == ' ') {
+						// continue to look backward
+						forward ++;
+					} else if (c == '"') {
+						// quote starts
+						isStringConcatenation = true;
+						break;
+					} else {
+						// not a string concatenation
+						break;
+					}
+				}
+				
+				if(isStringConcatenation) {
+					// remove this + operator
+					ranges.add(new Point(i, i));
+				}
+			}
+		}
+		
+		// remove whatever in the range list
+		String rel = "";
+		int cur = 0;
+		for(Point p : ranges) {
+			rel += expr.substring(cur, p.x);
+			cur = p.y + 1;
+		}
+		
+		if(cur <= expr.length()) {
+			rel += expr.substring(cur);
+		}
+		
+		return rel;
+	}
+
 	/**
 	 * 
 	 * Strip off unnecessary parentheses, we assume that the number of open

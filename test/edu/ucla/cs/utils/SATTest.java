@@ -92,7 +92,7 @@ public class SATTest {
 	}
 	
 	@Test
-	public void dontTreatFalseAsInteger() {
+	public void testSymbolizeEqualsFalse() {
 		SAT sat = new SAT();
 		String p1 = "true && arg0!=null&&arg0.isEmpty()==false";
 		String s1 = sat.symbolize(p1);
@@ -105,6 +105,14 @@ public class SATTest {
 		assertEquals("true && i0!=0&&b0==false", s1);
 		assertEquals("b0==false||i0<1", s2);
 		assertEquals("true && b0==false && true", s3);
+	}
+	
+	@Test
+	public void testSymbolizePlusAsStringOperator() {
+		SAT sat = new SAT();
+		String p = "true||StdIn.getInstance(getEncoding(),).readBooleanOption(\"Do you want to write all the configuration properties to an encrypted file at \"+rcv.getPath()+\"?\",\"y\",\"n\",)";
+		String s = sat.symbolize(p);
+		assertEquals("true||b0", s);
 	}
 	
 	@Test
