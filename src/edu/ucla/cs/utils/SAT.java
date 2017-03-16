@@ -207,47 +207,86 @@ public class SAT {
 				// this subexpression contains arithmetic operators.
 				// separator order matters!!!
 				String[] arr2 = e.split("\\+|-|\\*|\\/|>=|<=|>|<|==|\\!=");
-
-				// treat these sub-subexpressions as integers
-				for (String sub : arr2) {
-					sub = sub.trim();
-					// strip unbalanced parentheses
-					sub = stripUnbalancedParentheses(sub);
-
-					if (sub.matches("^\\d+$")) {
-						continue;
-					} else if (sub.matches("^(\\(+)\\d+(\\(+)")) {
-						// replace these literals with unnecessary parentheses
-						// with themselves
-						String temp = stripUnnecessaryParentheses(sub);
-						expr = expr.replaceAll(Pattern.quote(sub), temp);
-						continue;
-					} else if (sub.matches("^null$")) {
-						expr = expr.replaceAll("null", "0");
-						continue;
+				
+				boolean isBooleanExpression = false;
+				for(String sub : arr2) {
+					String temp = sub.trim();
+					temp = stripUnbalancedParentheses(temp);
+					if(temp.trim().equals("true") || temp.trim().equals("false")) {
+						isBooleanExpression = true;
 					}
-
-					if (int_symbol_map.containsKey(sub)) {
-						continue;
-					} else {
-						String temp = stripUnnecessaryParentheses(sub);
-						if (int_symbol_map.containsKey(temp)) {
-							String sym = int_symbol_map.get(temp);
-							int_symbol_map.put(sub, sym);
+				}
+				
+				if(isBooleanExpression) {
+					// treat these sub-expressions as booleans
+					for(String sub : arr2) {
+						sub = sub.trim();
+						// strip unbalanced parentheses
+						sub = stripUnbalancedParentheses(sub);
+						
+						if(sub.trim().equals("false") || sub.trim().equals("true")) {
+							continue;
 						} else {
-							String sym = "i" + int_symbol_map.size();
-							int_symbol_map.put(sub, sym);
-							if (!temp.equals(sub)) {
-								// parentheses have been stripped off, also put the
-								// stripped off version into the map
-								int_symbol_map.put(temp, sym);
+							if(bool_symbol_map.containsKey(sub)) {
+								continue;
+							} else {
+								String temp = stripUnnecessaryParentheses(sub);
+								if(bool_symbol_map.containsKey(temp)) {
+									String sym = bool_symbol_map.get(temp);
+									bool_symbol_map.put(sub, sym);
+								} else {
+									String sym = "b" + bool_symbol_map.size();
+									bool_symbol_map.put(sub, sym);
+									if(!sub.equals(temp)) {
+										// parentheses have been stripped off, also put the
+										// stripped off version into the map
+										bool_symbol_map.put(temp, sym);
+									}
+								}
 							}
 						}
 					}
+				} else {
+					// treat these sub-subexpressions as integers
+					for (String sub : arr2) {
+						sub = sub.trim();
+						// strip unbalanced parentheses
+						sub = stripUnbalancedParentheses(sub);
+
+						if (sub.matches("^\\d+$")) {
+							continue;
+						} else if (sub.matches("^(\\(+)\\d+(\\(+)")) {
+							// replace these literals with unnecessary parentheses
+							// with themselves
+							String temp = stripUnnecessaryParentheses(sub);
+							expr = expr.replaceAll(Pattern.quote(sub), temp);
+							continue;
+						} else if (sub.matches("^null$")) {
+							expr = expr.replaceAll("null", "0");
+							continue;
+						}
+
+						if (int_symbol_map.containsKey(sub)) {
+							continue;
+						} else {
+							String temp = stripUnnecessaryParentheses(sub);
+							if (int_symbol_map.containsKey(temp)) {
+								String sym = int_symbol_map.get(temp);
+								int_symbol_map.put(sub, sym);
+							} else {
+								String sym = "i" + int_symbol_map.size();
+								int_symbol_map.put(sub, sym);
+								if (!temp.equals(sub)) {
+									// parentheses have been stripped off, also put the
+									// stripped off version into the map
+									int_symbol_map.put(temp, sym);
+								}
+							}
+						}
+					}
+
 				}
-
 			} else {
-
 				if (e.matches("^true$") || e.matches("^false$")) {
 					continue;
 				} else if (e.matches("^(\\(+)true(\\)+)$")

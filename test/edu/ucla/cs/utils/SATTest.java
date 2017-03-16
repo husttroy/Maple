@@ -92,6 +92,22 @@ public class SATTest {
 	}
 	
 	@Test
+	public void dontTreatFalseAsInteger() {
+		SAT sat = new SAT();
+		String p1 = "true && arg0!=null&&arg0.isEmpty()==false";
+		String s1 = sat.symbolize(p1);
+		sat = new SAT(); //clear the map
+		String p2 = "rcv.exists()==false||rcv.length()<1";
+		String s2 = sat.symbolize(p2);
+		sat = new SAT(); // clear the map
+		String p3 = "true && rcv.exists()==false && true";
+		String s3 = sat.symbolize(p3);
+		assertEquals("true && i0!=0&&b0==false", s1);
+		assertEquals("b0==false||i0<1", s2);
+		assertEquals("true && b0==false && true", s3);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";
@@ -104,6 +120,13 @@ public class SATTest {
 	public void testZ3Runner() {
 		SAT sat = new SAT();
 		String query = "(declare-const a0 Int)\n(declare-const b0 Bool)\n(declare-const b2 Bool)(assert (and (not (= 1 a0)) (not (and b0 b2))))\n(check-sat)";
+		assertTrue(sat.isSAT(query));
+	}
+	
+	@Test
+	public void testEqualFalse() {
+		SAT sat = new SAT();
+		String query = "(declare-const b0 Bool)\n(assert (= b0 false))\n(check-sat)";
 		assertTrue(sat.isSAT(query));
 	}
 	
