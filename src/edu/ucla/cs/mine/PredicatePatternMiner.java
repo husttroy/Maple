@@ -181,7 +181,7 @@ public abstract class PredicatePatternMiner {
 
 				if (!flag) {
 					// this clause is irrelevant
-					res = res.replace(c, "true");
+					res = replaceVar(c, res, "true");
 				}
 			}
 		}

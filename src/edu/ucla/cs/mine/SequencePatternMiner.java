@@ -13,7 +13,7 @@ public abstract class SequencePatternMiner {
 	final private int min_support;
 	//ArrayList<String> query;
 	HashSet<String> query;
-	protected HashMap<ArrayList<String>, Integer> patterns;
+	public HashMap<ArrayList<String>, Integer> patterns;
 	
 	public SequencePatternMiner(String script_path, String seqs_path, int min_support, HashSet<String> filter){
 		this.script_path = script_path;

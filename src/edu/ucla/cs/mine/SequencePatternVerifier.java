@@ -77,22 +77,19 @@ public class SequencePatternVerifier {
 //		String output = "/home/troy/research/BOA/Maple/example/new_output.txt";
 		String output = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
-//		pattern.add("new File");
-		//pattern.add("exists");
-		//pattern.add("IF {");
-		//pattern.add("createNewFile");
-		//pattern.add("}");
-		pattern.add("hasNext");
+		pattern.add("iterator");
+		pattern.add("IF {");
 		pattern.add("next");
+		pattern.add("}");
 		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(output);
 		System.out.println(pv.support.size());
-		for(String id : pv.seqs.keySet()) {
-			if(!pv.support.containsKey(id)) {
-				// print violations
-				System.out.println(id);
-				System.out.println(pv.seqs.get(id));
-			}
-		}
+//		for(String id : pv.seqs.keySet()) {
+//			if(!pv.support.containsKey(id)) {
+//				// print violations
+//				System.out.println(id);
+//				System.out.println(pv.seqs.get(id));
+//			}
+//		}
 	}
 }

@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 
 import edu.ucla.cs.model.Method;
+import edu.ucla.cs.utils.ProcessUtils;
 
 public class CatastrophicBacktrackingProcessor extends SequenceProcessor{
 	
@@ -37,13 +38,13 @@ public class CatastrophicBacktrackingProcessor extends SequenceProcessor{
 					String rest = null;
 					if (args != null) {
 						// check whether this is a chained method call by checking whether the argument is balanced
-						if(!isBalanced(args)) {
+						if(!ProcessUtils.isBalanced(args)) {
 							// this is a call chain
 							// the regex cannot handle the method calls properly if one method call
 							// after the first one in the chain contains arguments
 							// the following method calls with arguments will be considered as the
 							// argument of the first one
-							int position = findFirstUnbalancedCloseParenthesis(args);
+							int position = ProcessUtils.findFirstUnbalancedCloseParenthesis(args);
 							if(position == -1) {
 								// something goes wrong, return empty list
 								return new ArrayList<String>();

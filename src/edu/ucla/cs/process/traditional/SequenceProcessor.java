@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.ucla.cs.model.Method;
+import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.ProcessUtils;
 
 public class SequenceProcessor extends ProcessStrategy {
 	// match < and > in API names to handle constructors of parameterized types
@@ -27,22 +29,45 @@ public class SequenceProcessor extends ProcessStrategy {
 		String[] ss = s.split("->");
 		// skip the first element because it is empty string
 		for (int i = 1; i < ss.length; i++) {
-			if (ss[i].contains("}")) {
-				String str = ss[i].trim();
-				while (str.contains("}")) {
-					String sub1 = str.substring(0, str.indexOf("}")).trim();
-					if (!sub1.isEmpty()) {
-						method.seq.addAll(extractItems(sub1));
-					}
-					method.seq.add("}");
-					str = str.substring(str.indexOf("}") + 1);
+			String str = ss[i].trim();
+			
+			int count1 = 0;
+			if(str.endsWith("}")) {
+				while(str.endsWith("}")) {
+					str = str.substring(0, str.lastIndexOf("}")).trim();
+					count1 ++;
 				}
+			}
+			
+			ArrayList<String> rest = new ArrayList<String>();
+			while (str.endsWith("} ELSE {") || str.endsWith("} CATCH {") || str.endsWith("} FINALLY {")) {
+				String s1 = str.substring(0, str.lastIndexOf('}') + 1).trim();
+				String s2 = str.substring(str.lastIndexOf('}') + 1, str.length()).trim();
+				
+				if(!s2.isEmpty()) {
+					rest.add(s2);
+				}
+				
+				while (s1.endsWith("}")) {
+					s1 = s1.substring(0, s1.lastIndexOf("}")).trim();
+					rest.add("}");
+				}
+				
+				str = s1;
 
-				if (!str.isEmpty()) {
-					method.seq.addAll(extractItems(str));
-				}
-			} else {
-				method.seq.addAll(extractItems(ss[i].trim()));
+			}
+			
+			if (!str.isEmpty()) {
+				method.seq.addAll(extractItems(str));
+			}
+						
+			for(int j = rest.size() - 1; j >= 0; j --) {
+				method.seq.add(rest.get(j));
+			}
+			
+			while(count1 > 0) {
+				method.seq.add("}");
+				count1 --;
 			}
 		}
 	}
@@ -88,13 +113,13 @@ public class SequenceProcessor extends ProcessStrategy {
 			String rest = null;
 			if (args != null) {
 				// check whether this is a chained method call by checking whether the argument is balanced
-				if(!isBalanced(args)) {
+				if(!ProcessUtils.isBalanced(args)) {
 					// this is a call chain
 					// the regex cannot handle the method calls properly if one method call
 					// after the first one in the chain contains arguments
 					// the following method calls with arguments will be considered as the
 					// argument of the first one
-					int position = findFirstUnbalancedCloseParenthesis(args);
+					int position = ProcessUtils.findFirstUnbalancedCloseParenthesis(args);
 					if(position == -1) {
 						// something goes wrong, return empty list
 						return new ArrayList<String>();
@@ -125,60 +150,5 @@ public class SequenceProcessor extends ProcessStrategy {
 			}
 		}
 		return items;
-	}
-	
-	public boolean isBalanced(String expr) {
-		boolean inQuote = false;
-		int parentheses = 0;
-		char[] chars = expr.toCharArray();
-		for(int i = 0; i < chars.length; i++) {
-			char cur = chars[i];
-			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
-				// escape, ignore this quote
-			} else if(cur == '"' && !inQuote) {
-				inQuote = true;
-			} else if(cur == '"' && inQuote) {
-				inQuote = false;
-			} else if (inQuote) {
-				// ignore all parentheses in quote
-			} else if (cur == '(') {
-				parentheses ++;
-			} else if (cur == ')') {
-				parentheses --;
-				if(parentheses < 0) {
-					return false;
-				}
-			}
-		}
-		
-		return parentheses == 0;
-	}
-	
-	public int findFirstUnbalancedCloseParenthesis(String expr) {
-		boolean inQuote = false;
-		int parentheses = 0;
-		char[] chars = expr.toCharArray();
-		for(int i = 0; i < chars.length; i++) {
-			char cur = chars[i];
-			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
-				// escape, ignore this quote
-			} else if(cur == '"' && !inQuote) {
-				inQuote = true;
-			} else if(cur == '"' && inQuote) {
-				inQuote = false;
-			} else if (inQuote) {
-				// ignore all parentheses in quote
-			} else if (cur == '(') {
-				parentheses ++;
-			} else if (cur == ')') {
-				parentheses --;
-				if(parentheses == -1) {
-					return i;
-				}
-			}
-		}
-		
-		// do not find the first unbalance close parenthese
-		return -1;
 	}
 }
