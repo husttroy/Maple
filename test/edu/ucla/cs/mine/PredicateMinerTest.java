@@ -171,4 +171,12 @@ public class PredicateMinerTest {
 		String predicate = "files && isDeploymentFromODEFileSystemAllowed()&&files!=null";
 		assertEquals("true!=null", PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionStringContainExclaimation() {
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("f");
+		String predicate = "!(execln.contentEquals(\"!Load\",))";
+		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
+	}
 }

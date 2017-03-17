@@ -2,6 +2,7 @@ package edu.ucla.cs.mine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -163,7 +164,7 @@ public abstract class PredicatePatternMiner {
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {
-		String[] arr = predicate.split("&&|\\|\\||\\!(?!=)");
+		String[] arr = splitOutOfQuote(predicate);
 		String res = predicate;
 		for (String c : arr) {
 			c = c.trim();
@@ -203,6 +204,71 @@ public abstract class PredicatePatternMiner {
 		}
 		
 		return res;
+	}
+	
+	public static String[] splitOutOfQuote(String s) {
+		ArrayList<String> tokens = new ArrayList<String>();
+		char[] chars = s.toCharArray();
+		boolean inQuote = false;
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < chars.length; i++) {
+			char cur = chars[i];
+			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
+				// escape quote, not the end of the quote
+				sb.append(cur);
+			} else if(cur == '"' && !inQuote) {
+				// quote starts
+				inQuote = true;
+				sb.append(cur);
+			} else if(cur == '"' && inQuote) {
+				// quote ends
+				inQuote = false;
+				sb.append(cur);
+			} else if (inQuote) {
+				// ignore any separator in quote
+				sb.append(cur);
+			} else if (cur == '&' || cur == '|'){
+				// look ahead
+				if (i + 1 < chars.length && chars[i+1] == cur) {
+					if(sb.length() > 0) {
+						// push previous concatenated chars to the array
+						tokens.add(sb.toString());
+						// clear the string builder
+						sb.setLength(0);
+					}
+					i++;
+				} else {
+					// lingering & or | 
+					sb.append(cur);
+				}
+			} else if (cur == '!') {
+				// look ahead
+				if (i + 1 < chars.length && chars[i+1] == '=') {
+					// != operator instead of logic negation operator
+					sb.append(cur);
+				} else {
+					if(sb.length() > 0) {
+						// push previous concatenated chars to the array
+						tokens.add(sb.toString());
+						// clear the string builder
+						sb.setLength(0);
+					}
+				}
+			} else {
+				sb.append(cur);
+			}
+		}
+		
+		// push the last token if any
+		if(sb.length() > 0) {
+			tokens.add(sb.toString());
+		}
+		
+		String[] arr = new String[tokens.size()];
+		for(int i = 0; i < tokens.size(); i++) {
+			arr[i] = tokens.get(i);
+		}
+		return arr;
 	}
 	
 	public static String normalize(String predicate, ArrayList<String> rcv_candidates,
