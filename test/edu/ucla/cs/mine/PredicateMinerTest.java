@@ -179,4 +179,13 @@ public class PredicateMinerTest {
 		String predicate = "!(execln.contentEquals(\"!Load\",))";
 		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionBitwiseOperator() {
+		// bitwise operator is equivalent to logic operator when two operands are booleans except that they do not short-circuit
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("img");
+		String predicate = "!(yourSelectedImage==null|iv.getDrawable()==null|!name.getText().toString().trim().length()>0|!time.getText().toString().trim().length()>0)";
+		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
+	}
 }

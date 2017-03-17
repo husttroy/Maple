@@ -164,6 +164,10 @@ public abstract class PredicatePatternMiner {
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {
+		// replace bitwise or with logical or
+		predicate = predicate.replaceAll("(?<!\\|)\\|(?!\\|)", "||");
+		// replace bitwise and with logical and
+		predicate = predicate.replaceAll("(?<!&)&(?!&)", "&&");
 		String[] arr = splitOutOfQuote(predicate);
 		String res = predicate;
 		for (String c : arr) {
@@ -230,16 +234,15 @@ public abstract class PredicatePatternMiner {
 			} else if (cur == '&' || cur == '|'){
 				// look ahead
 				if (i + 1 < chars.length && chars[i+1] == cur) {
-					if(sb.length() > 0) {
-						// push previous concatenated chars to the array
-						tokens.add(sb.toString());
-						// clear the string builder
-						sb.setLength(0);
-					}
+					// step forward if it is logic operator, otherwise it is a bitwise operator
 					i++;
-				} else {
-					// lingering & or | 
-					sb.append(cur);
+				}
+				
+				if(sb.length() > 0) {
+					// push previous concatenated chars to the array
+					tokens.add(sb.toString());
+					// clear the string builder
+					sb.setLength(0);
 				}
 			} else if (cur == '!') {
 				// look ahead
