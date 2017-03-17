@@ -147,6 +147,13 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testEqualNegativeInteger() {
+		SAT sat = new SAT();
+		String query = "(declare-const i0 Int)\n(assert (= i0 -1))\n(check-sat)";
+		assertTrue(sat.isSAT(query));
+	}
+	
+	@Test
 	public void testEquivalenceChecker() {
 		SAT sat = new SAT();
 		assertTrue(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists())",

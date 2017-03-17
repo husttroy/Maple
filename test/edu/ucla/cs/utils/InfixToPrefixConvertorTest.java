@@ -29,4 +29,14 @@ public class InfixToPrefixConvertorTest {
 		assertEquals("(&& (&& true (>= i0 1)) (! b0))",
 				InfixToPrefixConvertor.infixToPrefixConvert(infix));
 	}
+	
+	@Test
+	public void testConvertNegativeSign() {
+		String simpleInfix = "i0==-1";
+		assertEquals("(== i0 -1)", InfixToPrefixConvertor.infixToPrefixConvert(simpleInfix));
+		String complexInfix = "!b0 && true && !(i0==-1) && !b2";
+		assertEquals("(&& (&& (&& (! b0) true) (! (== i0 -1))) (! b2))", InfixToPrefixConvertor.infixToPrefixConvert(complexInfix));
+		String minusSign = " (a - b) - c";
+		assertEquals("(- (- a b) c)", InfixToPrefixConvertor.infixToPrefixConvert(minusSign));
+	}
 }

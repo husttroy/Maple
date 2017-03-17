@@ -105,7 +105,7 @@ public class InfixToPrefixConvertor {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < chs.length; i++) {
 			char c = chs[i];
-			if (c == '(' || c == ')' || c == '+' || c == '-' || c == '*'
+			if (c == '(' || c == ')' || c == '+' || c == '*'
 					|| c == '/') {
 				if(sb.length() > 0) {
 					// push previous concatenated chars to the array
@@ -152,6 +152,37 @@ public class InfixToPrefixConvertor {
 			} else if (c == ' ') {
 				// empty space
 				continue;
+			} else if (c == '-') {
+				// check whether it is a negative sign or a minus sign
+				boolean isNeg = false;
+				
+				int backward = i - 1;
+				while(backward >= 0) {
+					// look backward till the first character that is not empty space
+					char b = chs[backward];
+					if(b != ' ') {
+						if(b == '(' || b == '=' || b == '*' || b == '/' || b == '+' || b == '-'){
+							isNeg = true;
+						}
+						break;
+					}
+					backward --;
+				}
+				
+				if(isNeg) {
+					// consider negative sign as part of current token
+					sb.append(c);
+				} else {
+					// minus sign
+					if(sb.length() > 0) {
+						// push previous concatenated chars to the array
+						tokens.add(sb.toString());
+						// clear the string builder
+						sb.setLength(0);
+					}
+					// add the operator into the array
+					tokens.add(String.valueOf(c));
+				}
 			} else {
 				sb.append(c);
 			}
