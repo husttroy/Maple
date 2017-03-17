@@ -188,4 +188,12 @@ public class PredicateMinerTest {
 		String predicate = "!(yourSelectedImage==null|iv.getDrawable()==null|!name.getText().toString().trim().length()>0|!time.getText().toString().trim().length()>0)";
 		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionDoulbeBackslashBeforeUnquote() {
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("signatureFile");
+		String predicate = "!(columnTypes.size() > 0) && !(name==null||name.isEmpty()||name.trim().isEmpty()) && !(columnTypes==null||columnTypes.isEmpty()) && !(name.contains(\"\\\\\",)||name.contains(\"/\",)||name.contains(\">\",)||name.contains(\"<\",)||name.contains(\"\\\"\",)||name.contains(\":\",)||name.contains(\"?\",)||name.contains(\"|\",)||name.startsWith(\".\",)||name.endsWith(\".\",))";
+		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
+	}
 }

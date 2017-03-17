@@ -218,8 +218,24 @@ public abstract class PredicatePatternMiner {
 		for(int i = 0; i < chars.length; i++) {
 			char cur = chars[i];
 			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
-				// escape quote, not the end of the quote
-				sb.append(cur);
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// quote ends
+					inQuote = false;
+					sb.append(cur);
+				} else {
+					// escape quote, not the end of the quote
+					sb.append(cur);
+				}
 			} else if(cur == '"' && !inQuote) {
 				// quote starts
 				inQuote = true;
