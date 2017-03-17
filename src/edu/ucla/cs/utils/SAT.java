@@ -193,6 +193,9 @@ public class SAT {
 		// strip off string literals and the concatenation of strings
 		expr = stripOffStringLiteralsAndConcatenations(expr);
 		
+		// replace null with 0 in the beginning so it won't make inconsistency of symbolized tokens
+		expr = expr.replace("null", "0");
+		
 		// first tokenize this expression by logic operators
 		String[] arr = expr.split("&&|\\|\\||\\!(?!=)");
 		
@@ -270,9 +273,6 @@ public class SAT {
 							// with themselves
 							String temp = stripUnnecessaryParentheses(sub);
 							expr = expr.replaceAll(Pattern.quote(sub), temp);
-							continue;
-						} else if (sub.matches("^null$")) {
-							expr = expr.replaceAll("null", "0");
 							continue;
 						}
 

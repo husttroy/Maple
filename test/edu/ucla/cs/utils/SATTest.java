@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.regex.Pattern;
+
 import org.junit.Test;
 
 public class SATTest {
@@ -121,6 +123,14 @@ public class SATTest {
 		String p = "!(from.equals(rcv,)) && true && !(rcv.getName().indexOf('.',)==-1) && !rcv.exists()";
 		String s = sat.symbolize(p);
 		assertEquals("!b0 && true && !(i0==-1) && !b2", s);
+	}
+	
+	@Test
+	public void testSymbolizeNull() {
+		SAT sat = new SAT();
+		String p = "!(entityFiles.contains(new EntityFile(rcv,null,),)) && !(rcv==null) && !(rcv.exists())";
+		String s = sat.symbolize(p);
+		assertEquals("!b0 && !(i0==0) && !b2", s);
 	}
 	
 	@Test
