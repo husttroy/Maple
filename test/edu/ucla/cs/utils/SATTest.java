@@ -134,6 +134,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizePlusInArgument() {
+		SAT sat = new SAT();
+		String p = "!rcv.substring(arg0 + arg1, arg2,).isEmpty()";
+		String s = sat.symbolize(p);
+		assertEquals("!b0", s);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";

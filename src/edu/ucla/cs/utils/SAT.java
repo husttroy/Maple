@@ -10,18 +10,23 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class SAT {
+	static final Pattern METHOD_CALL_START = Pattern
+			.compile("[a-zA-Z0-9_]+(\\s)*\\(");
 	
 	private HashMap<String, String> bool_symbol_map;
 	private HashMap<String, String> int_symbol_map;
+	private HashMap<String, String> call_symbol_map;
 	
 	public SAT() {
 		bool_symbol_map = new HashMap<String, String>();
 		int_symbol_map = new HashMap<String, String>();
+		call_symbol_map = new HashMap<String, String>();
 	}
 
 	/***** Check Equivalence *****/
@@ -30,6 +35,7 @@ public class SAT {
 		// clear previous maps
 		bool_symbol_map.clear();
 		int_symbol_map.clear();
+		call_symbol_map.clear();
 
 		// replace variable names and function calls with boolean and integer
 		// symbols consistently. because Z3 does not support function calls and
@@ -86,6 +92,7 @@ public class SAT {
 		// clear previous maps
 		bool_symbol_map.clear();
 		int_symbol_map.clear();
+		call_symbol_map.clear();
 		
 		String p1_sym = symbolize(p1);
 		String p2_sym = symbolize(p2);
@@ -179,8 +186,7 @@ public class SAT {
 	/**
 	 * 
 	 * Support conditional expression with logic operators (i.e., !, &&, ||) and
-	 * arithmetic operators (i.e., *, /, +, -) We treat function calls and
-	 * objects as integers. Specifically, null is encoded as 0. For example,
+	 * arithmetic operators (i.e., *, /, +, -) We treat objects integers. Specifically, null is encoded as 0. For example,
 	 * rcv.getA() != null is encoded as X != 0.
 	 * 
 	 * @param expr
@@ -191,10 +197,13 @@ public class SAT {
 		expr = expr.replaceAll("<[a-zA-Z0-9\\?\\s]*>", "");
 		
 		// strip off string literals and the concatenation of strings
-		expr = stripOffStringLiteralsAndConcatenations(expr);
+		expr = stripOffStringLiteralsAndStringConcatenations(expr);
 		
 		// replace null with 0 in the beginning so it won't make inconsistency of symbolized tokens
 		expr = expr.replace("null", "0");
+		
+		// replace API calls (if any) with symbols to avoid operators in arguments to mess up the following tokenization
+		expr = symbolizeAPICalls(expr);
 		
 		// first tokenize this expression by logic operators
 		String[] arr = expr.split("&&|\\|\\||\\!(?!=)");
@@ -374,7 +383,61 @@ public class SAT {
 		return expr;
 	}
 	
-	private String stripOffStringLiteralsAndConcatenations(String expr) {
+	private String symbolizeAPICalls(String expr) {
+		char[] chars = expr.toCharArray();
+		Matcher m = METHOD_CALL_START.matcher(expr);
+		ArrayList<Point> ranges = new ArrayList<Point>();
+		while (m.find()) {
+			int start = m.start();
+			int end = m.end();
+			int paren = 1;
+			// find where the API call ends
+			for(int i = end; i < chars.length; i ++) {
+				char cur = chars[i];
+				if(cur == '(') {
+					paren ++;
+				} else if (cur == ')') {
+					paren --;
+					if(paren == 0) {
+						// here is the close parenthesis
+						end = i;
+						break;
+					}
+				}
+			}
+			
+			ranges.add(new Point(start, end));
+		}
+		
+		// replace API calls with symbols
+		String rel = "";
+		int cur = 0;
+		for(Point p : ranges) {
+			if(p.x < cur) {
+				// p is a sub-range of a previous range
+				continue;
+			} else {
+				rel += expr.substring(cur, p.x);
+				String apiCall = expr.substring(p.x, p.y + 1);
+				if(call_symbol_map.containsKey(apiCall)) {
+					rel += call_symbol_map.get(apiCall);
+				}else {
+					String sym = "m" + call_symbol_map.values().size();
+					rel += sym;
+					call_symbol_map.put(apiCall, sym);
+				}
+			}
+			cur = p.y + 1;
+		}
+		
+		if(cur <= expr.length()) {
+			rel += expr.substring(cur);
+		}
+		
+		return rel;
+	}
+
+	private String stripOffStringLiteralsAndStringConcatenations(String expr) {
 		ArrayList<Point> ranges = new ArrayList<Point>();
 		char[] chars = expr.toCharArray();
 		boolean inQuote = false;
