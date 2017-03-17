@@ -1,11 +1,10 @@
 package edu.ucla.cs.mine;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
-
+import java.util.Stack;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
@@ -37,6 +36,7 @@ public abstract class PredicatePatternMiner {
 		for(String api : apis) {
 			ArrayList<PredicateCluster> arr = this.clusters.get(api);
 			ArrayList<PredicateCluster> newArr = merge(arr);
+			// keep merging the first two equivalent clusters till a fix point
 			while (!arr.equals(newArr)) {
 				// some clusters have been merged
 				// update current clusters
@@ -73,6 +73,43 @@ public abstract class PredicatePatternMiner {
 			}
 		}
 
+		return newArr;
+	}
+	
+	protected void optimized_merge() {
+		Set<String> apis = this.clusters.keySet();
+		for(String api : apis) {
+			ArrayList<PredicateCluster> arr = this.clusters.get(api);
+			ArrayList<PredicateCluster> newArr = optimized_merge(arr);
+			this.clusters.put(api, newArr);
+		}
+	}
+	
+	
+
+	private ArrayList<PredicateCluster> optimized_merge(
+			ArrayList<PredicateCluster> arr) {
+		ArrayList<PredicateCluster> newArr = new ArrayList<PredicateCluster>();
+		SAT sat = new SAT();
+		// keep adding each cluster in the given array to a new array
+		for(PredicateCluster p1 : arr) {
+			PredicateCluster eq = null;
+			for(PredicateCluster p2 : newArr) {
+				// check whether there is an equivalent cluster in the new array
+				if (sat.checkEquivalence(p1.shortest, p2.shortest)) {
+					eq = p2;
+					break;
+				}
+			}
+			if(eq == null) {
+				newArr.add(p1);
+			} else {
+				// there is an equivalent cluster
+				newArr.remove(eq);
+				newArr.add(new PredicateCluster(p1, eq));
+			}
+		}
+		
 		return newArr;
 	}
 
@@ -147,7 +184,7 @@ public abstract class PredicatePatternMiner {
 		}
 
 		// keep merging predicates until reaching a fix point
-		merge();
+		optimized_merge();
 
 		System.out.println("After checking predicate equivalence and merging:");
 		for (String api : clusters.keySet()) {
@@ -168,6 +205,10 @@ public abstract class PredicatePatternMiner {
 		predicate = predicate.replaceAll("(?<!\\|)\\|(?!\\|)", "||");
 		// replace bitwise and with logical and
 		predicate = predicate.replaceAll("(?<!&)&(?!&)", "&&");
+		
+		// normalize the use of assignment in the middle of a predicate as the assigned variable
+		predicate = replaceAssignment(predicate);
+		
 		String[] arr = splitOutOfQuote(predicate);
 		String res = predicate;
 		for (String c : arr) {
@@ -210,6 +251,84 @@ public abstract class PredicatePatternMiner {
 		return res;
 	}
 	
+	public static String replaceAssignment(String predicate) {
+		if(predicate.matches("^.+(?<!(=|\\!))=(?!=).+$")){
+			// this algorithm is based on one observation that an assignment sub-expression must be wrapped with parentheses in a boolean expression
+			char[] chars = predicate.toCharArray();
+			Stack<Integer> stack = new Stack<Integer>();
+			int snapshot = -1;
+			int assignment_index = -1;
+			boolean inQuote = false;
+			ArrayList<Point> ranges = new ArrayList<Point>();
+			for(int i = 0; i < chars.length; i++) {
+				char cur = chars[i];
+				if(cur == '"' && i > 0 && chars[i-1] == '\\') {
+					// count the number of backslashes
+					int count = 0;
+					while(i - count - 1 >= 0) {
+						if(chars[i - count - 1] == '\\') {
+							count ++;
+						} else {
+							break;
+						}
+					} 
+					if(count % 2 == 0) {
+						// escape one or more backslashes instead of this quote, end of quote
+						// quote ends
+						inQuote = false;
+					} else {
+						// escape quote, not the end of the quote
+					}
+				} else if(cur == '"' && !inQuote) {
+					// quote starts
+					inQuote = true;
+				} else if(cur == '"' && inQuote) {
+					// quote ends
+					inQuote = false;
+				} else if (inQuote) {
+					// ignore any separator in quote
+				} else if (cur == '=') {
+					if(i + 1 < chars.length && chars[i+1] == '=') {
+						// equal operator, ignore
+						i++;
+					} else if (i -1 >= 0 && chars[i-1] == '!') {
+						// not equal operator, ignore
+					} else {
+						// assignment operator, stack size must be at least 1
+						snapshot = stack.size();
+						assignment_index = i;
+					}
+				} else if (cur == '(') {
+					stack.push(i);
+				} else if (cur == ')') {
+					stack.pop();
+					if(stack.size() == snapshot - 1) {
+						ranges.add(new Point(assignment_index, i));
+						// reset
+						snapshot = -1;
+						assignment_index = -1;
+					}
+				}
+			}
+			
+			// remove whatever in the range list
+			String rel = "";
+			int cur = 0;
+			for(Point p : ranges) {
+				rel += predicate.substring(cur, p.x);
+				cur = p.y;
+			}
+			
+			if(cur <= predicate.length()) {
+				rel += predicate.substring(cur);
+			}
+			
+			return rel;
+		} else {
+			return predicate;
+		}
+	}
+
 	public static String[] splitOutOfQuote(String s) {
 		ArrayList<String> tokens = new ArrayList<String>();
 		char[] chars = s.toCharArray();

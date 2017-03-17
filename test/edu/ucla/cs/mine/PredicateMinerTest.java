@@ -196,4 +196,12 @@ public class PredicateMinerTest {
 		String predicate = "!(columnTypes.size() > 0) && !(name==null||name.isEmpty()||name.trim().isEmpty()) && !(columnTypes==null||columnTypes.isEmpty()) && !(name.contains(\"\\\\\",)||name.contains(\"/\",)||name.contains(\">\",)||name.contains(\"<\",)||name.contains(\"\\\"\",)||name.contains(\":\",)||name.contains(\"?\",)||name.contains(\"|\",)||name.startsWith(\".\",)||name.endsWith(\".\",))";
 		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionAssignmentInTheMiddle() {
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("file");
+		String predicate = "!(file = new File(propDir + f)).exists()";
+		assertEquals("!(file ).exists()", PredicatePatternMiner.condition(vars, predicate));
+	}
 }
