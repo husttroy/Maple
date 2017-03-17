@@ -236,7 +236,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			String normalized_predicate = normalize(conditioned_predicate,
 					temp1, temp2);
 
-			if (normalized_predicate.contains("true!=null") || normalized_predicate.contains("true==null")) {
+			if (normalized_predicate.equals("!(true||rcv)")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
