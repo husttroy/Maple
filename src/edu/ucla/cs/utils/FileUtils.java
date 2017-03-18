@@ -48,10 +48,25 @@ public class FileUtils {
 		}
 		
 		if(ss.size() - 1 >= 0) {
-			content += ss.get(ss.size());
+			content += ss.get(ss.size() - 1);
 		}
 		
 		writeStringToFile(content, path);;
+	}
+	
+	public static int countLines(String path) {
+		int count = 0;
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(path)))){
+			while(br.readLine()!=null) {
+				count++;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return count;
 	}
 	
 	public static void delete(String path) {

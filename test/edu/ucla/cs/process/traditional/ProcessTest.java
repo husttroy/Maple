@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import edu.ucla.cs.model.Method;
+import edu.ucla.cs.utils.ProcessUtils;
+
 public class ProcessTest {
 	
 	@Test
@@ -75,7 +78,7 @@ public class ProcessTest {
 		String path = "/home/troy/research/BOA/Maple/test/edu/ucla/cs/process/traditional/testHangs.txt";
 		try {
 			Process p = new Process();
-			p.s = new SequenceProcessor();
+			p.s = new CatastrophicBacktrackingProcessor();
 			p.processByLine(path);
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -85,28 +88,66 @@ public class ProcessTest {
 	@Test
 	public void testIsBalanced() {
 		String expr1 = "adwdw)adwdw(dwkok)((()))";
-		assertFalse(new SequenceProcessor().isBalanced(expr1));
+		assertFalse(ProcessUtils.isBalanced(expr1));
 		String expr2 = "adwo(aadkwo)kopadwko(())";
-		assertTrue(new SequenceProcessor().isBalanced(expr2));
+		assertTrue(ProcessUtils.isBalanced(expr2));
 		String expr3 = "adwdw(\"ajiodw)jaidw\")";
-		assertTrue(new SequenceProcessor().isBalanced(expr3));
+		assertTrue(ProcessUtils.isBalanced(expr3));
 		String expr4 = "adwdw(\"aji\"odw)jaidw)";
-		assertFalse(new SequenceProcessor().isBalanced(expr4));
+		assertFalse(ProcessUtils.isBalanced(expr4));
 		String expr5 = "adwdw(\"aji\\\"odw)j\\\"ai\"dw)";
-		assertTrue(new SequenceProcessor().isBalanced(expr5));
+		assertTrue(ProcessUtils.isBalanced(expr5));
 	}
 	
 	@Test
 	public void testGetFirstUnbalancedCloseParenthesis() {
 		String expr1 = "adwdw)adwdw(dwkok)((()))";
-		assertEquals(5, new SequenceProcessor().findFirstUnbalancedCloseParenthesis(expr1));
+		assertEquals(5, ProcessUtils.findFirstUnbalancedCloseParenthesis(expr1));
 		String expr2 = "adwo(aadkwo)kopadwko(())";
-		assertEquals(-1, new SequenceProcessor().findFirstUnbalancedCloseParenthesis(expr2));
+		assertEquals(-1, ProcessUtils.findFirstUnbalancedCloseParenthesis(expr2));
 		String expr3 = "adwdw(\"ajiodw)jaidw\")";
-		assertEquals(-1, new SequenceProcessor().findFirstUnbalancedCloseParenthesis(expr3));
+		assertEquals(-1, ProcessUtils.findFirstUnbalancedCloseParenthesis(expr3));
 		String expr4 = "adwdw(\"aji\"odw)jaidw)";
-		assertEquals(20, new SequenceProcessor().findFirstUnbalancedCloseParenthesis(expr4));
+		assertEquals(20, ProcessUtils.findFirstUnbalancedCloseParenthesis(expr4));
 		String expr5 = "adwdw(\"aji\\\"odw)j\\\"ai\"dw)";
-		assertEquals(-1, new SequenceProcessor().findFirstUnbalancedCloseParenthesis(expr5));
+		assertEquals(-1, ProcessUtils.findFirstUnbalancedCloseParenthesis(expr5));
+	}
+	
+	@Test
+	public void testCloseParenthesisInTheMiddle() {
+		Method mock = new Method("", "", "", "");
+		String expr = "results[key][SEQ] = -> foo()@ } -> foo().bar(\"{}{}{}\",)@ } } ELSE { ";
+		SequenceProcessor sp = new SequenceProcessor();
+		sp.buildSequenceMap(mock, expr);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("foo");
+		expected.add("}");
+		expected.add("foo");
+		expected.add("bar");
+		expected.add("}");
+		expected.add("}");
+		expected.add("ELSE {");
+		assertEquals(expected, mock.seq);
+	}
+	
+	
+	@Test
+	public void testTwoEmptyBlocksAtTheEnd() {
+		Method mock = new Method("", "", "", "");
+		String expr = "results[key][SEQ] = -> TRY { -> foo().bar(\"{}{}{}\",)@ } CATCH { } CATCH { } FINALLY { }";
+		SequenceProcessor sp = new SequenceProcessor();
+		sp.buildSequenceMap(mock, expr);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("TRY {");
+		expected.add("foo");
+		expected.add("bar");
+		expected.add("}");
+		expected.add("CATCH {");
+		expected.add("}");
+		expected.add("CATCH {");
+		expected.add("}");
+		expected.add("FINALLY {");
+		expected.add("}");
+		assertEquals(expected, mock.seq);
 	}
 }

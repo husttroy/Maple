@@ -33,7 +33,11 @@ public abstract class SequencePatternMiner {
 			while((s = stdInput.readLine()) != null) {
 				output += s + System.lineSeparator();
 			}
+			p.waitFor();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
