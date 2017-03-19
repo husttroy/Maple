@@ -51,4 +51,10 @@ public class InfixToPrefixConvertorTest {
 		String infix = "true && b0 && i0 + i1 < i2";
 		assertEquals("(&& (&& true b0) (< (+ i0 i1) i2))", InfixToPrefixConvertor.infixToPrefixConvert(infix));
 	}
+	
+	@Test
+	public void testConvertModuloOperator() {
+		String infix = "true && b0 && i0 % i1 < i2";
+		assertEquals("(&& (&& true b0) (< (% i0 i1) i2))", InfixToPrefixConvertor.infixToPrefixConvert(infix));
+	}
 }

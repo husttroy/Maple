@@ -14,7 +14,8 @@ public class InfixToPrefixConvertor {
 				|| s.equals("*") || s.equals("(") || s.equals(")")
 				|| s.equals("||") || s.equals("&&") || s.equals("!")
 				|| s.equals(">") || s.equals("<") || s.equals(">=")
-				|| s.equals("<=") || s.equals("!=") || s.equals("=="));
+				|| s.equals("<=") || s.equals("!=") || s.equals("==")
+				|| s.equals("%"));
 	}
 
 	public static String operationCombine(Stack<String> operatorStack,
@@ -53,7 +54,7 @@ public class InfixToPrefixConvertor {
 			return 2;
 		} else if (s.equals("+") || s.equals("-")) {
 			return 4;
-		} else if (s.equals("/") || s.equals("*")) {
+		} else if (s.equals("/") || s.equals("*") || s.equals("%")) {
 			return 5;
 		} else {
 			return 0;
@@ -106,7 +107,7 @@ public class InfixToPrefixConvertor {
 		for (int i = 0; i < chs.length; i++) {
 			char c = chs[i];
 			if (c == '(' || c == ')' || c == '+' || c == '*'
-					|| c == '/') {
+					|| c == '/' || c == '%'){
 				if(sb.length() > 0) {
 					// push previous concatenated chars to the array
 					tokens.add(sb.toString());
@@ -161,7 +162,7 @@ public class InfixToPrefixConvertor {
 					// look backward till the first character that is not empty space
 					char b = chs[backward];
 					if(b != ' ') {
-						if(b == '(' || b == '=' || b == '*' || b == '/' || b == '+' || b == '-' || b == '<' || b == '>'){
+						if(b == '(' || b == '=' || b == '*' || b == '/' || b == '+' || b == '-' || b == '<' || b == '>' || b == '%'){
 							isNeg = true;
 						}
 						break;

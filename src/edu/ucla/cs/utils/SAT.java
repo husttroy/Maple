@@ -185,6 +185,8 @@ public class SAT {
 		rel = rel.replaceAll("==", "=");
 		// replace / with div
 		rel = rel.replaceAll("\\/", "div");
+		
+		rel = rel.replace("%", "mod");
 		return rel;
 	}
 	

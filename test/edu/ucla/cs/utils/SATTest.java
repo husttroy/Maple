@@ -227,4 +227,11 @@ public class SATTest {
 		assertTrue(sat.checkImplication("a&&c", "a"));
 		assertFalse(sat.checkImplication("a", "a&&c"));
 	}
+	
+	@Test
+	public void testSATModuloChecker() {
+		SAT sat = new SAT();
+		assertTrue(sat.checkImplication("a % 2 == 1 && c", "c"));
+		assertFalse(sat.checkImplication("a % 2 == 1 && c", "a"));
+	}
 }
