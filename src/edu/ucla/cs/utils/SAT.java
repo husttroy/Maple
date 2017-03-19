@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -545,10 +546,53 @@ public class SAT {
 	
 	public static String stripUnbalancedParentheses(String expr) {
 		String rel = expr;
+		char[] chars = expr.toCharArray();
+		boolean inQuote = false;
+		int left = 0;
+		int right = 0;
+		for(int i = 0; i < chars.length; i++) {
+			char cur = chars[i];
+			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// quote ends
+					inQuote = false;
+				} else {
+					// escape quote, not the end of the quote
+				}
+			} else if(cur == '"' && !inQuote) {
+				// quote starts
+				inQuote = true;
+			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
+				// escape single quote in quote
+			} else if(cur == '\'' && !inQuote) {
+				// single quote starts
+				inQuote = true;
+			} else if(cur == '"' && inQuote) {
+				// quote ends
+				inQuote = false;
+			} else if (cur == '\'' && inQuote) {
+				// single quote ends
+				inQuote = false;
+			} else if (inQuote) {
+				// ignore any separator in quote
 
-		int left = StringUtils.countMatches(rel, "(");
-		int right = StringUtils.countMatches(rel, ")");
-
+			} else if (cur == '(') {
+				left ++;
+			} else if (cur == ')') {
+				right ++;
+			}
+		}
+		
 		// remove extra parentheses in each clause
 		if (left > right && rel.startsWith("(")) {
 			for (int i = 0; i < left - right; i++) {
