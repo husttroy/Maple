@@ -37,6 +37,9 @@ public class SAT {
 		int_symbol_map.clear();
 		call_symbol_map.clear();
 
+		// replace (rcv) with rcv
+		p1 = p1.replace("(rcv)", "rcv");
+		p2 = p2.replace("(rcv)", "rcv");
 		// replace variable names and function calls with boolean and integer
 		// symbols consistently. because Z3 does not support function calls and
 		// we also need to know the type of each variables and subexpressions.
