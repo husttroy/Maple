@@ -516,6 +516,13 @@ public class SAT {
 		int cur = 0;
 		for(Point p : ranges) {
 			rel += expr.substring(cur, p.x);
+			String rest = expr.substring(p.y + 1).trim();
+			if(rel.trim().endsWith("==") || rel.trim().endsWith("!=")) {
+				// string comparison, replace the string with integer
+				rel += "1";
+			} else if (rest.startsWith("==") || rest.startsWith("!=")) {
+				rel += "1";
+			}
 			cur = p.y + 1;
 		}
 		

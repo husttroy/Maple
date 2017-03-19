@@ -164,6 +164,22 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizeStringComparison1() {
+		SAT sat = new SAT();
+		String p = "true && !(arg0 == null || arg0 == \"\" || arg0.isEmpty())";
+		String s = sat.symbolize(p);
+		assertEquals("true && !(i0 == 0 || i0 == 1 || b0)", s);
+	}
+	
+	@Test
+	public void testSymbolizeStringComparison2() {
+		SAT sat = new SAT();
+		String p = "true && !(arg0 == null || \"\" == arg0 || arg0.isEmpty())";
+		String s = sat.symbolize(p);
+		assertEquals("true && !(i0 == 0 || 1 == i0 || b0)", s);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";
