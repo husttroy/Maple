@@ -162,7 +162,9 @@ public class SAT {
 			System.err.println("Z3 Formating error!");
 			// delete the temporary file
 			FileUtils.delete("./temp.z3");
-			System.exit(-1);
+			
+			// let it elapse
+			return true;
 		}
 
 		// delete the temporary file
@@ -223,10 +225,10 @@ public class SAT {
 			if (e.contains("+") || e.contains("-") || e.contains("*")
 					|| e.contains("/") || e.contains(">") || e.contains("<")
 					|| e.contains(">=") || e.contains("<=") || e.contains("==")
-					|| e.contains("!=")) {
+					|| e.contains("!=") || e.contains("%")) {
 				// this subexpression contains arithmetic operators.
 				// separator order matters!!!
-				String[] arr2 = e.split("\\+|-|\\*|\\/|>=|<=|>|<|==|\\!=");
+				String[] arr2 = e.split("\\+|-|\\*|\\/|>=|<=|>|<|==|\\!=|%");
 				
 				boolean isBooleanExpression = false;
 				for(String sub : arr2) {

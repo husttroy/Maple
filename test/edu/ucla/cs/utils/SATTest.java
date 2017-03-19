@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.regex.Pattern;
-
 import org.junit.Test;
 
 public class SATTest {
@@ -158,6 +156,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizeModulo() {
+		SAT sat = new SAT();
+		String p = "rcv % 2 > that";
+		String s = sat.symbolize(p);
+		assertEquals("i0 % 2 > i1", s);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";
@@ -205,6 +211,14 @@ public class SATTest {
 		SAT sat = new SAT();
 		assertFalse(sat.checkEquivalence("true && arg0 >= 1 && !(rcv.exists())",
 				"true"));
+	}
+	
+	@Test
+	public void testEquivalenceWithParentheses() {
+		SAT sat = new SAT();
+		String p1 = "!(rcv).exists()";
+		String p2 = "!rcv.exists()";
+		assertTrue(sat.checkEquivalence(p1, p2));
 	}
 	
 	@Test
