@@ -46,13 +46,13 @@ public class InfixToPrefixConvertor {
 			return 6;
 		} else if (s.equals(">") || s.equals("<") || s.equals(">=")
 				|| s.equals("<=")) {
-			return 4;
+			return 3;
 		} else if (s.equals("&&") || s.equals("||")) {
 			return 1;
 		} else if (s.equals("!=") || s.equals("==")) {
 			return 2;
 		} else if (s.equals("+") || s.equals("-")) {
-			return 3;
+			return 4;
 		} else if (s.equals("/") || s.equals("*")) {
 			return 5;
 		} else {

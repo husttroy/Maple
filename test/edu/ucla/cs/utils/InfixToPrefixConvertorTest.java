@@ -45,4 +45,10 @@ public class InfixToPrefixConvertorTest {
 		String simpleInfix = "i0 < -1";
 		assertEquals("(< i0 -1)", InfixToPrefixConvertor.infixToPrefixConvert(simpleInfix));
 	}
+	
+	@Test
+	public void testConvertPlusThenCompare() {
+		String infix = "true && b0 && i0 + i1 < i2";
+		assertEquals("(&& (&& true b0) (< (+ i0 i1) i2))", InfixToPrefixConvertor.infixToPrefixConvert(infix));
+	}
 }
