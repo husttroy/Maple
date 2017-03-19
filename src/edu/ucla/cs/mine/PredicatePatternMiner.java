@@ -278,7 +278,7 @@ public abstract class PredicatePatternMiner {
 	}
 	
 	public static String replaceAssignment(String predicate) {
-		if(predicate.matches("^.+(?<!(=|\\!))=(?!=).+$")){
+		if(predicate.matches("^.+(?<!(=|\\!|>|<))=(?!=).+$")){
 			// this algorithm is based on one observation that an assignment sub-expression must be wrapped with parentheses in a boolean expression
 			char[] chars = predicate.toCharArray();
 			Stack<Integer> stack = new Stack<Integer>();

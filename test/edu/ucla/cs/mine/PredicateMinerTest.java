@@ -222,4 +222,14 @@ public class PredicateMinerTest {
 		String predicate = "!(file = new File(propDir + f)).exists()";
 		assertEquals("!(file ).exists()", PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionAssignmentInTheMiddle2() {
+		String predicate = "elements.containsKey(index) && !(index < 0 || index >= size)";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("elements");
+		vars.add("index");
+		assertEquals("elements.containsKey(index) && !(index < 0 || index >= size)",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }
