@@ -95,8 +95,8 @@ public abstract class PredicatePatternMiner {
 		for(PredicateCluster p1 : arr) {
 			PredicateCluster eq = null;
 			for(PredicateCluster p2 : newArr) {
-				// check whether there is an equivalent cluster in the new array
 				if (sat.checkEquivalence(p1.shortest, p2.shortest)) {
+					// p1 <=> p2, merge them
 					eq = p2;
 					break;
 				}
@@ -111,6 +111,32 @@ public abstract class PredicatePatternMiner {
 		}
 		
 		return newArr;
+//		ArrayList<PredicateCluster> newArr2 = new ArrayList<PredicateCluster>();
+//		// another round to check implication. 
+//		for(int i = 0; i < newArr.size(); i ++) {
+//			PredicateCluster p1 = newArr.get(i);
+//			if(p1.shortest.equals("true")) {
+//				// everything implies true 
+//				newArr2.add(new PredicateCluster(p1.shortest, p1.cluster.size()));
+//				continue;
+//			}
+//			// compare with every other cluster
+//			int count = 0;
+//			for(int j = 0; j < newArr.size(); j ++) {
+//				if(j == i) {
+//					// do not compare with itself
+//				} else {
+//					PredicateCluster p2 = newArr.get(j);
+//					if(sat.checkImplication(p2.shortest, p1.shortest)) {
+//						count += p2.cluster.size();
+//					}
+//				}
+//			}
+//			
+//			newArr2.add(new PredicateCluster(p1.shortest, count + p1.cluster.size()));
+// 		}
+//		
+//		return newArr2;
 	}
 
 	protected void setup() {
@@ -169,42 +195,42 @@ public abstract class PredicatePatternMiner {
 		setup();
 
 		// print initial clusters
-		System.out
-				.println("Before checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
+//		System.out
+//				.println("Before checking predicate equivalence and merging:");
+//		for (String api : clusters.keySet()) {
+//			System.out.println("[" + api + "]");
+//			int count = 0;
+//			for (PredicateCluster pc : clusters.get(api)) {
+//				System.out.print("Cluster" + count + ": ");
+//				for (String p : pc.cluster.elementSet()) {
+//					System.out.println(p + "---" + pc.cluster.count(p));
+//				}
+//				count++;
+//			}
+//		}
 
 		// keep merging predicates until reaching a fix point
 		optimized_merge();
 
-		System.out.println("After checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
+//		System.out.println("After checking predicate equivalence and merging:");
+//		for (String api : clusters.keySet()) {
+//			System.out.println("[" + api + "]");
+//			int count = 0;
+//			for (PredicateCluster pc : clusters.get(api)) {
+//				System.out.print("Cluster" + count + ": ");
+//				for (String p : pc.cluster.elementSet()) {
+//					System.out.println(p + "---" + pc.cluster.count(p));
+//				}
+//				count++;
+//			}
+//		}
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {
 		// replace bitwise or with logical or
 		predicate = predicate.replaceAll("(?<!\\|)\\|(?!\\|)", "||");
 		// replace bitwise and with logical and
-		predicate = predicate.replaceAll("(?<!&)&(?!&)", "&&");
+		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d))", "&&");
 		
 		// normalize the use of assignment in the middle of a predicate as the assigned variable
 		predicate = replaceAssignment(predicate);
@@ -371,13 +397,15 @@ public abstract class PredicatePatternMiner {
 				if (i + 1 < chars.length && chars[i+1] == cur) {
 					// step forward if it is logic operator, otherwise it is a bitwise operator
 					i++;
-				}
-				
-				if(sb.length() > 0) {
-					// push previous concatenated chars to the array
-					tokens.add(sb.toString());
-					// clear the string builder
-					sb.setLength(0);
+					if(sb.length() > 0) {
+						// push previous concatenated chars to the array
+						tokens.add(sb.toString());
+						// clear the string builder
+						sb.setLength(0);
+					}
+				} else {
+					// bitwise separator
+					sb.append(cur);
 				}
 			} else if (cur == '!') {
 				// look ahead
@@ -526,19 +554,17 @@ public abstract class PredicatePatternMiner {
 		}
 	}
 	
-	public HashMap<String, String> find_the_most_common_predicate() {
-		HashMap<String, String> predicates = new HashMap<String, String>();
+	public HashMap<String, HashMap<String, Integer>> find_the_most_common_predicate(int threshold) {
+		HashMap<String, HashMap<String, Integer>> predicates = new HashMap<String, HashMap<String, Integer>>();
 		for (String api : clusters.keySet()) {
-			int max = 0;
-			String pred = null;
+			HashMap<String, Integer> ps = new HashMap<String, Integer>();
 			ArrayList<PredicateCluster> pcs = clusters.get(api);
 			for(PredicateCluster pc : pcs) {
-				if(pc.cluster.size() > max) {
-					max = pc.cluster.size();
-					pred = pc.shortest;
+				if(pc.cluster.size() > threshold) {
+					ps.put(pc.shortest, pc.cluster.size());
 				}
 			}
-			predicates.put(api, pred);
+			predicates.put(api, ps);
 		}
 		
 		return predicates;

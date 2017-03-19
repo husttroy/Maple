@@ -190,6 +190,15 @@ public class PredicateMinerTest {
 	}
 	
 	@Test
+	public void testConditionBitwiseOperator2() {
+		String predicate = "itr != null && itr.hasNext() && !((cur & 1) == 1)";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("itr");
+		assertEquals("itr != null && itr.hasNext() && true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
 	public void testConditionDoulbeBackslashBeforeUnquote() {
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("signatureFile");
