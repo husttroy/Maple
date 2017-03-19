@@ -39,4 +39,10 @@ public class InfixToPrefixConvertorTest {
 		String minusSign = " (a - b) - c";
 		assertEquals("(- (- a b) c)", InfixToPrefixConvertor.infixToPrefixConvert(minusSign));
 	}
+	
+	@Test
+	public void testConvertNegativeSign2() {
+		String simpleInfix = "i0 < -1";
+		assertEquals("(< i0 -1)", InfixToPrefixConvertor.infixToPrefixConvert(simpleInfix));
+	}
 }

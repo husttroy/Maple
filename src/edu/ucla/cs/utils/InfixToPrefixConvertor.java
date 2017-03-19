@@ -161,7 +161,7 @@ public class InfixToPrefixConvertor {
 					// look backward till the first character that is not empty space
 					char b = chs[backward];
 					if(b != ' ') {
-						if(b == '(' || b == '=' || b == '*' || b == '/' || b == '+' || b == '-'){
+						if(b == '(' || b == '=' || b == '*' || b == '/' || b == '+' || b == '-' || b == '<' || b == '>'){
 							isNeg = true;
 						}
 						break;
