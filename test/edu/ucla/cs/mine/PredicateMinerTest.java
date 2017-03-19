@@ -192,6 +192,15 @@ public class PredicateMinerTest {
 	}
 	
 	@Test
+	public void testConditionSingleQuote() {
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("counterIndex");
+		vars.add("counter");
+		String predicate = "i < stringLength && !(charAt == 'a') && charAt == 'b'";
+		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
 	public void testConditionBitwiseOperator1() {
 		// bitwise operator is equivalent to logic operator when two operands are booleans except that they do not short-circuit
 		HashSet<String> vars = new HashSet<String>();

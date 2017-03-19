@@ -385,8 +385,19 @@ public abstract class PredicatePatternMiner {
 				// quote starts
 				inQuote = true;
 				sb.append(cur);
+			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
+				// escape single quote in quote
+				sb.append(cur);
+			} else if(cur == '\'' && !inQuote) {
+				// single quote starts
+				inQuote = true;
+				sb.append(cur);
 			} else if(cur == '"' && inQuote) {
 				// quote ends
+				inQuote = false;
+				sb.append(cur);
+			} else if (cur == '\'' && inQuote) {
+				// single quote ends
 				inQuote = false;
 				sb.append(cur);
 			} else if (inQuote) {
