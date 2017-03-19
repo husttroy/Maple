@@ -181,7 +181,7 @@ public class PredicateMinerTest {
 	}
 	
 	@Test
-	public void testConditionBitwiseOperator() {
+	public void testConditionBitwiseOperator1() {
 		// bitwise operator is equivalent to logic operator when two operands are booleans except that they do not short-circuit
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("img");
@@ -195,6 +195,15 @@ public class PredicateMinerTest {
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("itr");
 		assertEquals("itr != null && itr.hasNext() && true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
+	public void testConditionBitwiseOperator3() {
+		String predicate = "arrayOfFlagBitfields.size() > 0 && positionsToCount.size() > 0 && (bitfield & flag) != 0";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("arrayOfFlagBitfields");
+		assertEquals("arrayOfFlagBitfields.size() > 0 && true",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
 	

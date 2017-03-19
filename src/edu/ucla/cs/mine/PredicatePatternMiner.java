@@ -195,42 +195,42 @@ public abstract class PredicatePatternMiner {
 		setup();
 
 		// print initial clusters
-//		System.out
-//				.println("Before checking predicate equivalence and merging:");
-//		for (String api : clusters.keySet()) {
-//			System.out.println("[" + api + "]");
-//			int count = 0;
-//			for (PredicateCluster pc : clusters.get(api)) {
-//				System.out.print("Cluster" + count + ": ");
-//				for (String p : pc.cluster.elementSet()) {
-//					System.out.println(p + "---" + pc.cluster.count(p));
-//				}
-//				count++;
-//			}
-//		}
+		System.out
+				.println("Before checking predicate equivalence and merging:");
+		for (String api : clusters.keySet()) {
+			System.out.println("[" + api + "]");
+			int count = 0;
+			for (PredicateCluster pc : clusters.get(api)) {
+				System.out.print("Cluster" + count + ": ");
+				for (String p : pc.cluster.elementSet()) {
+					System.out.println(p + "---" + pc.cluster.count(p));
+				}
+				count++;
+			}
+		}
 
 		// keep merging predicates until reaching a fix point
 		optimized_merge();
 
-//		System.out.println("After checking predicate equivalence and merging:");
-//		for (String api : clusters.keySet()) {
-//			System.out.println("[" + api + "]");
-//			int count = 0;
-//			for (PredicateCluster pc : clusters.get(api)) {
-//				System.out.print("Cluster" + count + ": ");
-//				for (String p : pc.cluster.elementSet()) {
-//					System.out.println(p + "---" + pc.cluster.count(p));
-//				}
-//				count++;
-//			}
-//		}
+		System.out.println("After checking predicate equivalence and merging:");
+		for (String api : clusters.keySet()) {
+			System.out.println("[" + api + "]");
+			int count = 0;
+			for (PredicateCluster pc : clusters.get(api)) {
+				System.out.print("Cluster" + count + ": ");
+				for (String p : pc.cluster.elementSet()) {
+					System.out.println(p + "---" + pc.cluster.count(p));
+				}
+				count++;
+			}
+		}
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {
 		// replace bitwise or with logical or
 		predicate = predicate.replaceAll("(?<!\\|)\\|(?!\\|)", "||");
 		// replace bitwise and with logical and
-		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d))", "&&");
+		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d||(\\s)*[a-zA-Z0-9_]+\\)(\\s)*(\\!=|==)))", "&&");
 		
 		// normalize the use of assignment in the middle of a predicate as the assigned variable
 		predicate = replaceAssignment(predicate);
