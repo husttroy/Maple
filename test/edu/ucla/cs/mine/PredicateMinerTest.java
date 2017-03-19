@@ -165,11 +165,10 @@ public class PredicateMinerTest {
 	
 	@Test
 	public void testConditionConflictingNames() {
-		// this case should never happen
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("deployedMarker");
 		String predicate = "files && isDeploymentFromODEFileSystemAllowed()&&files!=null";
-		assertEquals("true!=null", PredicatePatternMiner.condition(vars, predicate));
+		assertEquals("true", PredicatePatternMiner.condition(vars, predicate));
 	}
 	
 	@Test
@@ -230,6 +229,16 @@ public class PredicateMinerTest {
 		vars.add("elements");
 		vars.add("index");
 		assertEquals("elements.containsKey(index) && !(index < 0 || index >= size)",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
+	public void testConditionClausePartOfAnother() {
+		String predicate = "current_rank < k && child.containsKey(c) && child.get(c).count + current_rank < k";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("c");
+		vars.add("child");
+		assertEquals("true && child.containsKey(c) && child.get(c).count + current_rank < k",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
 }

@@ -253,7 +253,7 @@ public abstract class PredicatePatternMiner {
 
 				if (!flag) {
 					// this clause is irrelevant
-					res = replaceVar(c, res, "true");
+					res = conditionClause(c, res);
 				}
 			}
 		}
@@ -505,6 +505,74 @@ public abstract class PredicatePatternMiner {
 		} else {
 			return false;
 		}
+	}
+	
+	public static String conditionClause(String clause, String predicate) {
+		String res = predicate;
+		// a small trick to check whether the part that matches the clause is a stand-alone clause
+		while(true) {
+			if(res.indexOf(clause) == -1) {
+				// the clause does not exist
+				break;
+			} else {
+				boolean flag1 = false;
+				boolean flag2 = false;
+				
+				// look ahead and see if it reaches a clause separator, e.g., &(&), |(|), !(!=)
+				int ahead = res.indexOf(clause) - 1;
+				while (ahead >= 0 && ahead < res.length()) {
+					char c = res.charAt(ahead);
+					if(c == ' ' || c == '(') {
+						// okay lets keep looking back
+						ahead --;
+					} else if (c == '&' || c == '!' || c == '|'){
+						flag1 = true;
+						break;
+					} else {
+						break;
+					}
+				}
+				
+				if(ahead == -1) {
+					// this clause appear in the beginning
+					flag1 = true;
+				}
+				
+				int behind = res.indexOf(clause) + clause.length();
+				while (behind >= 0 && behind < res.length()) {
+					char c = res.charAt(behind);
+					if(c == ' ' || c == ')') {
+						// okay lets keep looking behind
+						behind ++;
+					} else if (c == '&' || c == '|'){
+						flag2 = true;
+						break;
+					} else if (c == '!' && behind + 1 < res.length() && res.charAt(behind + 1) != '=') {
+						flag2 = true;
+						break;
+					} else {
+						break;
+					}
+				}
+				
+				if(behind == res.length()) {
+					// this clause appears in the end
+					flag2 = true;
+				}
+				
+				if(flag1 && flag2) {
+					// stand-alone clause
+					String sub1 = res.substring(0, res.indexOf(clause));
+					String sub2 = res.substring(res.indexOf(clause) + clause.length());
+					return sub1 + "true" + sub2;
+				} else {
+					// keep searching
+					res = res.substring(behind);
+				}
+			}
+		}
+		
+		return predicate;
 	}
 	
 	public static String replaceVar(String var, String predicate, String substitute) {
