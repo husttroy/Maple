@@ -222,6 +222,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testEquivalenceWithArguments() {
+		SAT sat = new SAT();
+		String p1 = "!rcv.containsKey(arg0,)";
+		String p2 = "!rcv.containsKey(arg0)";
+		assertTrue(sat.checkEquivalence(p1, p2));
+	}
+	
+	@Test
 	public void testImplicationChecker() {
 		SAT sat = new SAT();
 		assertTrue(sat.checkImplication("a&&c", "a"));

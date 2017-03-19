@@ -209,6 +209,9 @@ public class SAT {
 		// replace null with 0 in the beginning so it won't make inconsistency of symbolized tokens
 		expr = expr.replace("null", "0");
 		
+		// replace ,) with ) because the boa ouput always appends one more comma after the last argument
+		expr = expr.replace(",)", ")");
+		
 		// replace API calls (if any) with symbols to avoid operators in arguments to mess up the following tokenization
 		expr = symbolizeAPICalls(expr);
 		

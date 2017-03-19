@@ -143,6 +143,18 @@ public class PredicateMinerTest {
 		assertEquals("rcv!=null",
 				PredicatePatternMiner.replaceVar(var3, clause, "rcv"));
 	}
+	
+	@Test
+	public void testNormalizeMod() {
+		String predicate = "it % 2 > that";
+		ArrayList<String> rcv_candidates = new ArrayList<String>();
+		rcv_candidates.add("it");
+		ArrayList<ArrayList<String>> args_candidates = new ArrayList<ArrayList<String>>();
+		String norm = PredicatePatternMiner.normalize(predicate,
+				rcv_candidates, args_candidates);
+		String expected = "rcv % 2 > that";
+		assertEquals(expected, norm);
+	}
 
 	@Test
 	public void testExtractReceiverWithTypeCasting() {
