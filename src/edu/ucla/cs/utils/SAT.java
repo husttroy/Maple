@@ -41,6 +41,10 @@ public class SAT {
 		String p1_norm = normalize(p1);
 		String p2_norm = normalize(p2);
 		
+		if(p1_norm.contains("?") || p2_norm.contains("?")) {
+			return false;
+		}
+		
 		// replace variable names and function calls with boolean and integer
 		// symbols consistently. because Z3 does not support function calls and
 		// we also need to know the type of each variables and subexpressions.
@@ -154,6 +158,10 @@ public class SAT {
 		
 		String p1_norm = normalize(p1);
 		String p2_norm = normalize(p2);
+		
+		if(p1_norm.contains("?") || p2_norm.contains("?")) {
+			return false;
+		}
 		
 		String p1_sym = symbolize(p1_norm);
 		String p2_sym = symbolize(p2_norm);
