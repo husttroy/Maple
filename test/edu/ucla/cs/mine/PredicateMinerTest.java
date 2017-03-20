@@ -124,9 +124,9 @@ public class PredicateMinerTest {
 		String var3 = "files";
 		String clause = "files!=null";
 
-		assertFalse(PredicatePatternMiner.containsVar(var1, clause));
-		assertFalse(PredicatePatternMiner.containsVar(var2, clause));
-		assertTrue(PredicatePatternMiner.containsVar(var3, clause));
+		assertFalse(PredicatePatternMiner.containsVar(var1, clause, 0));
+		assertFalse(PredicatePatternMiner.containsVar(var2, clause, 0));
+		assertTrue(PredicatePatternMiner.containsVar(var3, clause, 0));
 	}
 
 	@Test
@@ -137,11 +137,11 @@ public class PredicateMinerTest {
 		String clause = "files!=null";
 
 		assertEquals("files!=null",
-				PredicatePatternMiner.replaceVar(var1, clause, "rcv"));
+				PredicatePatternMiner.replaceVar(var1, clause, 0, "rcv"));
 		assertEquals("files!=null",
-				PredicatePatternMiner.replaceVar(var2, clause, "rcv"));
+				PredicatePatternMiner.replaceVar(var2, clause, 0, "rcv"));
 		assertEquals("rcv!=null",
-				PredicatePatternMiner.replaceVar(var3, clause, "rcv"));
+				PredicatePatternMiner.replaceVar(var3, clause, 0, "rcv"));
 	}
 	
 	@Test
@@ -288,5 +288,26 @@ public class PredicateMinerTest {
 		vars.add("neighbor_iter");
 		assertEquals("neighbor_iter.hasNext() && true",
 				PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
+	public void testConditionNameInTheMiddle() {
+		String predicate = "!(imports!=null) && l.hasNext()";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("l");
+		assertEquals("true && l.hasNext()",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
+	public void normalizeNameInTheMiddle2() {
+		String predicate = "!(l!=null) && l.hasNext()";
+		ArrayList<String> rcv_candidates = new ArrayList<String>();
+		rcv_candidates.add("l");
+		ArrayList<ArrayList<String>> args_candidates = new ArrayList<ArrayList<String>>();
+		String norm = PredicatePatternMiner.normalize(predicate,
+				rcv_candidates, args_candidates);
+		String expected = "!(rcv!=null) && rcv.hasNext()";
+		assertEquals(expected, norm);
 	}
 }

@@ -195,35 +195,35 @@ public abstract class PredicatePatternMiner {
 		setup();
 
 		// print initial clusters
-		System.out
-				.println("Before checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
+//		System.out
+//				.println("Before checking predicate equivalence and merging:");
+//		for (String api : clusters.keySet()) {
+//			System.out.println("[" + api + "]");
+//			int count = 0;
+//			for (PredicateCluster pc : clusters.get(api)) {
+//				System.out.print("Cluster" + count + ": ");
+//				for (String p : pc.cluster.elementSet()) {
+//					System.out.println(p + "---" + pc.cluster.count(p));
+//				}
+//				count++;
+//			}
+//		}
 
 		// keep merging predicates until reaching a fix point
 		optimized_merge();
 
-		System.out.println("After checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
+//		System.out.println("After checking predicate equivalence and merging:");
+//		for (String api : clusters.keySet()) {
+//			System.out.println("[" + api + "]");
+//			int count = 0;
+//			for (PredicateCluster pc : clusters.get(api)) {
+//				System.out.print("Cluster" + count + ": ");
+//				for (String p : pc.cluster.elementSet()) {
+//					System.out.println(p + "---" + pc.cluster.count(p));
+//				}
+//				count++;
+//			}
+//		}
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {
@@ -246,7 +246,7 @@ public abstract class PredicatePatternMiner {
 
 				boolean flag = false;
 				for (String var : vars) {
-					if (containsVar(var, c)) {
+					if (containsVar(var, c, 0)) {
 						flag = true;
 					}
 				}
@@ -455,7 +455,7 @@ public abstract class PredicatePatternMiner {
 			if (norm.contains(rcv)) {
 				// cannot simply call replaceAll since some name be appear as part of other names
 				//norm = norm.replaceAll(Pattern.quote(rcv), "rcv");
-				norm = replaceVar(rcv, norm, "rcv");
+				norm = replaceVar(rcv, norm, 0, "rcv");
 			}
 		}
 
@@ -464,7 +464,7 @@ public abstract class PredicatePatternMiner {
 				if (norm.contains(args.get(i))) {
 					// cannot simply call replaceAll since some name be appear as part of other names
 					//norm = norm.replaceAll(Pattern.quote(args.get(i)), "arg" + i);
-					norm = replaceVar(args.get(i), norm, "arg" + i);
+					norm = replaceVar(args.get(i), norm, 0, "arg" + i);
 				}
 			}
 		}
@@ -472,13 +472,13 @@ public abstract class PredicatePatternMiner {
 		return norm;
 	}
 	
-	public static boolean containsVar(String var, String clause) {
-		if(clause.contains(var)) {
+	public static boolean containsVar(String var, String clause, int start) {
+		if(clause.substring(start).contains(var)) {
 			boolean flag1 = false;
 			boolean flag2 = false;
 			// a small trick to avoid the case where a condition variable name is part of a variable name in the clause
-			int ahead = clause.indexOf(var) - 1;
-			int behind = clause.indexOf(var) + var.length();
+			int ahead = clause.indexOf(var, start) - 1;
+			int behind = clause.indexOf(var, start) + var.length();
 			if (ahead >= 0 && ahead < clause.length()) {
 				char c = clause.charAt(ahead);
 				if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
@@ -508,7 +508,7 @@ public abstract class PredicatePatternMiner {
 			} else {
 				// keep looking forward
 				if(behind < clause.length()) {
-					return containsVar(var, clause.substring(behind));
+					return containsVar(var, clause, behind);
 				} else {
 					return false;
 				}
@@ -588,16 +588,16 @@ public abstract class PredicatePatternMiner {
 		return predicate;
 	}
 	
-	public static String replaceVar(String var, String predicate, String substitute) {
-		if(!containsVar(var, predicate)) {
+	public static String replaceVar(String var, String predicate, int start, String substitute) {
+		if(!containsVar(var, predicate, start)) {
 			return predicate;
 		}
 		
 		boolean flag1 = false;
 		boolean flag2 = false;
 		// a small trick to avoid the case where a condition variable name is part of a variable name in the clause
-		int ahead = predicate.indexOf(var) - 1;
-		int behind = predicate.indexOf(var) + var.length();
+		int ahead = predicate.indexOf(var, start) - 1;
+		int behind = predicate.indexOf(var, start) + var.length();
 		
 		if (ahead >= 0 && ahead < predicate.length()) {
 			char c = predicate.charAt(ahead);
@@ -628,10 +628,13 @@ public abstract class PredicatePatternMiner {
 		String sub2 = predicate.substring(behind);
 		if(flag1 && flag2) {
 			// replace it
-			return sub1 + substitute + replaceVar(var, sub2, substitute);
+			String predicate2 = sub1 + substitute + sub2;
+			// recalculate behind index after substitution
+			behind = behind + substitute.length() - var.length();
+			return replaceVar(var, predicate2, behind, substitute);
 		} else {
 			// keep looking forward
-			return sub1 + var + replaceVar(var, sub2, substitute);
+			return replaceVar(var, predicate, behind, substitute);
 		}
 	}
 	
