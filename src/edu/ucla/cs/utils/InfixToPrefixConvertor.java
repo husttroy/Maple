@@ -171,8 +171,12 @@ public class InfixToPrefixConvertor {
 				}
 				
 				if(isNeg) {
-					// consider negative sign as part of current token
-					sb.append(c);
+					if(i + 1 < chs.length && chs[i + 1] == 'i') {
+						// Z3 does not support negative sign in front of an integer variable, so we will ditch the negative sign in front of integer variables
+						continue;
+					} else {
+						sb.append(c);
+					}
 				} else {
 					// minus sign
 					if(sb.length() > 0) {

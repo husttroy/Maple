@@ -47,6 +47,13 @@ public class InfixToPrefixConvertorTest {
 	}
 	
 	@Test
+	public void testConvertNegativeSign3() {
+		// Z3 does not support negative integer variable
+		String simpleInfix = "i0 < -i1";
+		assertEquals("(< i0 i1)", InfixToPrefixConvertor.infixToPrefixConvert(simpleInfix));
+	}
+	
+	@Test
 	public void testConvertPlusThenCompare() {
 		String infix = "true && b0 && i0 + i1 < i2";
 		assertEquals("(&& (&& true b0) (< (+ i0 i1) i2))", InfixToPrefixConvertor.infixToPrefixConvert(infix));
