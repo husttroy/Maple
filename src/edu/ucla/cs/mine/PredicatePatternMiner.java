@@ -520,6 +520,7 @@ public abstract class PredicatePatternMiner {
 	
 	public static String conditionClause(String clause, String predicate) {
 		String res = predicate;
+		String pre = "";
 		// a small trick to check whether the part that matches the clause is a stand-alone clause
 		while(true) {
 			if(res.indexOf(clause) == -1) {
@@ -575,9 +576,10 @@ public abstract class PredicatePatternMiner {
 					// stand-alone clause
 					String sub1 = res.substring(0, res.indexOf(clause));
 					String sub2 = res.substring(res.indexOf(clause) + clause.length());
-					return sub1 + "true" + sub2;
+					return pre + sub1 + "true" + sub2;
 				} else {
 					// keep searching
+					pre = res.substring(0, behind);
 					res = res.substring(behind);
 				}
 			}

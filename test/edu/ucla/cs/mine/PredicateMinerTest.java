@@ -280,4 +280,13 @@ public class PredicateMinerTest {
 		assertEquals("true && child.containsKey(c) && child.get(c).count + current_rank < k",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionUnderscore() {
+		String predicate = "neighbor_iter.hasNext() && iter.hasNext()";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("neighbor_iter");
+		assertEquals("neighbor_iter.hasNext() && true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }
