@@ -308,8 +308,16 @@ public abstract class PredicatePatternMiner {
 				} else if(cur == '"' && !inQuote) {
 					// quote starts
 					inQuote = true;
+				} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
+					// escape single quote in quote 
+				} else if(cur == '\'' && !inQuote) {
+					// single quote starts
+					inQuote = true; 
 				} else if(cur == '"' && inQuote) {
 					// quote ends
+					inQuote = false;
+				} else if (cur == '\'' && inQuote) {
+					// single quote ends
 					inQuote = false;
 				} else if (inQuote) {
 					// ignore any separator in quote

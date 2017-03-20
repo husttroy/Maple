@@ -320,4 +320,14 @@ public class PredicateMinerTest {
 		assertEquals("true && enm_70.hasNext()&&true",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionSingleQuote2() {
+		String predicate = "!(bsource[start]!='=') && start<bsource.length && !(!classNames.containsKey(className,))";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("classNames");
+		vars.add("className");
+		assertEquals("true && !(!classNames.containsKey(className,))",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }
