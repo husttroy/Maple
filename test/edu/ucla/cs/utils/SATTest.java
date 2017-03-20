@@ -205,6 +205,19 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testUpdateI() {
+		SAT sat = new SAT();
+		String p1 = "i<rcv.size()-3 && rcv.size()>=4 && i<rcv.size()-4";
+		String p2 = "styleElements[i].hasAttribute(\"base-arg0\",) && true";
+		String p1_norm = sat.normalize(p1);
+		String s1 = sat.symbolize(p1_norm);
+		String p2_norm = sat.normalize(p2);
+		String s2 = sat.symbolize(p2_norm);
+		assertEquals("i0<i1-3 && i1>=4 && i0<i1-4", s1);
+		assertEquals("b0 && true", s2);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";

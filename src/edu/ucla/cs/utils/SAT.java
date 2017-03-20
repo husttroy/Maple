@@ -445,10 +445,73 @@ public class SAT {
 		// replace function calls and variable names with symbols
 		// first check whether there are any variables named as i or b
 		if(bool_symbol_map.keySet().contains("b")) {
+			// check whether there are other symbolized expressions that also reference b
+			HashMap<String, String> bool_update = new HashMap<String, String>();
+			for(String name : bool_symbol_map.keySet()) {
+				if(name.matches("^.*(?<![a-zA-Z0-9_])b(?![a-zA-Z0-9_]).*$")) {
+					String new_name = name.replaceAll("(?<![a-zA-Z0-9_])b(?![a-zA-Z0-9_])", bool_symbol_map.get("b"));
+					bool_update.put(name, new_name);
+				}
+			}
+			
+			// update the symbolized expression in the boolean map since it will be modified by the symbolization of variable b 
+			for(String name : bool_update.keySet()) {
+				String value = bool_symbol_map.get(name);
+				String new_name = bool_update.get(name);
+				bool_symbol_map.put(new_name, value);
+			}
+			
+			HashMap<String, String> int_update = new HashMap<String, String>();
+			for(String name : int_symbol_map.keySet()) {
+				if(name.matches("^.*(?<![a-zA-Z0-9_])b(?![a-zA-Z0-9_]).*$")) {
+					String new_name = name.replaceAll("(?<![a-zA-Z0-9_])b(?![a-zA-Z0-9_])", bool_symbol_map.get("b"));
+					int_update.put(name, new_name);
+				}
+			}
+			
+			// update the symbolized expression in the integer map since it will be modified by the symbolization of variable b 
+			for(String name : int_update.keySet()) {
+				String value = int_symbol_map.get(name);
+				String new_name = int_update.get(name);
+				int_symbol_map.put(new_name, value);
+			}
+			
 			// replace it first
 			expr = expr.replaceAll("(?<![a-zA-Z0-9_])b(?![a-zA-Z0-9_])", bool_symbol_map.get("b"));
 		}
+		
 		if(int_symbol_map.keySet().contains("i")) {
+			// check whether there are other symbolized expressions that also reference i
+			HashMap<String, String> bool_update = new HashMap<String, String>();
+			for(String name : bool_symbol_map.keySet()) {
+				if(name.matches("^.*(?<![a-zA-Z0-9_])i(?![a-zA-Z0-9_]).*$")) {
+					String new_name = name.replaceAll("(?<![a-zA-Z0-9_])i(?![a-zA-Z0-9_])", int_symbol_map.get("i"));
+					bool_update.put(name, new_name);
+				}
+			}
+			
+			// update the symbolized expression in the boolean map since it will be modified by the symbolization of variable i
+			for(String name : bool_update.keySet()) {
+				String value = bool_symbol_map.get(name);
+				String new_name = bool_update.get(name);
+				bool_symbol_map.put(new_name, value);
+			}
+			
+			HashMap<String, String> int_update = new HashMap<String, String>();
+			for(String name : int_symbol_map.keySet()) {
+				if(name.matches("^.*(?<![a-zA-Z0-9_])i(?![a-zA-Z0-9_]).*$")) {
+					String new_name = name.replaceAll("(?<![a-zA-Z0-9_])i(?![a-zA-Z0-9_])", int_symbol_map.get("i"));
+					int_update.put(name, new_name);
+				}
+			}
+			
+			// update the symbolized expression in the boolean map since it will be modified by the symbolization of variable i
+			for(String name : int_update.keySet()) {
+				String value = int_symbol_map.get(name);
+				String new_name = int_update.get(name);
+				int_symbol_map.put(new_name, value);
+			}
+						
 			// replace it first
 			expr = expr.replaceAll("(?<![a-zA-Z0-9_])i(?![a-zA-Z0-9_])", int_symbol_map.get("i"));
 		}
