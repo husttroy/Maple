@@ -330,4 +330,13 @@ public class PredicateMinerTest {
 		assertEquals("true && !(!classNames.containsKey(className,))",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionVariableNameAppearInQuote() {
+		String predicate = "styleElements[i].hasAttribute(\"base-name\",) && true";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("name");
+		assertEquals("true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }

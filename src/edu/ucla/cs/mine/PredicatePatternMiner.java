@@ -277,6 +277,55 @@ public abstract class PredicatePatternMiner {
 		return res;
 	}
 	
+	public static boolean isInQuote(String s, int index) {
+		if(s.contains("\"") || s.contains("'")) {
+			char[] chars = s.toCharArray();
+			boolean inQuote = false;
+			for(int i = 0; i < chars.length; i++) {
+				if(i == index) {
+					return inQuote;
+				}
+				char cur = chars[i];
+				if(cur == '"' && i > 0 && chars[i-1] == '\\') {
+					// count the number of backslashes
+					int count = 0;
+					while(i - count - 1 >= 0) {
+						if(chars[i - count - 1] == '\\') {
+							count ++;
+						} else {
+							break;
+						}
+					} 
+					if(count % 2 == 0) {
+						// escape one or more backslashes instead of this quote, end of quote
+						// quote ends
+						inQuote = false;
+					} else {
+						// escape quote, not the end of the quote
+					}
+				} else if(cur == '"' && !inQuote) {
+					// quote starts
+					inQuote = true;
+				} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
+					// escape single quote in quote 
+				} else if(cur == '\'' && !inQuote) {
+					// single quote starts
+					inQuote = true; 
+				} else if(cur == '"' && inQuote) {
+					// quote ends
+					inQuote = false;
+				} else if (cur == '\'' && inQuote) {
+					// single quote ends
+					inQuote = false;
+				}
+			}
+			
+			return inQuote;
+		} else {
+			return false;
+		}
+	}
+	
 	public static String replaceAssignment(String predicate) {
 		if(predicate.matches("^.+(?<!(=|\\!|>|<))=(?!=).+$")){
 			// this algorithm is based on one observation that an assignment sub-expression must be wrapped with parentheses in a boolean expression
@@ -515,8 +564,9 @@ public abstract class PredicatePatternMiner {
 			boolean flag1 = false;
 			boolean flag2 = false;
 			// a small trick to avoid the case where a condition variable name is part of a variable name in the clause
-			int ahead = clause.indexOf(var, start) - 1;
-			int behind = clause.indexOf(var, start) + var.length();
+			int index = clause.indexOf(var, start);
+			int ahead =  index - 1;
+			int behind = index + var.length();
 			if (ahead >= 0 && ahead < clause.length()) {
 				char c = clause.charAt(ahead);
 				if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
@@ -541,7 +591,7 @@ public abstract class PredicatePatternMiner {
 				flag2 = true;
 			}
 			
-			if(flag1 && flag2) {
+			if(flag1 && flag2 && !isInQuote(clause, index)) {
 				return true;
 			} else {
 				// keep looking forward
@@ -634,8 +684,9 @@ public abstract class PredicatePatternMiner {
 		boolean flag1 = false;
 		boolean flag2 = false;
 		// a small trick to avoid the case where a condition variable name is part of a variable name in the clause
-		int ahead = predicate.indexOf(var, start) - 1;
-		int behind = predicate.indexOf(var, start) + var.length();
+		int index = predicate.indexOf(var, start);
+		int ahead =  index - 1;
+		int behind = index + var.length();
 		
 		if (ahead >= 0 && ahead < predicate.length()) {
 			char c = predicate.charAt(ahead);
@@ -664,7 +715,7 @@ public abstract class PredicatePatternMiner {
 
 		String sub1 = predicate.substring(0, ahead + 1);
 		String sub2 = predicate.substring(behind);
-		if(flag1 && flag2) {
+		if(flag1 && flag2 && !isInQuote(predicate, index)) {
 			// replace it
 			String predicate2 = sub1 + substitute + sub2;
 			// recalculate behind index after substitution
