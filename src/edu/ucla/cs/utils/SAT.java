@@ -37,17 +37,52 @@ public class SAT {
 		bool_symbol_map.clear();
 		int_symbol_map.clear();
 		call_symbol_map.clear();
-
-		// replace (rcv) with rcv
-		p1 = p1.replace("(rcv)", "rcv");
-		p2 = p2.replace("(rcv)", "rcv");
+		
+		String p1_norm = normalize(p1);
+		String p2_norm = normalize(p2);
 		
 		// replace variable names and function calls with boolean and integer
 		// symbols consistently. because Z3 does not support function calls and
 		// we also need to know the type of each variables and subexpressions.
-		String p1_sym = symbolize(p1);
-		String p2_sym = symbolize(p2);
+		String p1_sym = symbolize(p1_norm);
+		String p2_sym = symbolize(p2_norm);
 
+		// handle symbolizing conflicts
+		HashSet<String> set1 = new HashSet<String>(bool_symbol_map.keySet());
+		HashSet<String> set2 = new HashSet<String>(int_symbol_map.keySet());
+		set1.retainAll(set2);
+		if(!set1.isEmpty()) {
+			// conflicts. this because we cannot distinguish whether == and != are comparing two booleans or two integers
+			for(String name : set1) {
+				String symbol = int_symbol_map.get(name);
+				p1_sym = p1_sym.replace(symbol, bool_symbol_map.get(name));
+				p2_sym = p2_sym.replace(symbol, bool_symbol_map.get(name));
+				int_symbol_map.remove(name);
+				
+				// need to find the associated boolean variable it compares with
+				String another = null;
+				for(String name2 : int_symbol_map.keySet()) {
+					String regex1 = "^.*" + Pattern.quote(name) + "(\\s)*(=|\\!)=(\\s)*" + Pattern.quote(name2) + ".*$";
+					String regex2 = "^.*" + Pattern.quote(name2) + "(\\s)*(=|\\!)=(\\s)*" + Pattern.quote(name) + ".*$";
+					if(p1_norm.matches(regex1) || p1_norm.matches(regex2) || p2_norm.matches(regex1) || p2_norm.matches(regex2)) {
+						// name2 is the one
+						another = name2;
+						break;
+					}
+				}
+				
+				if(another != null) {
+					String symbol2 = int_symbol_map.get(another);
+					int_symbol_map.remove(another);
+					if(!bool_symbol_map.containsKey(another)) {
+						bool_symbol_map.put(another, "b" + bool_symbol_map.values().size());
+						p1_sym = p1_sym.replace(symbol2, bool_symbol_map.get(another));
+						p2_sym = p2_sym.replace(symbol2, bool_symbol_map.get(another));
+					}
+				}
+			}
+		}
+		
 		// Z3 does not support ++ or -- operators, replace it
 		p1_sym = normalizePlusPlusAndMinusMinus(p1_sym);
 		p2_sym = normalizePlusPlusAndMinusMinus(p2_sym);
@@ -117,8 +152,16 @@ public class SAT {
 		int_symbol_map.clear();
 		call_symbol_map.clear();
 		
-		String p1_sym = symbolize(p1);
-		String p2_sym = symbolize(p2);
+		String p1_norm = normalize(p1);
+		String p2_norm = normalize(p2);
+		
+		String p1_sym = symbolize(p1_norm);
+		String p2_sym = symbolize(p2_norm);
+		
+		// Z3 does not support ++ or -- operators, replace it
+		p1_sym = normalizePlusPlusAndMinusMinus(p1_sym);
+		p2_sym = normalizePlusPlusAndMinusMinus(p2_sym);
+		
 		String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
 		String p2_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p2_sym);
 		
@@ -220,21 +263,6 @@ public class SAT {
 	 * @return
 	 */
 	public String symbolize(String expr) {
-		// type erasure---get rid of '<' and '>' in parameterized types to avoid them messing up splitting based on arithmetic operators
-		expr = expr.replaceAll("<[a-zA-Z0-9\\?\\s]*>", "");
-		
-		// strip off string literals and the concatenation of strings
-		expr = stripOffStringLiteralsAndStringConcatenations(expr);
-		
-		// replace null with 0 in the beginning so it won't make inconsistency of symbolized tokens
-		expr = expr.replace("null", "0");
-		
-		// replace ,) with ) because the boa ouput always appends one more comma after the last argument
-		expr = expr.replace(",)", ")");
-		
-		// replace API calls (if any) with symbols to avoid operators in arguments to mess up the following tokenization
-		expr = symbolizeAPICalls(expr);
-		
 		// first tokenize this expression by logic operators
 		String[] arr = expr.split("&&|\\|\\||\\!(?!=)");
 		
@@ -261,7 +289,7 @@ public class SAT {
 					temp = stripUnbalancedParentheses(temp);
 					if(temp.trim().equals("true") || temp.trim().equals("false")) {
 						isBooleanExpression = true;
-					}
+					} 
 				}
 				
 				if(isBooleanExpression) {
@@ -369,7 +397,7 @@ public class SAT {
 				}
 			}
 		}
-
+		
 		// replace function calls and variable names with symbols
 		// first check whether there are any variables named as i or b
 		if(bool_symbol_map.keySet().contains("b")) {
@@ -409,6 +437,28 @@ public class SAT {
 			}
 			expr = expr.replaceAll(Pattern.quote(s), sym);
 		}
+		
+		return expr;
+	}
+	
+	
+	public String normalize(String expr) {
+		expr = expr.replace("(rcv)", "rcv");
+		
+		// type erasure---get rid of '<' and '>' in parameterized types to avoid them messing up splitting based on arithmetic operators
+		expr = expr.replaceAll("<[a-zA-Z0-9\\?\\s]*>", "");
+				
+		// strip off string literals and the concatenation of strings
+		expr = stripOffStringLiteralsAndStringConcatenations(expr);
+		
+		// replace null with 0 in the beginning so it won't make inconsistency of symbolized tokens
+		expr = expr.replace("null", "0");
+		
+		// replace ,) with ) because the boa ouput always appends one more comma after the last argument
+		expr = expr.replace(",)", ")");
+		
+		// replace API calls (if any) with symbols to avoid operators in arguments to mess up the following tokenization
+		expr = symbolizeAPICalls(expr);
 		
 		return expr;
 	}

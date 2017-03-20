@@ -56,8 +56,10 @@ public class SATTest {
 		SAT sat = new SAT();
 		String p1 = "rcv.size()<firstSet.size()";
 		String p2 = "true&&rcv!=null&&rcv.size()>0";
-		String p1_sym = sat.symbolize(p1);
-		String p2_sym = sat.symbolize(p2);
+		String p1_norm = sat.normalize(p1);
+		String p2_norm = sat.normalize(p2);
+		String p1_sym = sat.symbolize(p1_norm);
+		String p2_sym = sat.symbolize(p2_norm);
 		assertEquals("i0<i1", p1_sym);
 		assertEquals("true&&i2!=0&&i0>0", p2_sym);
 	}
@@ -69,7 +71,8 @@ public class SATTest {
 	public void testSymbolizePredicateWithParameterizedTypes() {
 		SAT sat = new SAT();
 		String p1 = "new ArrayList<>(rcv).size()>0";
-		String p1_sym = sat.symbolize(p1);
+		String p1_norm = sat.normalize(p1);
+		String p1_sym = sat.symbolize(p1_norm);
 		assertEquals("i0>0", p1_sym);
 	}
 	
@@ -95,13 +98,16 @@ public class SATTest {
 	public void testSymbolizeEqualsFalse() {
 		SAT sat = new SAT();
 		String p1 = "true && arg0!=null&&arg0.isEmpty()==false";
-		String s1 = sat.symbolize(p1);
+		String p1_norm = sat.normalize(p1);
+		String s1 = sat.symbolize(p1_norm);
 		sat = new SAT(); //clear the map
 		String p2 = "rcv.exists()==false||rcv.length()<1";
-		String s2 = sat.symbolize(p2);
+		String p2_norm = sat.normalize(p2);
+		String s2 = sat.symbolize(p2_norm);
 		sat = new SAT(); // clear the map
 		String p3 = "true && rcv.exists()==false && true";
-		String s3 = sat.symbolize(p3);
+		String p3_norm = sat.normalize(p3);
+		String s3 = sat.symbolize(p3_norm);
 		assertEquals("true && i0!=0&&b0==false", s1);
 		assertEquals("b0==false||i0<1", s2);
 		assertEquals("true && b0==false && true", s3);
@@ -111,7 +117,8 @@ public class SATTest {
 	public void testSymbolizePlusAsStringOperator() {
 		SAT sat = new SAT();
 		String p = "true||StdIn.getInstance(getEncoding(),).readBooleanOption(\"Do you want to write all the configuration properties to an encrypted file at \"+rcv.getPath()+\"?\",\"y\",\"n\",)";
-		String s = sat.symbolize(p);
+		String p_norm = sat.normalize(p);
+		String s = sat.symbolize(p_norm);
 		assertEquals("true||b0", s);
 	}
 	
@@ -127,7 +134,8 @@ public class SATTest {
 	public void testSymbolizeNull() {
 		SAT sat = new SAT();
 		String p = "!(entityFiles.contains(new EntityFile(rcv,null,),)) && !(rcv==null) && !(rcv.exists())";
-		String s = sat.symbolize(p);
+		String p_norm = sat.normalize(p);
+		String s = sat.symbolize(p_norm);
 		assertEquals("!b0 && !(i0==0) && !b2", s);
 	}
 	
@@ -135,7 +143,8 @@ public class SATTest {
 	public void testSymbolizePlusInArgument() {
 		SAT sat = new SAT();
 		String p = "!rcv.substring(arg0 + arg1, arg2,).isEmpty()";
-		String s = sat.symbolize(p);
+		String p_norm = sat.normalize(p);
+		String s = sat.symbolize(p_norm);
 		assertEquals("!b0", s);
 	}
 	
@@ -143,7 +152,8 @@ public class SATTest {
 	public void testSymbolizeAssignment() {
 		SAT sat = new SAT();
 		String p = "!(rcv = new File(propDir + f)).exists()";
-		String s = sat.symbolize(p);
+		String p_norm = sat.normalize(p);
+		String s = sat.symbolize(p_norm);
 		assertEquals("!b0", s);
 	}
 	
@@ -167,7 +177,8 @@ public class SATTest {
 	public void testSymbolizeStringComparison1() {
 		SAT sat = new SAT();
 		String p = "true && !(arg0 == null || arg0 == \"\" || arg0.isEmpty())";
-		String s = sat.symbolize(p);
+		String p_norm = sat.normalize(p);
+		String s = sat.symbolize(p_norm);
 		assertEquals("true && !(i0 == 0 || i0 == 1 || b0)", s);
 	}
 	
@@ -175,7 +186,8 @@ public class SATTest {
 	public void testSymbolizeStringComparison2() {
 		SAT sat = new SAT();
 		String p = "true && !(arg0 == null || \"\" == arg0 || arg0.isEmpty())";
-		String s = sat.symbolize(p);
+		String p_norm = sat.normalize(p);
+		String s = sat.symbolize(p_norm);
 		assertEquals("true && !(i0 == 0 || 1 == i0 || b0)", s);
 	}
 	
@@ -265,5 +277,11 @@ public class SATTest {
 		// we do not distinguish i-- and --i
 		assertTrue(sat.checkEquivalence("true && --i0>=0", "true && i0-->=0"));
 		assertTrue(sat.checkEquivalence("true && ++i0>=0", "true && i0++>=0"));
+	}
+	
+	@Test
+	public void testEquivalenceBooleanComparison() {
+		SAT sat = new SAT();
+		assertFalse(sat.checkEquivalence("rcv.next() && true", "rcv.next()==candidate && rcv.hasNext()"));
 	}
 }
