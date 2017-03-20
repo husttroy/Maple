@@ -258,4 +258,12 @@ public class SATTest {
 		assertTrue(sat.checkImplication("a % 2 == 1 && c", "c"));
 		assertFalse(sat.checkImplication("a % 2 == 1 && c", "a"));
 	}
+	
+	@Test
+	public void testSATIncrementAndDecrement() {
+		SAT sat = new SAT();
+		// we do not distinguish i-- and --i
+		assertTrue(sat.checkEquivalence("true && --i0>=0", "true && i0-->=0"));
+		assertTrue(sat.checkEquivalence("true && ++i0>=0", "true && i0++>=0"));
+	}
 }

@@ -41,12 +41,17 @@ public class SAT {
 		// replace (rcv) with rcv
 		p1 = p1.replace("(rcv)", "rcv");
 		p2 = p2.replace("(rcv)", "rcv");
+		
 		// replace variable names and function calls with boolean and integer
 		// symbols consistently. because Z3 does not support function calls and
 		// we also need to know the type of each variables and subexpressions.
 		String p1_sym = symbolize(p1);
 		String p2_sym = symbolize(p2);
 
+		// Z3 does not support ++ or -- operators, replace it
+		p1_sym = normalizePlusPlusAndMinusMinus(p1_sym);
+		p2_sym = normalizePlusPlusAndMinusMinus(p2_sym);
+		
 		// convert infix expressions to prefix expressions because Z3 encodes
 		// expression in prefix order
 		String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
@@ -56,6 +61,20 @@ public class SAT {
 		// check semantic equivalence
 		String query = generateEquvalenceQueryInZ3(p1_prefix, p2_prefix);
 		return !isSAT(query);
+	}
+	
+	private String normalizePlusPlusAndMinusMinus(String expr) {
+		if(expr.contains("++")) {
+			expr = expr.replaceAll("\\+\\+(?=i|\\d)|\\+\\+\\s(?=i|\\d)", "");
+			expr = expr.replaceAll("(?<=\\d)\\+\\+|(?<=\\d)\\s\\+\\+", "");
+		}
+		
+		if(expr.contains("--")) {
+			expr = expr.replaceAll("--(?=i|\\d)|--\\s(?=i|\\d)", "");
+			expr = expr.replaceAll("(?<=\\d)--|(?<=\\d)\\s--", "");
+		}
+		
+		return expr;
 	}
 	
 	public String generateEquvalenceQueryInZ3(String p1, String p2) {
