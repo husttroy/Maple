@@ -192,6 +192,19 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testNotSymbolizeLetterInFalse() {
+		SAT sat = new SAT();
+		String p1 = "arg0<s";
+		String p2 = "(Set<String>) rcv.keySet() && !(requestedMap.containsKey(arg0,)==false)";
+		String p1_norm = sat.normalize(p1);
+		String s1 = sat.symbolize(p1_norm);
+		String p2_norm = sat.normalize(p2);
+		String s2 = sat.symbolize(p2_norm);
+		assertEquals("i0<i1", s1);
+		assertEquals("b0 && !(b1==false)", s2);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";

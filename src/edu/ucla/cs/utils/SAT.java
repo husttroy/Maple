@@ -479,7 +479,7 @@ public class SAT {
 			} else {
 				sym = int_symbol_map.get(s);
 			}
-			expr = expr.replaceAll(Pattern.quote(s), sym);
+			expr = expr.replaceAll("(?<![a-zA-Z0-9_])" + Pattern.quote(s) + "(?![a-zA-Z0-9_])", sym);
 		}
 		
 		return expr;
