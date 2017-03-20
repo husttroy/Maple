@@ -221,8 +221,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			relevant_elements.addAll(arguments);
 
 			// remove irrelevant clauses
-			String conditioned_predicate = condition(relevant_elements,
-					predicate);
+			String conditioned_predicate;
+			if(!predicate.equals("true")) {
+				conditioned_predicate = condition(relevant_elements,predicate);
+			} else {
+				conditioned_predicate = "true";
+			}
+					
 
 			// normalize names
 			// declare temporary variables to fit the API
@@ -233,10 +238,16 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			ArrayList<ArrayList<String>> temp2 = new ArrayList<ArrayList<String>>();
 			temp2.add(arguments);
 
-			String normalized_predicate = normalize(conditioned_predicate,
-					temp1, temp2);
+			String normalized_predicate;
+			if(!conditioned_predicate.equals("true")) {
+				normalized_predicate = normalize(conditioned_predicate,
+						temp1, temp2);
+			} else {
+				normalized_predicate = "true";
+			}
+			
 
-			if (normalized_predicate.equals("true && !(!rcv.exists()) && !(rcv.exists())")) {
+			if (normalized_predicate.equals("arg0")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
@@ -309,11 +320,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("IF {");
-		pattern.add("createNewFile");
-		pattern.add("}");
-		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output.txt";
+		pattern.add("get");
+		String path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();

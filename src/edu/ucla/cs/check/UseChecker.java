@@ -24,11 +24,11 @@ public class UseChecker {
 	}
 	
 	public HashMap<Answer, ArrayList<Violation>> check(
-			ArrayList<APISeqItem> pattern, ArrayList<Answer> answers) {
+			HashSet<ArrayList<APISeqItem>> patterns, ArrayList<Answer> answers) {
 		HashMap<Answer, ArrayList<Violation>> violations = new HashMap<Answer, ArrayList<Violation>>();
 		for (Answer answer : answers) {
 			for (ArrayList<APISeqItem> seq : answer.seq.values()) {
-				ArrayList<Violation> vios = validate(pattern, seq);
+				ArrayList<Violation> vios = validate(patterns, seq);
 				if(!vios.isEmpty()) {
 					ArrayList<Violation> value;
 					if(violations.containsKey(answer)) {
@@ -50,37 +50,62 @@ public class UseChecker {
 
 	/**
 	 * 
-	 * Check whether the sequence violates the pattern If it does, characterize
-	 * the violations. 1. Exception Handling 2. Error Handling 3. Weakest
-	 * Precondition 4. API Call Ordering 5. API Call Completeness 6. Alternative
-	 * Use (*)
+	 * Check a structured API call sequence against multiple reliable usage patterns. We consider the sequence reliable if it 
+	 * follows at least one usage pattern. If the sequence does not follow any patterns, characterize the violations. 
+	 * 1. Exception Handling 
+	 * 2. Error Handling 
+	 * 3. Weakest Precondition 
+	 * 4. API Call Ordering 
+	 * 5. API Call Completeness 
 	 * 
 	 * @param pattern
 	 * @param seq
 	 * @return
 	 */
-	private ArrayList<Violation> validate(ArrayList<APISeqItem> pattern,
+	private ArrayList<Violation> validate(HashSet<ArrayList<APISeqItem>> patterns,
 			ArrayList<APISeqItem> seq) {
 		ArrayList<Violation> violations = new ArrayList<Violation>();
 
-		// compute the longest common subseqeunce
-		ArrayList<APISeqItem> lcs = LCS(pattern, seq);
+		ArrayList<APISeqItem> closest_pattern = null;
+		ArrayList<APISeqItem> closest_lcs = null;
+		ArrayList<APISeqItem> closest_common = null;
+		int diff = Integer.MAX_VALUE;
+		for(ArrayList<APISeqItem> pattern : patterns) {
+			// compute the longest common subseqeunce
+			ArrayList<APISeqItem> lcs = LCS(pattern, seq);
+			if(lcs.equals(pattern)) {
+				// follows at least one pattern, return an empty list
+				return violations;
+			} else {
+				// find the most similar pattern
+				if(pattern.size() - lcs.size() < diff) {
+					diff = pattern.size() - lcs.size();
+					closest_pattern = pattern;
+					closest_lcs = lcs;
+					closest_common = new ArrayList<APISeqItem>();
+					closest_common.addAll(common);
+				}
+			}
+			// reset
+			common.clear();
+		}
 		
-		for(APISeqItem item : pattern) {
+		// compute the violation
+		for(APISeqItem item : closest_pattern) {
 			if(item instanceof ControlConstruct) {
-				if(!lcs.contains(item) && !seq.contains(item)) {
+				if(!closest_lcs.contains(item) && !seq.contains(item)) {
 					violations.add(new Violation(ViolationType.MissingStructure, item));
 					continue;
-				} else if (!lcs.contains(item) && seq.contains(item)) {
+				} else if (!closest_lcs.contains(item) && seq.contains(item)) {
 					violations.add(new Violation(ViolationType.DisorderStructure, item));
 				}
 			} else {
 				APICall call1 = (APICall)item;
 				APICall call2 = null;
 				// find the corresponding call2, if any
-				if(lcs.contains(call1)) {
-					int index = lcs.indexOf(call1);
-					call2 = (APICall)common.get(index);
+				if(closest_lcs.contains(call1)) {
+					int index = closest_lcs.indexOf(call1);
+					call2 = (APICall)closest_common.get(index);
 				} else {
 					// try to find in the sequence
 					for(APISeqItem a : seq) {
@@ -107,9 +132,14 @@ public class UseChecker {
 					}
 					relevant_element.addAll(call2.arguments);
 					args.add(call2.arguments);
-					String cond = PredicatePatternMiner.condition(
-							relevant_element, call2.condition);
-					cond = PredicatePatternMiner.normalize(cond, rcv, args);
+					String cond;
+					if(!call2.condition.equals("true")) {
+						cond = PredicatePatternMiner.condition(
+								relevant_element, call2.condition);
+						cond = PredicatePatternMiner.normalize(cond, rcv, args);
+					} else {
+						cond = "true";
+					}
 					if (!sat.checkImplication(cond, call1.condition)) {
 						// precondition violation
 						Violation vio = new Violation(
