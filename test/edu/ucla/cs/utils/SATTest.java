@@ -268,7 +268,7 @@ public class SATTest {
 	public void testSATModuloChecker() {
 		SAT sat = new SAT();
 		assertTrue(sat.checkImplication("a % 2 == 1 && c", "c"));
-		assertFalse(sat.checkImplication("a % 2 == 1 && c", "a"));
+		assertFalse(sat.checkImplication("a % 2 == 1 && c", "a == 2"));
 	}
 	
 	@Test

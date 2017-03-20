@@ -158,6 +158,42 @@ public class SAT {
 		String p1_sym = symbolize(p1_norm);
 		String p2_sym = symbolize(p2_norm);
 		
+		// handle symbolizing conflicts
+		HashSet<String> set1 = new HashSet<String>(bool_symbol_map.keySet());
+		HashSet<String> set2 = new HashSet<String>(int_symbol_map.keySet());
+		set1.retainAll(set2);
+		if(!set1.isEmpty()) {
+			// conflicts. this because we cannot distinguish whether == and != are comparing two booleans or two integers
+			for(String name : set1) {
+				String symbol = int_symbol_map.get(name);
+				p1_sym = p1_sym.replace(symbol, bool_symbol_map.get(name));
+				p2_sym = p2_sym.replace(symbol, bool_symbol_map.get(name));
+				int_symbol_map.remove(name);
+				
+				// need to find the associated boolean variable it compares with
+				String another = null;
+				for(String name2 : int_symbol_map.keySet()) {
+					String regex1 = "^.*" + Pattern.quote(name) + "(\\s)*(=|\\!)=(\\s)*" + Pattern.quote(name2) + ".*$";
+					String regex2 = "^.*" + Pattern.quote(name2) + "(\\s)*(=|\\!)=(\\s)*" + Pattern.quote(name) + ".*$";
+					if(p1_norm.matches(regex1) || p1_norm.matches(regex2) || p2_norm.matches(regex1) || p2_norm.matches(regex2)) {
+						// name2 is the one
+						another = name2;
+						break;
+					}
+				}
+				
+				if(another != null) {
+					String symbol2 = int_symbol_map.get(another);
+					int_symbol_map.remove(another);
+					if(!bool_symbol_map.containsKey(another)) {
+						bool_symbol_map.put(another, "b" + bool_symbol_map.values().size());
+						p1_sym = p1_sym.replace(symbol2, bool_symbol_map.get(another));
+						p2_sym = p2_sym.replace(symbol2, bool_symbol_map.get(another));
+					}
+				}
+			}
+		}
+		
 		// Z3 does not support ++ or -- operators, replace it
 		p1_sym = normalizePlusPlusAndMinusMinus(p1_sym);
 		p2_sym = normalizePlusPlusAndMinusMinus(p2_sym);

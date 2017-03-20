@@ -359,6 +359,7 @@ public abstract class PredicatePatternMiner {
 		ArrayList<String> tokens = new ArrayList<String>();
 		char[] chars = s.toCharArray();
 		boolean inQuote = false;
+		int inArgList = 0;
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < chars.length; i++) {
 			char cur = chars[i];
@@ -400,8 +401,37 @@ public abstract class PredicatePatternMiner {
 				// single quote ends
 				inQuote = false;
 				sb.append(cur);
-			} else if (inQuote) {
-				// ignore any separator in quote
+			} else if (inArgList == 0 && cur == '(' && !inQuote) {
+				// look behind to check if this is a method call
+				int behind = i - 1;
+				while(behind >= 0) {
+					if(chars[behind] == ' ') {
+						// continue to look behind
+						behind = behind - 1;
+					} else if ((chars[behind] >= 'a' && chars[behind] <= 'z') || 
+							(chars[behind] >= 'A' && chars[behind] <= 'Z') ||
+							(chars[behind] >= '0' && chars[behind] <= '9') ||
+							chars[behind] == '_') {
+						// this is a method call
+						inArgList++;
+						break;
+					} else {
+						// not a method call
+						break;
+					}
+				}
+				sb.append(cur);
+			} else if (inArgList > 0 && cur == '(' && !inQuote) {
+				// already in an argument list. Since we cannot easily identify the end of argument list 
+				// due to the formatting inconsistency between partial program analysis and BOA query, I have
+				// to count every parenthesis in the argument list until it is 0
+				inArgList ++;
+				sb.append(cur);
+			} else if (inArgList > 0 && cur == ')' && !inQuote) {
+				inArgList --;
+				sb.append(cur);
+			} else if (inQuote || inArgList > 0) {
+				// ignore any separator in quote or in a method call
 				sb.append(cur);
 			} else if (cur == '&' || cur == '|'){
 				// look ahead

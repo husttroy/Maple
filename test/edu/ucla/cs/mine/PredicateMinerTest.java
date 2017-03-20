@@ -310,4 +310,14 @@ public class PredicateMinerTest {
 		String expected = "!(rcv!=null) && rcv.hasNext()";
 		assertEquals(expected, norm);
 	}
+	
+	@Test
+	public void testConditionLogicalOperatorInArgumentList() {
+		// should ignore logical separator in argument list and consider a method call as a unit
+		String predicate = "enm_77.hasNext()&&tmpQuant_49 && enm_70.hasNext()&&tmpQuant_55 && enm_74.hasNext()&&tmpQuant_49 && new Boolean(!UTIL.equals(x,y,),).booleanValue()";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("enm_70");
+		assertEquals("true && enm_70.hasNext()&&true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }
