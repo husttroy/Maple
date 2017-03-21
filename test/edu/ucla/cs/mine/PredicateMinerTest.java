@@ -246,6 +246,16 @@ public class PredicateMinerTest {
 	}
 	
 	@Test
+	public void testConditionBitwiseOperator4() {
+		String predicate = "curRealm!=null&curRealm.trim().length()>0 && noDataStores>0&&!dataStoreMap.isEmpty() && realmItr.hasNext()";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("dataStoreMap");
+		vars.add("curRealm");
+		assertEquals("curRealm!=null&&curRealm.trim().length()>0 && true&&!dataStoreMap.isEmpty() && true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
+	
+	@Test
 	public void testConditionDoulbeBackslashBeforeUnquote() {
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("signatureFile");

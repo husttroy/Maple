@@ -230,7 +230,7 @@ public abstract class PredicatePatternMiner {
 		// replace bitwise or with logical or
 		predicate = predicate.replaceAll("(?<!\\|)\\|(?!\\|)", "||");
 		// replace bitwise and with logical and
-		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d||(\\s)*[a-zA-Z0-9_]+\\)(\\s)*(\\!=|==)))", "&&");
+		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d|(\\s)*[a-zA-Z0-9_]+\\)(\\s)*(\\!=|==)))", "&&");
 		
 		// normalize the use of assignment in the middle of a predicate as the assigned variable
 		predicate = replaceAssignment(predicate);
