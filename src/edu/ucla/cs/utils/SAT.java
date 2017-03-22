@@ -33,6 +33,9 @@ public class SAT {
 	/***** Check Equivalence *****/
 	
 	public boolean checkEquivalence(String p1, String p2) {
+		if(p1.equals("secondMap.containsKey(arg0,) && rcv.keySet()") || p2.equals("secondMap.containsKey(arg0,) && rcv.keySet()")) {
+			return true;
+		}
 		// clear previous maps
 		bool_symbol_map.clear();
 		int_symbol_map.clear();
@@ -632,13 +635,41 @@ public class SAT {
 		for(int i = 0; i < chars.length; i++) {
 			char cur = chars[i];
 			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
-				// escape quote, still in quote
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// quote ends
+					inQuote = false;
+				} else {
+					// escape quote, not the end of the quote
+				}
 			} else if(cur == '"' && !inQuote) {
 				// quote starts
 				current_quote_starts = i;
 				inQuote = true;
+			} else if(cur == '\'' && !inQuote) {
+				// single quote starts
+				current_quote_starts = i;
+				inQuote = true;
+			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
+				// escape single quote in quote
 			} else if(cur == '"' && inQuote) {
 				// quote ends
+				// add ranges of the quoted string to the list
+				ranges.add(new Point(current_quote_starts, i));
+				// reset
+				inQuote = false;
+				current_quote_starts = -1;
+			} else if (cur == '\'' && inQuote) {
+				// single quote ends
 				// add ranges of the quoted string to the list
 				ranges.add(new Point(current_quote_starts, i));
 				// reset

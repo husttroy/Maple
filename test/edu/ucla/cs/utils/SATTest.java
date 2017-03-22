@@ -205,6 +205,15 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizeExclaimationInSingleQuote() {
+		SAT sat = new SAT();
+		String p1 = "true && !(arg0.m0=='!')";
+		String p1_norm = sat.normalize(p1);
+		String s1 = sat.symbolize(p1_norm);
+		assertEquals("true && !(i0==1)", s1);
+	}
+	
+	@Test
 	public void testUpdateI() {
 		SAT sat = new SAT();
 		String p1 = "i<rcv.size()-3 && rcv.size()>=4 && i<rcv.size()-4";
