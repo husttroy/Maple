@@ -22,8 +22,9 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 				
 				ArrayList<String> pattern = new ArrayList<String>();
 				sequence = sequence.substring(sequence.indexOf("(") + 1, sequence.lastIndexOf(")"));
-				String[] arr = sequence.split(", ");
+				String[] arr = sequence.split(",");
 				for(String api : arr){
+					api = api.trim();
 					// strip ' '
 					api = api.substring(1, api.length()-1);
 					pattern.add(api);
@@ -73,7 +74,7 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 	
 	public static void main(String[] args){
 		HashSet<String> query = new HashSet<String>();
-		query.add("next");
+		//query.add("mkdirs");
 		// learn from the output of the light-weight output
 		//PatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
 		//		"/home/troy/research/BOA/Maple/example/output.txt",
@@ -81,25 +82,9 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		//		query);
 		
 		// learn from the output of the traditional output
-//		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-//						"/home/troy/research/BOA/Maple/example/new_output.txt",
-//						41,
-//						query);
-//		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-//				"/home/troy/research/BOA/Maple/example/HashMap.get/small-output.txt",
-//				8,
-//				query);
-//		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-//				"/home/troy/research/BOA/Maple/example/HashMap.get/medium-output.txt",
-//				500,
-//				query);
-//		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-//				"/home/troy/research/BOA/Maple/example/HashMap.get/large-output.txt",
-//				24036,
-//				query);
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-				"/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt",
-				262,
+				"/home/troy/research/BOA/Maple/example/File.mkdir/small-output.txt",
+				117,
 				query);
 
 		pm.mine();
