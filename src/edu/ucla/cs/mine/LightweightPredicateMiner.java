@@ -257,7 +257,7 @@ public class LightweightPredicateMiner extends PredicatePatternMiner{
 		pattern.add("}");
 		LightweightPredicateMiner pm = new LightweightPredicateMiner(pattern);
 		pm.process();
-		HashMap<String, String> predicate_patterns = pm.find_the_most_common_predicate();
+		HashMap<String, HashMap<String, Integer>> predicate_patterns = pm.find_the_most_common_predicate(0);
 		for(String api: predicate_patterns.keySet()) {
 			System.out.println(api + ":" + predicate_patterns.get(api));
 		}

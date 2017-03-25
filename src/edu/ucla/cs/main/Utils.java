@@ -1,0 +1,75 @@
+package edu.ucla.cs.main;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
+import edu.ucla.cs.check.UseChecker;
+import edu.ucla.cs.model.APISeqItem;
+import edu.ucla.cs.model.Answer;
+import edu.ucla.cs.model.Violation;
+import edu.ucla.cs.model.ViolationType;
+
+public class Utils {
+	/**
+	 * 
+	 * Group violations based on their types
+	 * 
+	 * @param violations
+	 */
+	public static void classify(
+			HashMap<Answer, ArrayList<Violation>> violations) {
+		HashSet<Answer> miss_structure = new HashSet<Answer>();
+		HashSet<Answer> disorder_structure = new HashSet<Answer>();
+		HashSet<Answer> miss_api = new HashSet<Answer>();
+		HashSet<Answer> disorder_api = new HashSet<Answer>();
+		HashSet<Answer> wrong_precondition = new HashSet<Answer>();
+		for(Answer a : violations.keySet()) {
+			for(Violation v : violations.get(a)) {
+				if(v.type.equals(ViolationType.MissingStructure)) {
+					miss_structure.add(a);
+				} else if (v.type.equals(ViolationType.DisorderStructure)) {
+					disorder_structure.add(a);
+				} else if (v.type.equals(ViolationType.MissingMethodCall)) {
+					miss_api.add(a);
+				} else if (v.type.equals(ViolationType.DisorderMethodCall)) {
+					disorder_api.add(a);
+				} else if (v.type.equals(ViolationType.IncorrectPrecondition)) {
+					wrong_precondition.add(a);
+				}
+			}
+		}
+		
+		System.out.println("Missing Control-flow Structure: " + miss_structure.size());
+		System.out.println("Disorder Control-flow Structure: " + disorder_structure.size());
+		System.out.println("Missing API Call: " + miss_api.size());
+		System.out.println("Disorder API Call: " + disorder_api.size());
+		System.out.println("Incorrect Predicates: " + wrong_precondition.size());
+	}
+	
+	/**
+	 * 
+	 * use the pattern to check for the code snippets in the answers
+	 * 
+	 * @param snippets
+	 * @param pattern
+	 * @return
+	 */
+	public static HashMap<Answer, ArrayList<Violation>> detectAnomaly(
+			HashSet<Answer> snippets, HashSet<ArrayList<APISeqItem>> patterns) {
+		HashMap<Answer, ArrayList<Violation>> violations = new UseChecker().check(patterns, snippets);
+		int buggy_snippet_count = 0;
+		for(Answer a : violations.keySet()) {
+			buggy_snippet_count += a.buggy_seq_count;
+		}
+		System.out.println("Total number of unreliable Java snippets: " + buggy_snippet_count);
+		
+		for(Answer a : violations.keySet()) {
+			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);
+			for(Violation v : violations.get(a)) {
+				System.out.println("Violation: " + v.type + ", " + v.item);
+			}
+		}
+		return violations;
+	}
+}

@@ -6,20 +6,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import edu.ucla.cs.mine.FrequentSequenceMiner;
 import edu.ucla.cs.mine.PatternMiner;
-import edu.ucla.cs.mine.SequencePatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
 
-public class CreateNewFile {
+public class Mkdir {
 	public static void main(String[] args) throws IOException {
-		String raw_output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
-		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/File.mkdir/large-sequence.txt";
+		String path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
-		HashSet<String> query = new HashSet<String>();
-		query.add("createNewFile");
-		queries.add(query);
+		HashSet<String> q1 = new HashSet<String>();
+		q1.add("mkdir");
+		HashSet<String> q2 = new HashSet<String>();
+		q2.add("mkdirs");
 		Sample sam = new Sample(path);
 //		int[] sizes = {50, 100, 500, 1000, 5000, 10000};
 		int[] sizes = {100, 500, 2000};

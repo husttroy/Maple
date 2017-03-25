@@ -48,6 +48,10 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				if (pv.support.containsKey(key)) {
 					// this sequence follows the pattern
 					String seq = line.substring(line.indexOf("] =") + 3).trim();
+					if(seq.contains("?")) {
+						// cannot handle conditional expressions
+						continue;
+					}
 					String[] arr = seq.split("->");
 
 					HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
@@ -245,9 +249,8 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			} else {
 				normalized_predicate = "true";
 			}
-			
 
-			if (normalized_predicate.equals("arg0")) {
+			if (normalized_predicate.equals("!(secondMap.containsKey(arg0,)) && rcv.keySet()")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;

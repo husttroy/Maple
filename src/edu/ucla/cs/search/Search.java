@@ -10,13 +10,18 @@ import edu.ucla.cs.model.Answer;
 import edu.ucla.cs.parse.PartialProgramAnalyzer;
 
 public class Search {
-	public ArrayList<Answer> search(HashSet<String> types, HashSet<String> apis) {
+	public HashSet<Answer> search(HashSet<String> typeQuery, HashSet<HashSet<String>> apiQueries) {
 		MySQLAccess access = new MySQLAccess();
 		access.connect();
-		HashSet<String> keywords = new HashSet<String>();
-		keywords.addAll(types);
-		keywords.addAll(apis);
-		ArrayList<Answer> answers = access.searchCodeSnippets(keywords);
+		HashSet<HashSet<String>> keywords = new HashSet<HashSet<String>>();
+		for(HashSet<String> apiQuery : apiQueries) {
+			HashSet<String> keyword = new HashSet<String>();
+			keyword.addAll(typeQuery);
+			keyword.addAll(apiQuery);
+			keywords.add(keyword);
+		}
+		
+		HashSet<Answer> answers = access.searchCodeSnippets(keywords);
 		access.close();
 		
 		Iterator<Answer> iter1 = answers.iterator();
@@ -34,16 +39,22 @@ public class Search {
 					continue;
 				}
 				
-				// coarse-grained filtering by checking whether the snippet contains all keywords
-				boolean flag2 = false;
-				for(String keyword: keywords) {
-					if(!snippet.contains(keyword)) {
-						flag2 = true;
+				// coarse-grained filtering by checking whether the snippet contains keywords from one of the queries
+				boolean flag2 = true;
+				for(HashSet<String> query : keywords) {
+					for(String keyword : query) {
+						if(!snippet.contains(keyword)) {
+							flag2 = false;
+							break;
+						}
+					}
+					
+					if(flag2) {
 						break;
 					}
 				}
 				
-				if(flag2) {
+				if(!flag2) {
 					iter2.remove();
 					continue;
 				}
@@ -73,15 +84,24 @@ public class Search {
 						}
 					}
 					
-					if(!calls.containsAll(apis)) {
+					// remove the snippet if it does not contain the APIs in any of the input queries
+					boolean flag = false;
+					for(HashSet<String> apis : apiQueries) {
+						if(calls.containsAll(apis)) {
+							flag = true;
+							break;
+						} 
+					}
+					
+					if(!flag) {
 						// the code snippet does not contain all queried keywords, remove it
 						iter2.remove();
 						continue;
 					} else {
-						if(!types.isEmpty()) {
+						if(!typeQuery.isEmpty()) {
 							// additional check on types to handle ambiguous API calls
 							HashSet<String> ts = analyzer.retrieveTypes();
-							if(!ts.containsAll(types)) {
+							if(!ts.containsAll(typeQuery)) {
 								iter2.remove();
 								continue;
 							} else {
@@ -97,7 +117,7 @@ public class Search {
 			}
 			
 			if(!flag1) {
-				// no code snippets in the post is satisfied, remove this post
+				// no code snippet in the post is satisfied, remove this post
 				iter1.remove();
 			}
 		}

@@ -30,39 +30,42 @@ public class MySQLAccess {
 		}
 	}
 	
-	public ArrayList<Answer> searchCodeSnippets(HashSet<String> keywords) {
-		ArrayList<Answer> answers = new ArrayList<Answer>();
+	public HashSet<Answer> searchCodeSnippets(HashSet<HashSet<String>> queries) {
+		HashSet<Answer> answers = new HashSet<Answer>();
 		
 		if (connect != null) {
-			try {
-				// construct the query
-				String query = "select * from answers";
-				if(!keywords.isEmpty()) {
-					query += " where";
-					for(String keyword : keywords) {
-						query += " body like \"%" + keyword + "%\" and";
+			for(HashSet<String> keywords : queries) {
+				try {
+					// construct the query
+					String query = "select * from answers";
+					if(!keywords.isEmpty()) {
+						query += " where";
+						for(String keyword : keywords) {
+							query += " body like \"%" + keyword + "%\" and";
+						}
+						query = query.substring(0, query.length() - 4);
 					}
-					query = query.substring(0, query.length() - 4);
+					
+					query += ";";
+					
+					prep = connect.prepareStatement(query);
+					result = prep.executeQuery();
+					while(result.next()) {
+						String id = result.getString("Id");
+						String parentId = result.getString("ParentId");
+						String body = result.getString("Body");
+						String score = result.getString("Score");
+						String isAccepted = result.getString("IsAccepted");
+						String tags = result.getString("Tags");
+						String viewCount = result.getString("ViewCount");
+						Answer answer = new Answer(id, parentId, body, score, isAccepted, tags, viewCount);
+						answers.add(answer);
+					}
+					
+					result.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
 				}
-				query += ";";
-				
-				prep = connect.prepareStatement(query);
-				result = prep.executeQuery();
-				while(result.next()) {
-					String id = result.getString("Id");
-					String parentId = result.getString("ParentId");
-					String body = result.getString("Body");
-					String score = result.getString("Score");
-					String isAccepted = result.getString("IsAccepted");
-					String tags = result.getString("Tags");
-					String viewCount = result.getString("ViewCount");
-					Answer answer = new Answer(id, parentId, body, score, isAccepted, tags, viewCount);
-					answers.add(answer);
-				}
-				
-				result.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
 			}
 		}
 		

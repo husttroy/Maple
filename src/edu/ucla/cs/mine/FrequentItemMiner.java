@@ -6,8 +6,8 @@ import java.util.HashSet;
 public class FrequentItemMiner extends SequencePatternMiner{
 	
 	public FrequentItemMiner(String script_path, String seqs_path,
-			int min_support, HashSet<String> query) {
-		super(script_path, seqs_path, min_support, query);
+			int min_support, HashSet<HashSet<String>> queries) {
+		super(script_path, seqs_path, min_support, queries);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class FrequentItemMiner extends SequencePatternMiner{
 		
 		// check whether each pattern is satisfiable
 		for(ArrayList<String> pattern : this.patterns.keySet()) {
-			if(!pattern.containsAll(this.query) || !isBalanced(pattern) || !isComplete(pattern)){
+			if(!pattern.containsAll(this.queries) || !isBalanced(pattern) || !isComplete(pattern)){
 				remove.add(pattern);
 			}
 		}
@@ -52,12 +52,14 @@ public class FrequentItemMiner extends SequencePatternMiner{
 	}
 	
 	public static void main(String[] args){
+		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> query = new HashSet<String>();
 		query.add("createNewFile");
+		queries.add(query);
 		SequencePatternMiner pm = new FrequentItemMiner("/home/troy/research/BOA/Slicer/mining/freq_itemset.py", 
 				"/home/troy/research/BOA/Slicer/example/output.txt",
 				40,
-				query);
+				queries);
 		pm.mine();
 		for(ArrayList<String> pattern : pm.patterns.keySet()) {
 			System.out.println(pattern + " : " + pm.patterns.get(pattern));

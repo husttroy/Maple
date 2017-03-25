@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import edu.ucla.cs.mine.FrequentSequenceMiner;
 import edu.ucla.cs.mine.PatternMiner;
-import edu.ucla.cs.mine.SequencePatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
 
-public class CreateNewFile {
+public class Get {
 	public static void main(String[] args) throws IOException {
-		String raw_output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
-		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
+		String path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> query = new HashSet<String>();
-		query.add("createNewFile");
+		query.add("get");
 		queries.add(query);
 		Sample sam = new Sample(path);
 //		int[] sizes = {50, 100, 500, 1000, 5000, 10000};
@@ -47,4 +45,5 @@ public class CreateNewFile {
 			}
 		}
 	}
+
 }

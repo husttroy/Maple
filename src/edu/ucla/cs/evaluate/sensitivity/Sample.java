@@ -1,4 +1,4 @@
-package edu.ucla.cs.evaluate.size;
+package edu.ucla.cs.evaluate.sensitivity;
 
 import java.io.BufferedReader;
 import java.io.File;

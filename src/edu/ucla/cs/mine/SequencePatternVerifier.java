@@ -73,13 +73,11 @@ public class SequencePatternVerifier {
 	}
 	
 	public static void main(String[] args){
-//		String output = "/home/troy/research/BOA/Slicer/example/output_with_call_in_predicates.txt";
 //		String output = "/home/troy/research/BOA/Maple/example/new_output.txt";
-		String output = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
+		String output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output-sample-100.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("iterator");
 		pattern.add("IF {");
-		pattern.add("next");
+		pattern.add("createNewFile");
 		pattern.add("}");
 		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(output);

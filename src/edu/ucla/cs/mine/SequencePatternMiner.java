@@ -12,14 +12,14 @@ public abstract class SequencePatternMiner {
 	final private String seqs_path;
 	final private int min_support;
 	//ArrayList<String> query;
-	HashSet<String> query;
+	HashSet<HashSet<String>> queries;
 	public HashMap<ArrayList<String>, Integer> patterns;
 	
-	public SequencePatternMiner(String script_path, String seqs_path, int min_support, HashSet<String> filter){
+	public SequencePatternMiner(String script_path, String seqs_path, int min_support, HashSet<HashSet<String>> filters){
 		this.script_path = script_path;
 		this.seqs_path = seqs_path;
 		this.min_support = min_support;
-		this.query = filter;
+		this.queries = filters;
 		this.patterns = new HashMap<ArrayList<String>, Integer>();
 	}
 	

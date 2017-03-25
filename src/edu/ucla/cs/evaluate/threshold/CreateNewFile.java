@@ -11,14 +11,16 @@ public class CreateNewFile {
 	public static void main(String[] args) {
 		String output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output.txt";
 		int num = FileUtils.countLines(output);
+		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> query = new HashSet<String>();
 		query.add("createNewFile");
+		queries.add(query);
 		double[] supports = {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
 		for(double support: supports) {
 			SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
 					output,
 					(int) (support * num),
-					query);
+					queries);
 
 			pm.mine();
 			

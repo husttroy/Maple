@@ -6,8 +6,8 @@ import java.util.HashSet;
 public class FrequentSequenceMiner extends SequencePatternMiner {
 
 	public FrequentSequenceMiner(String script_path, String seqs_path,
-			int min_support, HashSet<String> filter) {
-		super(script_path, seqs_path, min_support, filter);
+			int min_support, HashSet<HashSet<String>> filters) {
+		super(script_path, seqs_path, min_support, filters);
 	}
 
 	@Override
@@ -41,7 +41,20 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		
 		// check whether each pattern is satisfiable
 		for(ArrayList<String> pattern : this.patterns.keySet()) {
-			if(!pattern.containsAll(this.query) || !isBalanced(pattern) || !isComplete(pattern)){
+			if(!isBalanced(pattern) || !isComplete(pattern)) {
+				remove.add(pattern);
+				continue;
+			}
+			
+			boolean flag = false;
+			for(HashSet<String> query : this.queries) {
+				if(pattern.containsAll(query)){
+					flag = true;
+				}
+			}
+			
+			if(!flag) {
+				// does not follow any queries
 				remove.add(pattern);
 			}
 		}
@@ -73,7 +86,13 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 	}
 	
 	public static void main(String[] args){
-		HashSet<String> query = new HashSet<String>();
+		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
+		HashSet<String> q1 = new HashSet<String>();
+		q1.add("mkdir");
+		queries.add(q1);
+		HashSet<String> q2 = new HashSet<String>();
+		q2.add("mkdirs");
+		queries.add(q2);
 		//query.add("mkdirs");
 		// learn from the output of the light-weight output
 		//PatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
@@ -85,7 +104,7 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
 				"/home/troy/research/BOA/Maple/example/File.mkdir/small-output.txt",
 				117,
-				query);
+				queries);
 
 		pm.mine();
 		for(ArrayList<String> pattern : pm.patterns.keySet()) {
