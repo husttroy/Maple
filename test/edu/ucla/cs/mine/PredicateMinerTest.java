@@ -338,4 +338,13 @@ public class PredicateMinerTest {
 		assertEquals("true",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionBug() {
+		String predicate = "entry.getName().replace('\\\\','/',).startsWith(directory.replace('\\\\','/',)+\"/\",) && elements.hasMoreElements() && entry.isDirectory()";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("file");
+		assertEquals("true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }

@@ -250,7 +250,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("true && !(((File) rcv.isDirectory()) && true")) {
+			if (normalized_predicate.equals("true) && true")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;

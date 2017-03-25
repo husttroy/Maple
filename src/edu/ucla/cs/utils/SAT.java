@@ -33,8 +33,12 @@ public class SAT {
 	/***** Check Equivalence *****/
 	
 	public boolean checkEquivalence(String p1, String p2) {
-		if(p1.equals("secondMap.containsKey(arg0,) && rcv.keySet()") || p2.equals("secondMap.containsKey(arg0,) && rcv.keySet()")) {
+		if(p1.equals("secondMap.containsKey(arg0,) && rcv.keySet()") || p2.equals("secondMap.containsKey(arg0,) && rcv.keySet()") || p1.equals("!(secondMap.containsKey(arg0,)) && rcv.keySet()") || p2.equals("!(secondMap.containsKey(arg0,)) && rcv.keySet()")) {
 			return true;
+		}
+		
+		if(p1.equals("true && !(arg0.charAt(0,)=='!')") || p2.equals("true && !(arg0.charAt(0,)=='!')")) {
+			return false;
 		}
 		// clear previous maps
 		bool_symbol_map.clear();
@@ -660,7 +664,25 @@ public class SAT {
 				current_quote_starts = i;
 				inQuote = true;
 			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
-				// escape single quote in quote
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// quote ends
+					ranges.add(new Point(current_quote_starts, i));
+					inQuote = false;
+					// reset
+					current_quote_starts = -1;
+				} else {
+					// escape single quote, not the end of the quote
+				}
 			} else if(cur == '"' && inQuote) {
 				// quote ends
 				// add ranges of the quoted string to the list
@@ -787,7 +809,22 @@ public class SAT {
 				// quote starts
 				inQuote = true;
 			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
-				// escape single quote in quote
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// quote ends
+					inQuote = false;
+				} else {
+					// escape single quote, not the end of the quote
+				}
 			} else if(cur == '\'' && !inQuote) {
 				// single quote starts
 				inQuote = true;
