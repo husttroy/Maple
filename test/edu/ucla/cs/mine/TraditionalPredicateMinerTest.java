@@ -95,4 +95,24 @@ public class TraditionalPredicateMinerTest {
 		expected2.add("true");
 		assertEquals(expected2, predicates2);
 	}
+	
+	@Test
+	public void testExtractReceiverAfterTypeCastingOfReturnValue() {
+		String path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(
+				new ArrayList<String>(), path, sequence_path);
+		String expr = "e=(Map.Entry) i.next()";
+		String apiName = "next";
+		assertEquals("i", pm.getReceiver(expr, apiName));
+	}
+	
+	@Test
+	public void testExtractReceiverWithTypeCastingInReceiver() {
+		String expr = "((File) value).mkdirs()";
+		String api = "mkdir";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		String rcv = pm.getReceiver(expr, api);
+		assertEquals("((File) value)", rcv);
+	}
 }

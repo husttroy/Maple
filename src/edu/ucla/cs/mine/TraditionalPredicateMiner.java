@@ -250,7 +250,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("!(secondMap.containsKey(arg0,)) && rcv.keySet()")) {
+			if (normalized_predicate.equals("true && !(((File) rcv.isDirectory()) && true")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
@@ -288,9 +288,10 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 					receiver = sub.substring(0, sub.length() - 1);
 				}
 
-				// strip off any type casting before the receiver
+				// strip off any type casting of the return value before the receiver
+				// but be careful and do not strip off the type casting in the receiver
 				receiver = receiver.trim();
-				if (receiver.startsWith("(")) {
+				if (receiver.startsWith("(") && !receiver.endsWith(")")) {
 					receiver = receiver.substring(receiver.indexOf(')') + 1);
 					receiver = receiver.trim();
 				}
@@ -323,9 +324,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("get");
-		String path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-output.txt";
+		pattern.add("mkdirs");
+		String path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();
