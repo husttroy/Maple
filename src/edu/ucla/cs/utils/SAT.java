@@ -571,6 +571,9 @@ public class SAT {
 		// replace ,) with ) because the boa ouput always appends one more comma after the last argument
 		expr = expr.replace(",)", ")");
 		
+		// replace !!! with !
+		expr = expr.replace("!!!", "!");
+		
 		// replace API calls (if any) with symbols to avoid operators in arguments to mess up the following tokenization
 		expr = symbolizeAPICalls(expr);
 		

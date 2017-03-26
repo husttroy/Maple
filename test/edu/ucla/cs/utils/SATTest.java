@@ -226,6 +226,15 @@ public class SATTest {
 		assertEquals("b0 && true", s2);
 	}
 	
+	
+	@Test
+	public void testNormalizePredicateWithThreeExclamations() {
+		SAT sat = new SAT();
+		String p = "!!!rcv.exists()";
+		String p_norm = sat.normalize(p);
+		assertEquals("!rcv.m0",p_norm);
+	}
+	
 	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();

@@ -340,7 +340,7 @@ public class PredicateMinerTest {
 	}
 	
 	@Test
-	public void testConditionBug() {
+	public void testConditionEscapeBackslashInSingleQuote() {
 		String predicate = "entry.getName().replace('\\\\','/',).startsWith(directory.replace('\\\\','/',)+\"/\",) && elements.hasMoreElements() && entry.isDirectory()";
 		HashSet<String> vars = new HashSet<String>();
 		vars.add("file");
