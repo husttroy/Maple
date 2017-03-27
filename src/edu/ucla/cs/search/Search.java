@@ -1,6 +1,7 @@
 package edu.ucla.cs.search;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -61,57 +62,66 @@ public class Search {
 				
 				// fine-grained filtering by parsing the code snippet to check for ambiguous names
 				PartialProgramAnalyzer analyzer;
-				ArrayList<APISeqItem> seq = null;
+				HashMap<String, ArrayList<APISeqItem>> seqs = null;
 				try {
 					analyzer = new PartialProgramAnalyzer(snippet);
-					seq = analyzer.retrieveAPICallSequences();
+					seqs = analyzer.retrieveAPICallSequences();
 				} catch (Exception e) {
 					// parse error
 					iter2.remove();
 					continue;
 				}
 				
-				if(seq == null) {
+				if(seqs == null) {
 					iter2.remove();
 					continue;
 				} else {
-					// check whether the API call sequences contain all queried keywords
-					HashSet<String> calls = new HashSet<String>();
-					for(APISeqItem item : seq) {
-						if(item instanceof APICall) {
-							APICall call = (APICall)item;
-							calls.add(call.name);
+					boolean flag3 = false; 
+					for(String method : seqs.keySet()) {
+						ArrayList<APISeqItem> seq = seqs.get(method);
+						
+						// check whether the API call sequences contain all queried keywords
+						HashSet<String> calls = new HashSet<String>();
+						for(APISeqItem item : seq) {
+							if(item instanceof APICall) {
+								APICall call = (APICall)item;
+								calls.add(call.name);
+							}
 						}
-					}
-					
-					// remove the snippet if it does not contain the APIs in any of the input queries
-					boolean flag = false;
-					for(HashSet<String> apis : apiQueries) {
-						if(calls.containsAll(apis)) {
-							flag = true;
-							break;
-						} 
-					}
-					
-					if(!flag) {
-						// the code snippet does not contain all queried keywords, remove it
-						iter2.remove();
-						continue;
-					} else {
-						if(!typeQuery.isEmpty()) {
-							// additional check on types to handle ambiguous API calls
-							HashSet<String> ts = analyzer.retrieveTypes();
-							if(!ts.containsAll(typeQuery)) {
-								iter2.remove();
-								continue;
+						
+						// remove the snippet if it does not contain the APIs in any of the input queries
+						boolean flag = false;
+						for(HashSet<String> apis : apiQueries) {
+							if(calls.containsAll(apis)) {
+								flag = true;
+								break;
+							} 
+						}
+						
+						if(!flag) {
+							continue;
+						} else {
+							if(!typeQuery.isEmpty()) {
+								// additional check on types to handle ambiguous API calls
+								HashSet<String> ts = analyzer.retrieveTypes();
+								if(!ts.containsAll(typeQuery)) {
+									continue;
+								} else {
+									answer.seq.put(snippet, seq);
+									flag1 = true;
+									flag3 = true;
+								}
 							} else {
 								answer.seq.put(snippet, seq);
 								flag1 = true;
+								flag3 = true;
 							}
-						} else {
-							answer.seq.put(snippet, seq);
-							flag1 = true;
 						}
+					}
+					
+					if(!flag3) {
+						// the code snippet does not contain any of queried keywords, remove it
+						iter2.remove();
 					}
 				}
 			}
