@@ -147,16 +147,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		Matcher m = METHOD_CALL.matcher(expr);
 		while (m.find()) {
 			String apiName = m.group(1);
-			if (!pattern.contains(apiName)) {
-				// skip if the API call does not appear in the sequence pattern
-				continue;
-			}
-
-			String receiver = getReceiver(expr, apiName);
-
-			// extract the arguments
+			
+			// first check about whether there are chained or nested method calls in the "arguments" (not real arguments due to inaccurate regex)
 			String args = m.group(3);
-
 			ArrayList<String> arguments = new ArrayList<String>();
 			if (args != null) {
 				String rest = null;
@@ -218,6 +211,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				}
 			}
 
+			if (!pattern.contains(apiName)) {
+				// skip if the API call does not appear in the sequence pattern
+				continue;
+			}
+
+			String receiver = getReceiver(expr, apiName);
+			
 			HashSet<String> relevant_elements = new HashSet<String>();
 			if (receiver != null && !receiver.isEmpty()) {
 				relevant_elements.add(receiver);
@@ -232,7 +232,6 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				conditioned_predicate = "true";
 			}
 					
-
 			// normalize names
 			// declare temporary variables to fit the API
 			ArrayList<String> temp1 = new ArrayList<String>();
@@ -250,7 +249,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("!(\"null\".equalsIgnoreCase(arg0,)) && !(arg1]\".equals(arg0,))")) {
+			if (normalized_predicate.equals("!rcv.countTokens()==0&&true && rcv.hasMoreTokens() && rcv.countTokens()==candidate_tokenizer.countTokens() && true")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
@@ -417,8 +416,8 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
-		String path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt";
+		String path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();

@@ -97,6 +97,91 @@ public class TraditionalPredicateMinerTest {
 	}
 	
 	@Test
+	public void testPropagatePredicateWithNestedMethodCallsWhereTheFirstMatchIsNotInPattern() {
+		String expr = "System.out.println(st.nextToken(),)";
+		String predicate = "st.hasMoreTokens() && docComment!=null";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("nextToken");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		ArrayList<String> expected1 = new ArrayList<String>();
+		expected1.add("rcv.hasMoreTokens() && true");
+		assertEquals(expected1, predicates.get("nextToken"));
+		assertEquals(null, predicates.get("println"));
+	}
+	
+	@Test
+	public void testPropagatePredicateWithNestedMethodCallsWhereTheFirstMatchIsNotInPattern2() {
+		String expr = "new TL1Line(command.nextToken().trim(),)";
+		String predicate = "i<pllines && termCode==';'||termCode=='>' && command.hasMoreTokens() && !(rawOutput==null) && !(msgType.charAt(0,)=='M')";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("nextToken");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		ArrayList<String> expected1 = new ArrayList<String>();
+		expected1.add("true && rcv.hasMoreTokens() && true");
+		assertEquals(expected1, predicates.get("nextToken"));
+		assertEquals(null, predicates.get("TL1Line"));
+		assertEquals(null, predicates.get("trim"));
+	}
+	
+	@Test
+	public void testPropagatePredicateWithAssignment() {
+		String expr = "tok=t.nextToken()";
+		String predicate = "t.hasMoreTokens()";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("nextToken");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("rcv.hasMoreTokens()");
+		assertEquals(expected, predicates.get("nextToken"));
+	}
+	
+	@Test
+	public void testPropagatePredicateWithAssignmentAndNested() {
+		String expr = "line=new StringBuilder(lines.nextToken(),)";
+		String predicate = "lines.hasMoreTokens()";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("nextToken");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("rcv.hasMoreTokens()");
+		assertEquals(expected, predicates.get("nextToken"));
+		assertEquals(null, predicates.get("new StringBuilder"));
+	}
+	
+	@Test
+	public void testPropagatePredicateWithAssignmentAndNestedAndChained() {
+		String expr = "Util.copyDocFiles(configuration,pathTokens.nextToken()+File.separator,DocletConstants.DOC_FILES_DIR_NAME,first,)";
+		String predicate = "!(root.classes().length==0) && pathTokens.hasMoreTokens()";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("nextToken");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("true && rcv.hasMoreTokens()");
+		assertEquals(expected, predicates.get("nextToken"));
+		assertEquals(null, predicates.get("copyDocFiles"));
+	}
+	
+	@Test
+	public void testPropagatePredicateWithDeepChained() {
+		String expr = "url=fileToURL(new File(st.nextToken(),),)";
+		String predicate = "st.hasMoreTokens()";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("nextToken");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("rcv.hasMoreTokens()");
+		assertEquals(expected, predicates.get("nextToken"));
+		assertEquals(null, predicates.get("new File"));
+		assertEquals(null, predicates.get("fileToURL"));
+	}
+	
+	@Test
 	public void testExtractReceiverAfterTypeCastingOfReturnValue() {
 		String path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/Iterator.next/small-output.txt";
