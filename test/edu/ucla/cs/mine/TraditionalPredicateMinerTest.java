@@ -115,4 +115,15 @@ public class TraditionalPredicateMinerTest {
 		String rcv = pm.getReceiver(expr, api);
 		assertEquals("((File) value)", rcv);
 	}
+	
+	@Test
+	public void testExtractArgumentWithCommaInQuote() {
+		String args = "strVal,\"[,]\",";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		ArrayList<String> argList = pm.getArguments(args);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("strVal");
+		expected.add("\"[,]\"");
+		assertEquals(expected, argList);
+	}
 }
