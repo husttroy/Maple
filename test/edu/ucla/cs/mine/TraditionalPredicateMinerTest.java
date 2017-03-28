@@ -211,4 +211,30 @@ public class TraditionalPredicateMinerTest {
 		expected.add("\"[,]\"");
 		assertEquals(expected, argList);
 	}
+	
+	@Test
+	public void testExtractPredicateWithAt() {
+		String s = "tokenizera=new StringTokenizer(token,\"//\",)@!(currentLine.contains(\"@\",))";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		String[] ss = pm.splitByAt(s);
+		assertEquals("tokenizera=new StringTokenizer(token,\"//\",)", ss[0]);
+		assertEquals("!(currentLine.contains(\"@\",))", ss[1]);
+	}
+	
+	@Test(timeout = 1000)
+	public void testExtractPredicateWithAt2() {
+		String s = "jid=JID.escapeNode(node,)+\"@\"+jid.substring(atIndex+1,)@!(tokens.countTokens()!=2)";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		String[] ss = pm.splitByAt(s);
+		assertEquals("jid=JID.escapeNode(node,)+\"@\"+jid.substring(atIndex+1,)", ss[0]);
+		assertEquals("!(tokens.countTokens()!=2)", ss[1]);
+	}
+	
+	@Test
+	public void splitLineByArrow() {
+		String s = "-> _log.info()@ -> _log.info(\"->\")@ -> _log.info()@";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		ArrayList<String> ss = pm.splitByArrow(s);
+		assertEquals(4, ss.size());
+	}
 }

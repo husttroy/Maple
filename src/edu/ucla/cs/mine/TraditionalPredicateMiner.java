@@ -52,13 +52,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 						// cannot handle conditional expressions
 						continue;
 					}
-					String[] arr = seq.split("->");
+					
+					ArrayList<String> arr = splitByArrow(seq);
 
 					HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 					// skip the first element because it is empty string
-					for (int i = 1; i < arr.length; i++) {
-						String str = arr[i].trim();
-
+					for(String str : arr) {
+						str = str.trim();
 						// strip off the close parentheses at the end (if any)
 						if (str.endsWith("}")) {
 							while (str.endsWith("}")) {
@@ -88,29 +88,15 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 						}
 
 						// split by @
-						String[] ss = str.split("@");
+						String[] ss = splitByAt(str);
 						String predicate = null;
-						String item = null;
-						// we assume the last @ splits the statement and its
-						// precondition
-						// but we will run into trouble if there is an @ in the
-						// precondition
-						if (ss.length == 1) {
-							item = ss[0];
+						String item = ss[0];
+						if(ss[1].trim().isEmpty()) {
 							predicate = "true";
 						} else {
-							predicate = ss[ss.length - 1];
-							for (int j = 0; j < ss.length - 1; j++) {
-								// concatenate the method call expression if it
-								// contains @ and is split
-								if (item == null) {
-									item = ss[j];
-								} else {
-									item += ss[j];
-								}
-							}
+							predicate = ss[1];
 						}
-
+						
 						// pre-check to avoid unnecessary pattern matching for
 						// the performance purpose
 						if (!item.contains("(") || !item.contains(")")) {
@@ -139,6 +125,49 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String[] splitByAt(String s) {
+		ArrayList<String> ss = new ArrayList<String>();
+		String[] arr = s.split("@");
+		int index = 0;
+		for(int i = 0; i < arr.length; i++) {
+			String item = arr[i];
+			if(!isInQuote(s, index)) {
+				ss.add(item);
+			} else {
+				String last = ss.get(ss.size() - 1);
+				ss.remove(ss.size() - 1);
+				ss.add(last + "@" + item);
+			}
+			index += item.length() + 1;
+		}
+		
+		if(ss.size() == 1) {
+			ss.add("true");
+		}
+		
+		String[] arr2 = new String[ss.size()];
+		return ss.toArray(arr2);
+	}
+	
+	public ArrayList<String> splitByArrow(String s) {
+		ArrayList<String> ss = new ArrayList<String>();
+		String[] arr = s.split("->");
+		int index = 0;
+		for(int i = 0; i < arr.length; i++) {
+			String item = arr[i];
+			if(!isInQuote(s, index)) {
+				ss.add(item);
+			} else {
+				String last = ss.get(ss.size() - 1);
+				ss.remove(ss.size() - 1);
+				ss.add(last + "->" + item);
+			}
+			index += item.length() + 2;
+		}
+		
+		return ss;
 	}
 
 	public HashMap<String, ArrayList<String>> propagatePredicates(String expr,
@@ -249,7 +278,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("!rcv.countTokens()==0&&true && rcv.hasMoreTokens() && rcv.countTokens()==candidate_tokenizer.countTokens() && true")) {
+			if (normalized_predicate.equals("!(rcv.countTokens()==1) && true && !(rcv.countTokens()<) && true")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
