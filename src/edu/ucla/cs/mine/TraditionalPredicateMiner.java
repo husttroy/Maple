@@ -53,7 +53,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 						continue;
 					}
 					
-					ArrayList<String> arr = splitByArrow(seq);
+					ArrayList<String> arr = ProcessUtils.splitByArrow(seq);
 
 					HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 					// skip the first element because it is empty string
@@ -133,7 +133,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		int index = 0;
 		for(int i = 0; i < arr.length; i++) {
 			String item = arr[i];
-			if(!isInQuote(s, index)) {
+			if(!ProcessUtils.isInQuote(s, index)) {
 				ss.add(item);
 			} else {
 				String last = ss.get(ss.size() - 1);
@@ -149,25 +149,6 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		
 		String[] arr2 = new String[ss.size()];
 		return ss.toArray(arr2);
-	}
-	
-	public ArrayList<String> splitByArrow(String s) {
-		ArrayList<String> ss = new ArrayList<String>();
-		String[] arr = s.split("->");
-		int index = 0;
-		for(int i = 0; i < arr.length; i++) {
-			String item = arr[i];
-			if(!isInQuote(s, index)) {
-				ss.add(item);
-			} else {
-				String last = ss.get(ss.size() - 1);
-				ss.remove(ss.size() - 1);
-				ss.add(last + "->" + item);
-			}
-			index += item.length() + 2;
-		}
-		
-		return ss;
 	}
 
 	public HashMap<String, ArrayList<String>> propagatePredicates(String expr,

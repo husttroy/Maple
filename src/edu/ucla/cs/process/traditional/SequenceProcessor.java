@@ -26,11 +26,9 @@ public class SequenceProcessor extends ProcessStrategy {
 
 	protected void buildSequenceMap(Method method, String line) {
 		String s = line.substring(line.indexOf("] =") + 3).trim();
-		String[] ss = s.split("->");
+		ArrayList<String> ss = ProcessUtils.splitByArrow(line);
 		// skip the first element because it is empty string
-		for (int i = 1; i < ss.length; i++) {
-			String str = ss[i].trim();
-			
+		for (String str : ss) {
 			int count1 = 0;
 			if(str.endsWith("}")) {
 				while(str.endsWith("}")) {

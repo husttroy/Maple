@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
+
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
 import edu.ucla.cs.model.PredicateCluster;
+import edu.ucla.cs.utils.ProcessUtils;
 import edu.ucla.cs.utils.SAT;
 
 public abstract class PredicatePatternMiner {
@@ -275,71 +277,6 @@ public abstract class PredicatePatternMiner {
 		}
 		
 		return res;
-	}
-	
-	public static boolean isInQuote(String s, int index) {
-		if(s.contains("\"") || s.contains("'")) {
-			char[] chars = s.toCharArray();
-			boolean inSingleQuote = false;
-			boolean inDoubleQuote = false;
-			for(int i = 0; i < chars.length; i++) {
-				if(i == index) {
-					return inSingleQuote || inDoubleQuote;
-				}
-				char cur = chars[i];
-				if(cur == '"' && i > 0 && chars[i-1] == '\\') {
-					// count the number of backslashes
-					int count = 0;
-					while(i - count - 1 >= 0) {
-						if(chars[i - count - 1] == '\\') {
-							count ++;
-						} else {
-							break;
-						}
-					} 
-					if(count % 2 == 0) {
-						// escape one or more backslashes instead of this quote, end of quote
-						// double quote ends
-						inDoubleQuote = false;
-					} else {
-						// escape quote, not the end of the quote
-					}
-				} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
-					// double quote starts
-					inDoubleQuote = true;
-				} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
-					// count the number of backslashes
-					int count = 0;
-					while(i - count - 1 >= 0) {
-						if(chars[i - count - 1] == '\\') {
-							count ++;
-						} else {
-							break;
-						}
-					} 
-					if(count % 2 == 0) {
-						// escape one or more backslashes instead of this quote, end of quote
-						// single quote ends
-						inSingleQuote = false;
-					} else {
-						// escape single quote, not the end of the quote
-					}
-				} else if(cur == '\'' && !inSingleQuote && !inDoubleQuote) {
-					// single quote starts
-					inSingleQuote = true; 
-				} else if(cur == '"' && !inSingleQuote && inDoubleQuote) {
-					// double quote ends
-					inDoubleQuote = false;
-				} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
-					// single quote ends
-					inSingleQuote = false;
-				}
-			}
-			
-			return inSingleQuote;
-		} else {
-			return false;
-		}
 	}
 	
 	public static String replaceAssignment(String predicate) {
@@ -640,7 +577,7 @@ public abstract class PredicatePatternMiner {
 				flag2 = true;
 			}
 			
-			if(flag1 && flag2 && !isInQuote(clause, index)) {
+			if(flag1 && flag2 && !ProcessUtils.isInQuote(clause, index)) {
 				return true;
 			} else {
 				// keep looking forward
@@ -764,7 +701,7 @@ public abstract class PredicatePatternMiner {
 
 		String sub1 = predicate.substring(0, ahead + 1);
 		String sub2 = predicate.substring(behind);
-		if(flag1 && flag2 && !isInQuote(predicate, index)) {
+		if(flag1 && flag2 && !ProcessUtils.isInQuote(predicate, index)) {
 			// replace it
 			String predicate2 = sub1 + substitute + sub2;
 			// recalculate behind index after substitution
