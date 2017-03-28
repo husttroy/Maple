@@ -356,4 +356,13 @@ public class PredicateMinerTest {
 		assertEquals("true && st.hasMoreTokens() && true && !(!(st.hasMoreTokens())) && true",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionLessEqualButNotAssignment() {
+		String predicate = "!(tok.countTokens()==1) && !(line==null) && !(rest.startsWith(\" \",)) && !(tok.countTokens()<=0) && !(firstEq>=0&&firstSp<0||firstEq<firstSp) && line.indexOf('@',)>=0 && (line=r.readLine())!=null";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("tok");
+		assertEquals("!(tok.countTokens()==1) && true && !(tok.countTokens()<=0) && true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }

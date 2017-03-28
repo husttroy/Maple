@@ -406,7 +406,7 @@ public abstract class PredicatePatternMiner {
 					if(i + 1 < chars.length && chars[i+1] == '=') {
 						// equal operator, ignore
 						i++;
-					} else if (i -1 >= 0 && chars[i-1] == '!') {
+					} else if (i -1 >= 0 && (chars[i-1] == '!' || chars[i-1] == '<' || chars[i-1] == '>')) {
 						// not equal operator, ignore
 					} else {
 						// assignment operator, stack size must be at least 1
