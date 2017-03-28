@@ -383,7 +383,14 @@ public class SAT {
 						}
 						// strip unbalanced parentheses
 						sub = stripUnbalancedParentheses(sub);
-
+						
+						if(sub.isEmpty()) {
+							// saw this happen when there is a parenthesis before a negative integer like (-1
+							// the negative sign is treated as a subtraction operator and split, leading to a lingering ( 
+							// after stripping unbalanced parentheses, it becomes empty
+							continue;
+						}
+						
 						if (sub.matches("^\\d+$")) {
 							continue;
 						} else if (sub.matches("^(\\(+)\\d+(\\(+)")) {

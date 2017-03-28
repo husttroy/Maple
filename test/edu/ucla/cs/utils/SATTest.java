@@ -131,6 +131,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizeNegativeIntegers2() {
+		SAT sat = new SAT();
+		String p_norm = "true && !(arg0.m0) && !(0==arg0.m1) && true && !(-1!=arg0.m1) && true && !(-1!=arg0.m1) && !(-1!=arg0.m1) && !(0==arg0.m1)";
+		String s = sat.symbolize(p_norm); 
+		assertEquals("true && !b0 && !(0==i0) && true && !(-1!=i0) && true && !(-1!=i0) && !(-1!=i0) && !(0==i0)", s);
+	}
+	
+	@Test
 	public void testSymbolizeNull() {
 		SAT sat = new SAT();
 		String p = "!(entityFiles.contains(new EntityFile(rcv,null,),)) && !(rcv==null) && !(rcv.exists())";
@@ -225,7 +233,6 @@ public class SATTest {
 		assertEquals("i0<i1-3 && i1>=4 && i0<i1-4", s1);
 		assertEquals("b0 && true", s2);
 	}
-	
 	
 	@Test
 	public void testNormalizePredicateWithThreeExclamations() {
