@@ -54,6 +54,13 @@ public class InfixToPrefixConvertorTest {
 	}
 	
 	@Test
+	public void testConvertNegativeSign4() {
+		// negative integer at the very beginning
+		String simpleInfix = "-1 != i0";
+		assertEquals("(! (== -1 i0))", InfixToPrefixConvertor.infixToPrefixConvert(simpleInfix));
+	}
+	
+	@Test
 	public void testConvertPlusThenCompare() {
 		String infix = "true && b0 && i0 + i1 < i2";
 		assertEquals("(&& (&& true b0) (< (+ i0 i1) i2))", InfixToPrefixConvertor.infixToPrefixConvert(infix));

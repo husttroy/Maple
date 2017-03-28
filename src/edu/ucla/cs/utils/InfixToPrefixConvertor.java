@@ -170,6 +170,11 @@ public class InfixToPrefixConvertor {
 					backward --;
 				}
 				
+				if(backward == -1) {
+					// reach the very beginning, this is a negative integer in the beginning of the expression
+					isNeg = true;
+				}
+				
 				if(isNeg) {
 					if(i + 1 < chs.length && chs[i + 1] == 'i') {
 						// Z3 does not support negative sign in front of an integer variable, so we will ditch the negative sign in front of integer variables
