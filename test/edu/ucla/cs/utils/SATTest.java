@@ -235,6 +235,15 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testSymbolizeVariableBAsInteger() {
+		SAT sat = new SAT();
+		String p1 = "true && !(true&&b!=arg1) && true && payloadLength>arg1";
+		String p1_norm = sat.normalize(p1);
+		String s1 = sat.symbolize(p1_norm);
+		assertEquals("true && !(true&&i0!=i1) && true && i2>i1", s1);
+	}
+	
+	@Test
 	public void testNormalizePredicateWithThreeExclamations() {
 		SAT sat = new SAT();
 		String p = "!!!rcv.exists()";
