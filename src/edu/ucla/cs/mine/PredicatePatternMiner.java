@@ -280,10 +280,11 @@ public abstract class PredicatePatternMiner {
 	public static boolean isInQuote(String s, int index) {
 		if(s.contains("\"") || s.contains("'")) {
 			char[] chars = s.toCharArray();
-			boolean inQuote = false;
+			boolean inSingleQuote = false;
+			boolean inDoubleQuote = false;
 			for(int i = 0; i < chars.length; i++) {
 				if(i == index) {
-					return inQuote;
+					return inSingleQuote || inDoubleQuote;
 				}
 				char cur = chars[i];
 				if(cur == '"' && i > 0 && chars[i-1] == '\\') {
@@ -298,14 +299,14 @@ public abstract class PredicatePatternMiner {
 					} 
 					if(count % 2 == 0) {
 						// escape one or more backslashes instead of this quote, end of quote
-						// quote ends
-						inQuote = false;
+						// double quote ends
+						inDoubleQuote = false;
 					} else {
 						// escape quote, not the end of the quote
 					}
-				} else if(cur == '"' && !inQuote) {
-					// quote starts
-					inQuote = true;
+				} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
+					// double quote starts
+					inDoubleQuote = true;
 				} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
 					// count the number of backslashes
 					int count = 0;
@@ -318,24 +319,24 @@ public abstract class PredicatePatternMiner {
 					} 
 					if(count % 2 == 0) {
 						// escape one or more backslashes instead of this quote, end of quote
-						// quote ends
-						inQuote = false;
+						// single quote ends
+						inSingleQuote = false;
 					} else {
 						// escape single quote, not the end of the quote
 					}
-				} else if(cur == '\'' && !inQuote) {
+				} else if(cur == '\'' && !inSingleQuote && !inDoubleQuote) {
 					// single quote starts
-					inQuote = true; 
-				} else if(cur == '"' && inQuote) {
-					// quote ends
-					inQuote = false;
-				} else if (cur == '\'' && inQuote) {
+					inSingleQuote = true; 
+				} else if(cur == '"' && !inSingleQuote && inDoubleQuote) {
+					// double quote ends
+					inDoubleQuote = false;
+				} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
 					// single quote ends
-					inQuote = false;
+					inSingleQuote = false;
 				}
 			}
 			
-			return inQuote;
+			return inSingleQuote;
 		} else {
 			return false;
 		}
@@ -348,7 +349,8 @@ public abstract class PredicatePatternMiner {
 			Stack<Integer> stack = new Stack<Integer>();
 			int snapshot = -1;
 			int assignment_index = -1;
-			boolean inQuote = false;
+			boolean inSingleQuote = false;
+			boolean inDoubleQuote = false;
 			ArrayList<Point> ranges = new ArrayList<Point>();
 			for(int i = 0; i < chars.length; i++) {
 				char cur = chars[i];
@@ -364,14 +366,14 @@ public abstract class PredicatePatternMiner {
 					} 
 					if(count % 2 == 0) {
 						// escape one or more backslashes instead of this quote, end of quote
-						// quote ends
-						inQuote = false;
+						// double quote ends
+						inDoubleQuote = false;
 					} else {
 						// escape quote, not the end of the quote
 					}
-				} else if(cur == '"' && !inQuote) {
-					// quote starts
-					inQuote = true;
+				} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
+					// double quote starts
+					inDoubleQuote = true;
 				} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
 					// count the number of backslashes
 					int count = 0;
@@ -384,21 +386,21 @@ public abstract class PredicatePatternMiner {
 					} 
 					if(count % 2 == 0) {
 						// escape one or more backslashes instead of this quote, end of quote
-						// quote ends
-						inQuote = false;
+						// single quote ends
+						inSingleQuote = false;
 					} else {
 						// escape single quote, not the end of the quote
 					}
-				} else if(cur == '\'' && !inQuote) {
+				} else if(cur == '\'' && !inSingleQuote && !inDoubleQuote) {
 					// single quote starts
-					inQuote = true; 
-				} else if(cur == '"' && inQuote) {
-					// quote ends
-					inQuote = false;
-				} else if (cur == '\'' && inQuote) {
+					inSingleQuote = true; 
+				} else if(cur == '"' && !inSingleQuote && inDoubleQuote) {
+					// double quote ends
+					inDoubleQuote = false;
+				} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
 					// single quote ends
-					inQuote = false;
-				} else if (inQuote) {
+					inSingleQuote = false;
+				} else if (inSingleQuote || inDoubleQuote) {
 					// ignore any separator in quote
 				} else if (cur == '=') {
 					if(i + 1 < chars.length && chars[i+1] == '=') {
@@ -445,7 +447,8 @@ public abstract class PredicatePatternMiner {
 	public static String[] splitOutOfQuote(String s) {
 		ArrayList<String> tokens = new ArrayList<String>();
 		char[] chars = s.toCharArray();
-		boolean inQuote = false;
+		boolean inSingleQuote = false;
+		boolean inDoubleQuote = false;
 		int inArgList = 0;
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < chars.length; i++) {
@@ -462,16 +465,16 @@ public abstract class PredicatePatternMiner {
 				} 
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
+					// double quote ends
+					inDoubleQuote = false;
 					sb.append(cur);
 				} else {
 					// escape quote, not the end of the quote
 					sb.append(cur);
 				}
-			} else if(cur == '"' && !inQuote) {
-				// quote starts
-				inQuote = true;
+			} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
+				// double quote starts
+				inDoubleQuote = true;
 				sb.append(cur);
 			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
 				// count the number of backslashes
@@ -485,26 +488,26 @@ public abstract class PredicatePatternMiner {
 				} 
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
+					// single quote ends
+					inSingleQuote = false;
 					sb.append(cur);
 				} else {
 					// escape single quote, not the end of the quote
 					sb.append(cur);
 				}
-			} else if(cur == '\'' && !inQuote) {
+			} else if(cur == '\'' && !inDoubleQuote && !inSingleQuote) {
 				// single quote starts
-				inQuote = true;
+				inSingleQuote = true;
 				sb.append(cur);
-			} else if(cur == '"' && inQuote) {
+			} else if(cur == '"' && !inSingleQuote && inDoubleQuote) {
 				// quote ends
-				inQuote = false;
+				inDoubleQuote = false;
 				sb.append(cur);
-			} else if (cur == '\'' && inQuote) {
+			} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
 				// single quote ends
-				inQuote = false;
+				inSingleQuote = false;
 				sb.append(cur);
-			} else if (inArgList == 0 && cur == '(' && !inQuote) {
+			} else if (inArgList == 0 && cur == '(' && !inSingleQuote && !inDoubleQuote) {
 				// look behind to check if this is a method call
 				int behind = i - 1;
 				while(behind >= 0) {
@@ -524,16 +527,16 @@ public abstract class PredicatePatternMiner {
 					}
 				}
 				sb.append(cur);
-			} else if (inArgList > 0 && cur == '(' && !inQuote) {
+			} else if (inArgList > 0 && cur == '(' && !inSingleQuote && !inDoubleQuote) {
 				// already in an argument list. Since we cannot easily identify the end of argument list 
 				// due to the formatting inconsistency between partial program analysis and BOA query, I have
 				// to count every parenthesis in the argument list until it is 0
 				inArgList ++;
 				sb.append(cur);
-			} else if (inArgList > 0 && cur == ')' && !inQuote) {
+			} else if (inArgList > 0 && cur == ')' && !inSingleQuote && !inDoubleQuote) {
 				inArgList --;
 				sb.append(cur);
-			} else if (inQuote || inArgList > 0) {
+			} else if (inSingleQuote || inArgList > 0 || inDoubleQuote) {
 				// ignore any separator in quote or in a method call
 				sb.append(cur);
 			} else if (cur == '&' || cur == '|'){

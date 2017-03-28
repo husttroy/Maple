@@ -637,7 +637,8 @@ public class SAT {
 	private String stripOffStringLiteralsAndStringConcatenations(String expr) {
 		ArrayList<Point> ranges = new ArrayList<Point>();
 		char[] chars = expr.toCharArray();
-		boolean inQuote = false;
+		boolean inSingleQuote = false;
+		boolean inDoubleQuote = false;
 		int current_quote_starts = -1;
 		for(int i = 0; i < chars.length; i++) {
 			char cur = chars[i];
@@ -653,19 +654,19 @@ public class SAT {
 				} 
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
+					// double quote ends
+					inDoubleQuote = false;
 				} else {
 					// escape quote, not the end of the quote
 				}
-			} else if(cur == '"' && !inQuote) {
-				// quote starts
+			} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
+				// double quote starts
 				current_quote_starts = i;
-				inQuote = true;
-			} else if(cur == '\'' && !inQuote) {
+				inDoubleQuote = true;
+			} else if(cur == '\'' && !inSingleQuote && !inDoubleQuote) {
 				// single quote starts
 				current_quote_starts = i;
-				inQuote = true;
+				inSingleQuote = true;
 			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
 				// count the number of backslashes
 				int count = 0;
@@ -678,29 +679,29 @@ public class SAT {
 				} 
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
+					// single quote ends
 					ranges.add(new Point(current_quote_starts, i));
-					inQuote = false;
+					inSingleQuote = false;
 					// reset
 					current_quote_starts = -1;
 				} else {
 					// escape single quote, not the end of the quote
 				}
-			} else if(cur == '"' && inQuote) {
-				// quote ends
+			} else if(cur == '"' && !inSingleQuote && inDoubleQuote) {
+				// double quote ends
 				// add ranges of the quoted string to the list
 				ranges.add(new Point(current_quote_starts, i));
 				// reset
-				inQuote = false;
+				inDoubleQuote = false;
 				current_quote_starts = -1;
-			} else if (cur == '\'' && inQuote) {
+			} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
 				// single quote ends
 				// add ranges of the quoted string to the list
 				ranges.add(new Point(current_quote_starts, i));
 				// reset
-				inQuote = false;
+				inSingleQuote = false;
 				current_quote_starts = -1;
-			} else if(cur == '+' && !inQuote) {
+			} else if(cur == '+' && !inSingleQuote && !inDoubleQuote) {
 				boolean isStringConcatenation = false;
 				// look backward to check if it is string concatenation
 				int backward = i - 1;
@@ -786,7 +787,8 @@ public class SAT {
 	public static String stripUnbalancedParentheses(String expr) {
 		String rel = expr;
 		char[] chars = expr.toCharArray();
-		boolean inQuote = false;
+		boolean inSingleQuote = false;
+		boolean inDoubleQuote = false;
 		int left = 0;
 		int right = 0;
 		for(int i = 0; i < chars.length; i++) {
@@ -803,14 +805,14 @@ public class SAT {
 				} 
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
+					// double quote ends
+					inDoubleQuote = false;
 				} else {
 					// escape quote, not the end of the quote
 				}
-			} else if(cur == '"' && !inQuote) {
-				// quote starts
-				inQuote = true;
+			} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
+				// double quote starts
+				inDoubleQuote = true;
 			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
 				// count the number of backslashes
 				int count = 0;
@@ -823,21 +825,21 @@ public class SAT {
 				} 
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
+					// single quote ends
+					inSingleQuote = false;
 				} else {
 					// escape single quote, not the end of the quote
 				}
-			} else if(cur == '\'' && !inQuote) {
+			} else if(cur == '\'' && !inSingleQuote && !inDoubleQuote) {
 				// single quote starts
-				inQuote = true;
-			} else if(cur == '"' && inQuote) {
-				// quote ends
-				inQuote = false;
-			} else if (cur == '\'' && inQuote) {
+				inSingleQuote = true;
+			} else if(cur == '"' && inDoubleQuote && !inSingleQuote) {
+				// double quote ends
+				inDoubleQuote = false;
+			} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
 				// single quote ends
-				inQuote = false;
-			} else if (inQuote) {
+				inSingleQuote = false;
+			} else if (inSingleQuote || inDoubleQuote) {
 				// ignore any separator in quote
 
 			} else if (cur == '(') {

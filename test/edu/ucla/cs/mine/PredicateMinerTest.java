@@ -347,4 +347,13 @@ public class PredicateMinerTest {
 		assertEquals("true",
 				PredicatePatternMiner.condition(vars, predicate));
 	}
+	
+	@Test
+	public void testConditionSingleQuoteInDoubleQuote() {
+		String predicate = "!(currentWord.endsWith(\"\\\"\",)) && st.hasMoreTokens() && currentWord.startsWith(\"\\\"\",) && !(!(st.hasMoreTokens())) && !(currentWord.startsWith(\"'\",))";
+		HashSet<String> vars = new HashSet<String>();
+		vars.add("st");
+		assertEquals("true && st.hasMoreTokens() && true && !(!(st.hasMoreTokens())) && true",
+				PredicatePatternMiner.condition(vars, predicate));
+	}
 }
