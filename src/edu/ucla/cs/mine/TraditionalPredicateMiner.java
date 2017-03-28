@@ -48,10 +48,10 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				if (pv.support.containsKey(key)) {
 					// this sequence follows the pattern
 					String seq = line.substring(line.indexOf("] =") + 3).trim();
-					if(seq.contains("?")) {
-						// cannot handle conditional expressions
-						continue;
-					}
+//					if(seq.contains("?") || seq.contains(">>") || seq.contains("<<") || seq.matches("^.+(?<!\\|)\\|(?!\\|).+$") || seq.matches("^.+(?<!&)&(?!&).+$")) {
+//						// cannot handle conditional expressions, bit shift operators, bitwise operators
+//						continue;
+//					}
 					
 					ArrayList<String> arr = ProcessUtils.splitByArrow(seq);
 
@@ -59,6 +59,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 					// skip the first element because it is empty string
 					for(String str : arr) {
 						str = str.trim();
+						
+						if(str.isEmpty()) continue;
+						
 						// strip off the close parentheses at the end (if any)
 						if (str.endsWith("}")) {
 							while (str.endsWith("}")) {
@@ -259,7 +262,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("!(rcv.countTokens()==1) && true && !(rcv.countTokens()<) && true")) {
+			if (normalized_predicate.equals("!(rcv==null) && !(arg0==null) && !(arg2==0) && !(arg1||arg2<0||arg1>arg0.length||arg0.length-arg1<arg2) && arg2>0")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
@@ -425,9 +428,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
-		String path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/large-output.txt";
+		pattern.add("read");
+		String path = "/home/troy/research/BOA/Maple/example/InputStream.read/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/InputStream.read/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();

@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
+import edu.ucla.cs.utils.ProcessUtils;
+
 public class TraditionalPredicateMinerTest {
 	@Test
 	public void testExtractArguments() {
@@ -233,8 +235,7 @@ public class TraditionalPredicateMinerTest {
 	@Test
 	public void splitLineByArrow() {
 		String s = "-> _log.info()@ -> _log.info(\"->\")@ -> _log.info()@";
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
-		ArrayList<String> ss = pm.splitByArrow(s);
-		assertEquals(4, ss.size());
+		ArrayList<String> ss = ProcessUtils.splitByArrow(s);
+		assertEquals(3, ss.size());
 	}
 }

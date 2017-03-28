@@ -230,9 +230,21 @@ public abstract class PredicatePatternMiner {
 	
 	public static String condition(Set<String> vars, String predicate) {
 		// replace bitwise or with logical or
-		predicate = predicate.replaceAll("(?<!\\|)\\|(?!\\|)", "||");
+//		predicate = predicate.replaceAll("(?<!\\||\\d\\s|\\d)\\|(?!(\\||\\s\\d|\\d|(\\s)*[a-zA-Z0-9_]+\\)(\\s)*(\\!=|==|<=|<|>|>=)))", "||");
 		// replace bitwise and with logical and
-		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d|(\\s)*[a-zA-Z0-9_]+\\)(\\s)*(\\!=|==)))", "&&");
+//		predicate = predicate.replaceAll("(?<!&|\\d\\s|\\d)&(?!(&|\\s\\d|\\d|(\\s)*[a-zA-Z0-9_]+\\)(\\s)*(\\!=|==|<=|<|>|>=)))", "&&");
+		
+		if(predicate.contains("?")) {
+			return "conditional";
+		}
+		
+		if(predicate.contains(">>") || predicate.contains("<<")) {
+			return "bitshift";
+		}
+		
+		if(predicate.matches("^.*(?<!\\|)\\|(?!\\|).*$") || predicate.matches("^.*(?<!&)&(?!&).*$")) {
+			return "bitwise";
+		}
 		
 		// normalize the use of assignment in the middle of a predicate as the assigned variable
 		predicate = replaceAssignment(predicate);
