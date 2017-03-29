@@ -109,7 +109,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 						// extract predicates for each method call in this
 						// expression
 						HashMap<String, ArrayList<String>> predicates = propagatePredicates(
-								item.trim(), predicate);
+								item.trim(), item.trim(), predicate);
 
 						// aggregate the predicates with those from previous
 						// sequences
@@ -154,10 +154,10 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		return ss.toArray(arr2);
 	}
 
-	public HashMap<String, ArrayList<String>> propagatePredicates(String expr,
+	public HashMap<String, ArrayList<String>> propagatePredicates(String expr, String original,
 			String predicate) {
 		HashMap<String, ArrayList<String>> predicates = new HashMap<String, ArrayList<String>>();
-		Matcher m = METHOD_CALL.matcher(expr);
+ 		Matcher m = METHOD_CALL.matcher(expr);
 		while (m.find()) {
 			String apiName = m.group(1);
 			
@@ -198,7 +198,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				arguments = getArguments(args);
 				for (String arg : arguments) {
 					HashMap<String, ArrayList<String>> p2 = propagatePredicates(
-							arg, predicate);
+							arg, arg, predicate);
 					// aggregate
 					for (String name : p2.keySet()) {
 						if (predicates.containsKey(name)) {
@@ -212,7 +212,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				// then process the rest of the API calls in the chain (if any)
 				if (rest != null) {
 					HashMap<String, ArrayList<String>> p3 = propagatePredicates(
-							rest, predicate);
+							rest, original, predicate);
 					// aggregate
 					for (String name : p3.keySet()) {
 						if (predicates.containsKey(name)) {
@@ -229,7 +229,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				continue;
 			}
 
-			String receiver = getReceiver(expr, apiName);
+			String receiver = getReceiver(original, apiName);
 			
 			HashSet<String> relevant_elements = new HashSet<String>();
 			if (receiver != null && !receiver.isEmpty()) {
@@ -248,7 +248,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			// normalize names
 			// declare temporary variables to fit the API
 			ArrayList<String> temp1 = new ArrayList<String>();
-			if (receiver != null) {
+			if (receiver != null && !receiver.isEmpty()) {
 				temp1.add(receiver);
 			}
 			ArrayList<ArrayList<String>> temp2 = new ArrayList<ArrayList<String>>();
@@ -303,7 +303,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				// strip off any type casting of the return value before the receiver
 				// but be careful and do not strip off the type casting in the receiver
 				receiver = receiver.trim();
-				if (receiver.startsWith("(") && !receiver.endsWith(")")) {
+				if (receiver.matches("^\\([a-zA-Z0-9_\\.<>\\?\\s]+\\).+$")) {
 					receiver = receiver.substring(receiver.indexOf(')') + 1);
 					receiver = receiver.trim();
 				}
@@ -428,9 +428,9 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("read");
-		String path = "/home/troy/research/BOA/Maple/example/InputStream.read/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/InputStream.read/large-output.txt";
+		pattern.add("get");
+		String path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();

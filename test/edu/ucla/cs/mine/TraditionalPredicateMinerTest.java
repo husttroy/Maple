@@ -48,7 +48,7 @@ public class TraditionalPredicateMinerTest {
 		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
-		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> predicates = map.get("createNewFile");
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("!rcv.exists()");
@@ -65,7 +65,7 @@ public class TraditionalPredicateMinerTest {
 		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
-		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> predicates1 = map.get("new String");
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("arg0.length() > 0 && !new String(arg0,).exists()");
@@ -86,7 +86,7 @@ public class TraditionalPredicateMinerTest {
 		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
-		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> predicates1 = map.get("createNewFile");
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("!rcv.exists()");
@@ -105,7 +105,7 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
-		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("rcv.hasMoreTokens() && true");
 		assertEquals(expected1, predicates.get("nextToken"));
@@ -119,12 +119,28 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
-		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("true && rcv.hasMoreTokens() && true");
 		assertEquals(expected1, predicates.get("nextToken"));
 		assertEquals(null, predicates.get("TL1Line"));
 		assertEquals(null, predicates.get("trim"));
+	}
+	
+	@Test
+	public void testPropagatePredicateWithChainedCall() {
+		String expr = "otherRealIn=(String) shortTtToFullTt.foo(in,).get(in,)";
+		String predicate = "prncvs[sex.toInteger()].containsKey(in,)";
+		ArrayList<String> pattern = new ArrayList<String>();
+		pattern.add("get");
+		pattern.add("foo");
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
+		ArrayList<String> expected1 = new ArrayList<String>();
+		expected1.add("prncvs[sex.toInteger()].containsKey(arg0,)");
+		assertEquals(expected1, predicates.get("get"));
+		assertEquals(null, predicates.get("toInteger"));
+		assertEquals(expected1, predicates.get("foo"));
 	}
 	
 	@Test
@@ -134,7 +150,7 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
-		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("rcv.hasMoreTokens()");
 		assertEquals(expected, predicates.get("nextToken"));
@@ -147,7 +163,7 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
-		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("rcv.hasMoreTokens()");
 		assertEquals(expected, predicates.get("nextToken"));
@@ -161,7 +177,7 @@ public class TraditionalPredicateMinerTest {
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
-		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("true && rcv.hasMoreTokens()");
 		assertEquals(expected, predicates.get("nextToken"));
@@ -169,13 +185,13 @@ public class TraditionalPredicateMinerTest {
 	}
 	
 	@Test
-	public void testPropagatePredicateWithDeepChained() {
+	public void testPropagatePredicateWithDeeplyNested() {
 		String expr = "url=fileToURL(new File(st.nextToken(),),)";
 		String predicate = "st.hasMoreTokens()";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("nextToken");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
-		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, predicate);
+		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("rcv.hasMoreTokens()");
 		assertEquals(expected, predicates.get("nextToken"));
