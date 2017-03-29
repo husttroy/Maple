@@ -211,6 +211,15 @@ public class TraditionalPredicateMinerTest {
 	}
 	
 	@Test
+	public void testExtractReceiverWithExtraParenthesis() {
+		String expr = "action=(session.get(\"feedbackAction\",)!=null&&session.get(\"feedbackAction\",).toString().equals(\"save\",))?\"save\":\"cancel\"";
+		String api = "get";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		String rcv = pm.getReceiver(expr, api);
+		assertEquals("session", rcv);
+	}
+	
+	@Test
 	public void testExtractReceiverWithTypeCastingInReceiver() {
 		String expr = "((File) value).mkdirs()";
 		String api = "mkdir";

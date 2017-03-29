@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 import edu.ucla.cs.utils.ProcessUtils;
+import edu.ucla.cs.utils.SAT;
 
 public class TraditionalPredicateMiner extends PredicatePatternMiner {
 	static final Pattern METHOD_CALL = Pattern
@@ -262,7 +263,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("!(rcv==null) && !(arg0==null) && !(arg2==0) && !(arg1||arg2<0||arg1>arg0.length||arg0.length-arg1<arg2) && arg2>0")) {
+			if (normalized_predicate.equals("true && !rcv.get(\"feedbackMatrixCall\",)!=null) && true")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
@@ -307,6 +308,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 					receiver = receiver.substring(receiver.indexOf(')') + 1);
 					receiver = receiver.trim();
 				}
+				receiver = SAT.stripUnbalancedParentheses(receiver);
 			}
 		}
 		return receiver;
