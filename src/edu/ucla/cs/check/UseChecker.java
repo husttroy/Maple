@@ -24,9 +24,12 @@ public class UseChecker {
 	}
 	
 	public HashMap<Answer, ArrayList<Violation>> check(
-			HashSet<ArrayList<APISeqItem>> patterns, ArrayList<Answer> answers) {
+			HashSet<ArrayList<APISeqItem>> patterns, HashSet<Answer> answers) {
 		HashMap<Answer, ArrayList<Violation>> violations = new HashMap<Answer, ArrayList<Violation>>();
 		for (Answer answer : answers) {
+			if(answer.id == 28300736) {
+				System.out.println("hit!");
+			}
 			for (ArrayList<APISeqItem> seq : answer.seq.values()) {
 				ArrayList<Violation> vios = validate(patterns, seq);
 				if(!vios.isEmpty()) {
@@ -62,7 +65,7 @@ public class UseChecker {
 	 * @param seq
 	 * @return
 	 */
-	private ArrayList<Violation> validate(HashSet<ArrayList<APISeqItem>> patterns,
+	public ArrayList<Violation> validate(HashSet<ArrayList<APISeqItem>> patterns,
 			ArrayList<APISeqItem> seq) {
 		ArrayList<Violation> violations = new ArrayList<Violation>();
 
@@ -74,7 +77,20 @@ public class UseChecker {
 			// compute the longest common subseqeunce
 			ArrayList<APISeqItem> lcs = LCS(pattern, seq);
 			if(lcs.equals(pattern)) {
-				// follows at least one pattern, return an empty list
+				// follows at least one pattern, then checks for the condition violation
+				for(APISeqItem item : lcs) {
+					if(item instanceof APICall) {
+						APICall call1 = (APICall)item;
+						int index = lcs.indexOf(call1);
+						APICall call2 = (APICall) common.get(index);
+						if (checkPrecondition(call2, call1)) {
+							// precondition violation
+							Violation vio = new Violation(
+									ViolationType.IncorrectPrecondition, call2);
+							violations.add(vio);
+						}
+					}
+				}
 				return violations;
 			} else {
 				// find the most similar pattern
@@ -120,27 +136,7 @@ public class UseChecker {
 				if(call2 == null) {
 					violations.add(new Violation(ViolationType.MissingMethodCall, item));
 				} else {
-					// check whether the precondition of API call in pattern is implied by the precondition of the API call in the sequence
-					SAT sat = new SAT();
-					// condition and normalize the path condition of api2
-					HashSet<String> relevant_element = new HashSet<String>();
-					ArrayList<String> rcv = new ArrayList<String>();
-					ArrayList<ArrayList<String>> args = new ArrayList<ArrayList<String>>();
-					if (call2.receiver != null) {
-						relevant_element.add(call2.receiver);
-						rcv.add(call2.receiver);
-					}
-					relevant_element.addAll(call2.arguments);
-					args.add(call2.arguments);
-					String cond;
-					if(!call2.condition.equals("true")) {
-						cond = PredicatePatternMiner.condition(
-								relevant_element, call2.condition);
-						cond = PredicatePatternMiner.normalize(cond, rcv, args);
-					} else {
-						cond = "true";
-					}
-					if (!sat.checkImplication(cond, call1.condition)) {
+					if (checkPrecondition(call2, call1)) {
 						// precondition violation
 						Violation vio = new Violation(
 								ViolationType.IncorrectPrecondition, call2);
@@ -151,6 +147,34 @@ public class UseChecker {
 		}
 
 		return violations;
+	}
+	
+	public boolean checkPrecondition(APICall call2, APICall call1) {
+		// check whether the precondition of API call in pattern is implied by the precondition of the API call in the sequence
+		SAT sat = new SAT();
+		// condition and normalize the path condition of api2
+		HashSet<String> relevant_element = new HashSet<String>();
+		ArrayList<String> rcv = new ArrayList<String>();
+		ArrayList<ArrayList<String>> args = new ArrayList<ArrayList<String>>();
+		if (call2.receiver != null) {
+			relevant_element.add(call2.receiver);
+			rcv.add(call2.receiver);
+		}
+		relevant_element.addAll(call2.arguments);
+		args.add(call2.arguments);
+		String cond;
+		if(!call2.condition.equals("true")) {
+			cond = PredicatePatternMiner.condition(
+					relevant_element, call2.condition);
+			cond = PredicatePatternMiner.normalize(cond, rcv, args);
+		} else {
+			cond = "true";
+		}
+		if (!sat.checkImplication(cond, call1.condition)) {
+			// precondition violation
+			return true;
+		}
+		return false;
 	}
 	
 	public ArrayList<APISeqItem> LCS(ArrayList<APISeqItem> seq1, ArrayList<APISeqItem> seq2) {
