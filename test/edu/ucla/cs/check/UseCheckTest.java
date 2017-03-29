@@ -119,4 +119,38 @@ public class UseCheckTest {
 		ArrayList<Violation> vios2 = check.validate(patterns, seq2);
 		assertEquals(0, vios2.size());
 	}
+	
+	@Test
+	public void testMultiplePatternsWithMinimumDistance() {
+		ArrayList<String> args = new ArrayList<String>();
+		APICall call1 = new APICall("firstKey", "!map.isEmpty()", "map", args);
+		APICall call2 = new APICall("firstKey", "map.size() > 0", "map", args);
+		APICall call3 = new APICall("firstKey", "!rcv.isEmpty()");
+		APICall call4 = new APICall("firstKey", "rcv.size() > 0");
+		
+		ArrayList<APISeqItem> seq1 = new ArrayList<APISeqItem>();
+		seq1.add(ControlConstruct.IF);
+		seq1.add(call1);
+		seq1.add(ControlConstruct.END_BLOCK);
+		
+		ArrayList<APISeqItem> seq2 = new ArrayList<APISeqItem>();
+		seq2.add(ControlConstruct.IF);
+		seq2.add(call2);
+		seq2.add(ControlConstruct.END_BLOCK);
+		
+		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
+		pattern1.add(call3);
+		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
+		pattern2.add(call4);
+		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
+		patterns.add(pattern1);
+		patterns.add(pattern2);
+		
+		UseChecker check = new UseChecker();
+		ArrayList<Violation> vios1 = check.validate(patterns, seq1);
+		assertEquals(0, vios1.size());
+		
+		ArrayList<Violation> vios2 = check.validate(patterns, seq2);
+		assertEquals(0, vios2.size());
+	}
 }

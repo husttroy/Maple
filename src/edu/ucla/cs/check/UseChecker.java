@@ -87,8 +87,6 @@ public class UseChecker {
 				closest_pattern_common.put(pattern, closest_common);
 			} else if (pattern.size() - lcs.size() == diff) {
 				// same minimum distance
-				closest_pattern_lcs.clear();
-				closest_pattern_common.clear();
 				closest_pattern_lcs.put(pattern, lcs);
 				ArrayList<APISeqItem> closest_common = new ArrayList<APISeqItem>();
 				closest_common.addAll(common);
