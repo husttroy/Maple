@@ -82,4 +82,41 @@ public class UseCheckTest {
 		ArrayList<Violation> vios2 = check.validate(patterns, seq2);
 		assertEquals(0, vios2.size());
 	}
+	
+	@Test
+	public void testMultiplePatterns() {
+		ArrayList<String> args = new ArrayList<String>();
+		args.add("key");
+		APICall call1 = new APICall("get", "map.containsKey(key,)", "map", args);
+		APICall call2 = new APICall("get", "true", "map", args);
+		APICall call3 = new APICall("get", "rcv.containsKey(arg0,)");
+		APICall call4 = new APICall("get", "true");
+		
+		ArrayList<APISeqItem> seq1 = new ArrayList<APISeqItem>();
+		seq1.add(ControlConstruct.IF);
+		seq1.add(call1);
+		seq1.add(ControlConstruct.END_BLOCK);
+		
+		ArrayList<APISeqItem> seq2 = new ArrayList<APISeqItem>();
+		seq2.add(call2);
+		seq2.add(ControlConstruct.IF);
+		seq2.add(ControlConstruct.END_BLOCK);
+		
+		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
+		pattern1.add(call3);
+		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
+		pattern2.add(call4);
+		pattern2.add(ControlConstruct.IF);
+		pattern2.add(ControlConstruct.END_BLOCK);
+		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
+		patterns.add(pattern1);
+		patterns.add(pattern2);
+		
+		UseChecker check = new UseChecker();
+		ArrayList<Violation> vios1 = check.validate(patterns, seq1);
+		assertEquals(0, vios1.size());
+		
+		ArrayList<Violation> vios2 = check.validate(patterns, seq2);
+		assertEquals(0, vios2.size());
+	}
 }

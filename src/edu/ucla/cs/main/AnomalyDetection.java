@@ -25,12 +25,13 @@ public class AnomalyDetection {
 		Search search = new Search();
 		HashSet<Answer> answers = search.search(typeQuery, apiQueries);
 		
-		int count = 0;
-		for(Answer answer : answers) {
-			count += answer.seq.keySet().size();
-		}
-		
-		System.out.println("Total number of relevant Java snippets: " + count);
+//		int count = 0;
+//		for(Answer answer : answers) {
+//			count += answer.seq.keySet().size();
+//		}
+//		
+//		System.out.println("Total number of relevant Java snippets: " + count);
+		System.out.println("Total number of relevant Java snippets: " + answers.size());
 		
 		// detect API usage anomalies
 		HashMap<Answer, ArrayList<Violation>> violations = Utils.detectAnomaly(

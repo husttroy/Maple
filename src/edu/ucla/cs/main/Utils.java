@@ -58,11 +58,12 @@ public class Utils {
 	public static HashMap<Answer, ArrayList<Violation>> detectAnomaly(
 			HashSet<Answer> snippets, HashSet<ArrayList<APISeqItem>> patterns) {
 		HashMap<Answer, ArrayList<Violation>> violations = new UseChecker().check(patterns, snippets);
-		int buggy_snippet_count = 0;
-		for(Answer a : violations.keySet()) {
-			buggy_snippet_count += a.buggy_seq_count;
-		}
-		System.out.println("Total number of unreliable Java snippets: " + buggy_snippet_count);
+//		int buggy_snippet_count = 0;
+//		for(Answer a : violations.keySet()) {
+//			buggy_snippet_count += a.buggy_seq_count;
+//		}
+//		System.out.println("Total number of unreliable Java snippets: " + buggy_snippet_count);
+		System.out.println("Total number of unreliable Java snippets: " + violations.keySet().size());
 		
 		for(Answer a : violations.keySet()) {
 			System.out.println("Answer Id --- http://stackoverflow.com/questions/" + a.id);

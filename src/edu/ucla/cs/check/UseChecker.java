@@ -32,7 +32,7 @@ public class UseChecker {
 			}
 			for (ArrayList<APISeqItem> seq : answer.seq.values()) {
 				ArrayList<Violation> vios = validate(patterns, seq);
-				if(!vios.isEmpty()) {
+				if(vios != null && !vios.isEmpty()) {
 					ArrayList<Violation> value;
 					if(violations.containsKey(answer)) {
 						value = violations.get(answer);
@@ -67,61 +67,71 @@ public class UseChecker {
 	 */
 	public ArrayList<Violation> validate(HashSet<ArrayList<APISeqItem>> patterns,
 			ArrayList<APISeqItem> seq) {
-		ArrayList<Violation> violations = new ArrayList<Violation>();
-
-		ArrayList<APISeqItem> closest_pattern = null;
-		ArrayList<APISeqItem> closest_lcs = null;
-		ArrayList<APISeqItem> closest_common = null;
+		// first-round checking, find the one with the minimum sequence distance
+		HashMap<ArrayList<APISeqItem>, ArrayList<APISeqItem>> closest_pattern_lcs = new HashMap<ArrayList<APISeqItem>, ArrayList<APISeqItem>>();
+		HashMap<ArrayList<APISeqItem>, ArrayList<APISeqItem>> closest_pattern_common = new HashMap<ArrayList<APISeqItem>, ArrayList<APISeqItem>>();
 		int diff = Integer.MAX_VALUE;
 		for(ArrayList<APISeqItem> pattern : patterns) {
 			// compute the longest common subseqeunce
 			ArrayList<APISeqItem> lcs = LCS(pattern, seq);
-			if(lcs.equals(pattern)) {
-				// follows at least one pattern, then checks for the condition violation
-				for(APISeqItem item : lcs) {
-					if(item instanceof APICall) {
-						APICall call1 = (APICall)item;
-						int index = lcs.indexOf(call1);
-						APICall call2 = (APICall) common.get(index);
-						if (checkPrecondition(call2, call1)) {
-							// precondition violation
-							Violation vio = new Violation(
-									ViolationType.IncorrectPrecondition, call2);
-							violations.add(vio);
-						}
-					}
-				}
-				return violations;
-			} else {
-				// find the most similar pattern
-				if(pattern.size() - lcs.size() < diff) {
-					diff = pattern.size() - lcs.size();
-					closest_pattern = pattern;
-					closest_lcs = lcs;
-					closest_common = new ArrayList<APISeqItem>();
-					closest_common.addAll(common);
-				}
+			
+			// find the most similar pattern
+			if(pattern.size() - lcs.size() < diff) {
+				// a new minimum distance
+				diff = pattern.size() - lcs.size();
+				closest_pattern_lcs.clear();
+				closest_pattern_common.clear();
+				closest_pattern_lcs.put(pattern, lcs);
+				ArrayList<APISeqItem> closest_common = new ArrayList<APISeqItem>();
+				closest_common.addAll(common);
+				closest_pattern_common.put(pattern, closest_common);
+			} else if (pattern.size() - lcs.size() == diff) {
+				// same minimum distance
+				closest_pattern_lcs.clear();
+				closest_pattern_common.clear();
+				closest_pattern_lcs.put(pattern, lcs);
+				ArrayList<APISeqItem> closest_common = new ArrayList<APISeqItem>();
+				closest_common.addAll(common);
+				closest_pattern_common.put(pattern, closest_common);
 			}
+			
 			// reset
 			common.clear();
 		}
 		
+		// second-round checking, also consider the precondition violations
+		int num = Integer.MAX_VALUE;
+		ArrayList<Violation> min_vio = null;
+		for(ArrayList<APISeqItem> pattern : closest_pattern_lcs.keySet()) {
+			ArrayList<Violation> violations = compute(pattern, seq, closest_pattern_lcs.get(pattern), closest_pattern_common.get(pattern));
+			if(violations.size() < num) {
+				num = violations.size();
+				min_vio = violations;
+			}
+		}
+
+		return min_vio;
+	}
+	
+	public ArrayList<Violation> compute(ArrayList<APISeqItem> pattern, ArrayList<APISeqItem> seq, ArrayList<APISeqItem> lcs, ArrayList<APISeqItem> common) {
+		ArrayList<Violation> violations = new ArrayList<Violation>();
+		
 		// compute the violation
-		for(APISeqItem item : closest_pattern) {
+		for(APISeqItem item : pattern) {
 			if(item instanceof ControlConstruct) {
-				if(!closest_lcs.contains(item) && !seq.contains(item)) {
+				if(!lcs.contains(item) && !seq.contains(item)) {
 					violations.add(new Violation(ViolationType.MissingStructure, item));
 					continue;
-				} else if (!closest_lcs.contains(item) && seq.contains(item)) {
+				} else if (!lcs.contains(item) && seq.contains(item)) {
 					violations.add(new Violation(ViolationType.DisorderStructure, item));
 				}
 			} else {
 				APICall call1 = (APICall)item;
 				APICall call2 = null;
 				// find the corresponding call2, if any
-				if(closest_lcs.contains(call1)) {
-					int index = closest_lcs.indexOf(call1);
-					call2 = (APICall)closest_common.get(index);
+				if(lcs.contains(call1)) {
+					int index = lcs.indexOf(call1);
+					call2 = (APICall)common.get(index);
 				} else {
 					// try to find in the sequence
 					for(APISeqItem a : seq) {
@@ -145,7 +155,7 @@ public class UseChecker {
 				}
 			}
 		}
-
+		
 		return violations;
 	}
 	
