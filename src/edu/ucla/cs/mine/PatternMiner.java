@@ -25,7 +25,9 @@ public class PatternMiner {
 			int threshold2 = (int) (support * seq_support);
 			HashMap<String, HashMap<String, Integer>> predicate_patterns = pm2.find_the_most_common_predicate(threshold2);
 			HashMap<ArrayList<APISeqItem>, Integer> cp = compose(seq_pattern, seq_support, predicate_patterns);
-			composed_patterns.putAll(cp);
+			if(cp != null) {
+				composed_patterns.putAll(cp);
+			}
 		}
 		
 		return composed_patterns;
@@ -139,10 +141,16 @@ public class PatternMiner {
 					for(Map.Entry<ArrayList<APISeqItem>, Integer> entry : composed_patterns.entrySet()) {
 						ArrayList<APISeqItem> s = entry.getKey();
 						int support1 = entry.getValue();
+						
+						if(conditions.size() > 1 && conditions.containsKey("true")) {
+							// we prefer conditions that are not true above the threshold
+							conditions.remove("true");
+						} else if (conditions.size() == 1 && conditions.containsKey("true") && flag) {
+							// ignore this pattern
+							return null;
+						}
+						
 						for(String condition : conditions.keySet()) {
-							if(flag && condition.equals("true")) {
-								continue;
-							}
 							int support2 = conditions.get(condition);
 							int value = Math.min(support1, support2);
 							ArrayList<APISeqItem> newS = new ArrayList<APISeqItem>();
@@ -184,16 +192,13 @@ public class PatternMiner {
 	}
 	
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/Maple/example/File.mkdir/small-sequence.txt";
-		String seq = "/home/troy/research/BOA/Maple/example/File.mkdir/small-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/InputStream.read/small-sequence.txt";
+		String seq = "/home/troy/research/BOA/Maple/example/InputStream.read/small-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("mkdir");
+		q1.add("read");
 		queries.add(q1);
-		HashSet<String> q2 = new HashSet<String>();
-		q2.add("mkdirs");
-		queries.add(q2);
-		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, queries, 0.6, 196);
+		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, queries, 0.6, 47);
 		for(ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
