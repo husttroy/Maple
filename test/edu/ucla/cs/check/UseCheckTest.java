@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import edu.ucla.cs.main.Utils;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
@@ -152,5 +153,23 @@ public class UseCheckTest {
 		
 		ArrayList<Violation> vios2 = check.validate(patterns, seq2);
 		assertEquals(0, vios2.size());
+	}
+	
+	@Test
+	public void testSubSequence() {
+		ArrayList<String> s1 = new ArrayList<String>();
+		s1.add("put");
+		s1.add("flip");
+		s1.add("get");
+		ArrayList<String> s2 = new ArrayList<String>();
+		s2.add("get");
+		s2.add("flip");
+		s2.add("put");
+		ArrayList<String> s3 = new ArrayList<String>();
+		s3.add("put");
+		s3.add("get");
+		
+		assertTrue(Utils.isSubsequence(s1, s3));
+		assertFalse(Utils.isSubsequence(s2, s3));
 	}
 }

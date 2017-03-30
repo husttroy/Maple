@@ -1,5 +1,6 @@
 package edu.ucla.cs.evaluate.example;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import edu.ucla.cs.main.Maple;
@@ -8,8 +9,8 @@ public class IteratorNext {
 	public static void main(String[] args) {
 		HashSet<String> types = new HashSet<String>();
 		types.add("Iterator");
-		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
-		HashSet<String> apis = new HashSet<String>();
+		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
+		ArrayList<String> apis = new ArrayList<String>();
 		apis.add("next");
 		queries.add(apis);
 		String raw_output = "/home/troy/research/BOA/Maple/example/Iterator.next/small-sequence.txt";

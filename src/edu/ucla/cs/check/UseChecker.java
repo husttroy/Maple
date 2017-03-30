@@ -27,9 +27,6 @@ public class UseChecker {
 			HashSet<ArrayList<APISeqItem>> patterns, HashSet<Answer> answers) {
 		HashMap<Answer, ArrayList<Violation>> violations = new HashMap<Answer, ArrayList<Violation>>();
 		for (Answer answer : answers) {
-			if(answer.id == 28300736) {
-				System.out.println("hit!");
-			}
 			for (ArrayList<APISeqItem> seq : answer.seq.values()) {
 				ArrayList<Violation> vios = validate(patterns, seq);
 				if(vios != null && !vios.isEmpty()) {

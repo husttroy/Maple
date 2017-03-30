@@ -22,12 +22,12 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class Maple {
 	HashSet<String> types;
-	HashSet<HashSet<String>> apis;
+	HashSet<ArrayList<String>> apis;
 	String raw_output;
 	String seq;
 	double min_support;
 	
-	public Maple(HashSet<String> types, HashSet<HashSet<String>> apis, String raw_output, String seq, double threshold) {
+	public Maple(HashSet<String> types, HashSet<ArrayList<String>> apis, String raw_output, String seq, double threshold) {
 		this.types = types;
 		this.apis = apis;
 		this.raw_output = raw_output;
@@ -54,7 +54,11 @@ public class Maple {
 		// TODO: we also assume that the raw output from BOA has been
 		// pre-processed, e.g., sliced for the lightweight approach, formatted
 		// for the traditional approach
-		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, apis, min_support, FileUtils.countLines(seq));
+		HashSet<HashSet<String>> sets = new HashSet<HashSet<String>>();
+		for(ArrayList<String> l : apis) {
+			sets.add(new HashSet<String>(l));
+		}
+		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, sets, min_support, FileUtils.countLines(seq));
 		HashSet<ArrayList<APISeqItem>> set = new HashSet<ArrayList<APISeqItem>>();
 		set.addAll(patterns.keySet());
 		

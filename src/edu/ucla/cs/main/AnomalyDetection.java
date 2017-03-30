@@ -11,10 +11,10 @@ import edu.ucla.cs.search.Search;
 
 public class AnomalyDetection {
 	HashSet<String> typeQuery;
-	HashSet<HashSet<String>> apiQueries;
+	HashSet<ArrayList<String>> apiQueries;
 	HashSet<ArrayList<APISeqItem>> patterns;
 	
-	public AnomalyDetection(HashSet<String> typeQuery, HashSet<HashSet<String>> apiQueries, HashSet<ArrayList<APISeqItem>> patterns) {
+	public AnomalyDetection(HashSet<String> typeQuery, HashSet<ArrayList<String>> apiQueries, HashSet<ArrayList<APISeqItem>> patterns) {
 		this.typeQuery = typeQuery;
 		this.apiQueries = apiQueries;
 		this.patterns = patterns;

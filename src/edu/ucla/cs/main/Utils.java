@@ -73,4 +73,24 @@ public class Utils {
 		}
 		return violations;
 	}
+	
+	/**
+	 * Check whether the second sequence is a subseqeunce of the first one.
+	 * 
+	 * @param seq1
+	 * @param seq2
+	 * @return
+	 */
+	public static boolean isSubsequence(ArrayList<String> seq1, ArrayList<String> seq2){
+		int pos1 = 0;
+		int pos2 = 0;
+		for (; pos1 < seq1.size() && pos2 < seq2.size();) {
+			if(seq1.get(pos1).equals(seq2.get(pos2))) {
+				pos2 ++;
+			} 
+			pos1++;
+		}
+		
+		return pos2 == seq2.size();
+	}
 }

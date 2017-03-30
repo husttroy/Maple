@@ -8,13 +8,13 @@ import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
 
-public class CreateNewFile {
+public class HashMapGet {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("createNewFile", "!rcv.exists()"));
+		pattern1.add(new APICall("get", "rcv.containsKey(arg0,)"));
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("createNewFile", "true"));
+		pattern2.add(new APICall("get", "true"));
 		pattern2.add(ControlConstruct.IF);
 		pattern2.add(ControlConstruct.END_BLOCK);
 		
@@ -23,9 +23,10 @@ public class CreateNewFile {
 		patterns.add(pattern2);
 		
 		HashSet<String> types = new HashSet<String>();
+		types.add("HashMap");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("createNewFile");
+		apis.add("get");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

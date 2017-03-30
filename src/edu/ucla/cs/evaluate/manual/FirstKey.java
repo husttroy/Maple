@@ -8,24 +8,30 @@ import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
 
-public class CreateNewFile {
+public class FirstKey {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("createNewFile", "!rcv.exists()"));
+		pattern1.add(ControlConstruct.TRY);
+		pattern1.add(new APICall("firstKey", "true"));
+		pattern1.add(ControlConstruct.END_BLOCK);
+		pattern1.add(ControlConstruct.CATCH);
+		pattern1.add(ControlConstruct.END_BLOCK);
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("createNewFile", "true"));
-		pattern2.add(ControlConstruct.IF);
-		pattern2.add(ControlConstruct.END_BLOCK);
-		
+		pattern2.add(new APICall("firstKey", "!rcv.isEmpty()"));
+				
+		ArrayList<APISeqItem> pattern3 = new ArrayList<APISeqItem>();
+		pattern3.add(new APICall("firstKey", "rcv.size() > 0"));
+			
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
 		patterns.add(pattern2);
+		patterns.add(pattern3);
 		
 		HashSet<String> types = new HashSet<String>();
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("createNewFile");
+		apis.add("firstKey");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

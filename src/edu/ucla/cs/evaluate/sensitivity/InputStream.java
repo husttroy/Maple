@@ -10,17 +10,14 @@ import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
 
-public class Mkdir {
+public class InputStream {
 	public static void main(String[] args) throws IOException {
-		String raw_output = "/home/troy/research/BOA/Maple/example/File.mkdir/large-sequence.txt";
-		String path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/InputStream.read/large-sequence.txt";
+		String path = "/home/troy/research/BOA/Maple/example/InputStream.read/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
-		HashSet<String> q1 = new HashSet<String>();
-		q1.add("mkdir");
-		HashSet<String> q2 = new HashSet<String>();
-		q2.add("mkdirs");
-		queries.add(q1);
-		queries.add(q2);
+		HashSet<String> query = new HashSet<String>();
+		query.add("read");
+		queries.add(query);
 		Sample sam = new Sample(path);
 //		int[] sizes = {50, 100, 500, 1000, 5000, 10000};
 		int[] sizes = {100, 500, 2000};

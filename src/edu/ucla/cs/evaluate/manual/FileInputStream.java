@@ -8,14 +8,16 @@ import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
 
-public class CreateNewFile {
+public class FileInputStream {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("createNewFile", "!rcv.exists()"));
+		pattern1.add(new APICall("new FileInputStream", "arg0.exists()"));
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("createNewFile", "true"));
-		pattern2.add(ControlConstruct.IF);
+		pattern2.add(ControlConstruct.TRY);
+		pattern2.add(new APICall("new FileInputStream", "true"));
+		pattern2.add(ControlConstruct.END_BLOCK);
+		pattern2.add(ControlConstruct.CATCH);
 		pattern2.add(ControlConstruct.END_BLOCK);
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
@@ -25,7 +27,7 @@ public class CreateNewFile {
 		HashSet<String> types = new HashSet<String>();
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("createNewFile");
+		apis.add("new FileInputStream");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

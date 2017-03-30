@@ -310,6 +310,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testEquivalenceWithParentheses2() {
+		SAT sat = new SAT();
+		String p1 = "!(rcv.isEmpty())";
+		String p2 = "!rcv.isEmpty()";
+		assertTrue(sat.checkEquivalence(p1, p2));
+	}
+	
+	@Test
 	public void testEquivalenceWithArguments() {
 		SAT sat = new SAT();
 		String p1 = "!rcv.containsKey(arg0,)";
