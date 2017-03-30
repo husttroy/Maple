@@ -37,7 +37,9 @@ public class SAT {
 			return true;
 		}
 		
-		if(p1.equals("true && !(arg0.charAt(0,)=='!')") || p2.equals("true && !(arg0.charAt(0,)=='!')")) {
+		if(p1.equals("true && !(arg0.charAt(0,)=='!')") || p2.equals("true && !(arg0.charAt(0,)=='!')") 
+				|| p1.equals("arg3 && !(arg0.containsKey(\"self\",))") || p2.equals("arg3 && !(arg0.containsKey(\"self\",))")
+				|| p1.equals("true||pageList.size()==arg0 && !rcv==null||rcv.size()==arg0 && true") || p2.equals("true||pageList.size()==arg0 && !rcv==null||rcv.size()==arg0 && true")) {
 			return false;
 		}
 		// clear previous maps
@@ -829,10 +831,10 @@ public class SAT {
 		for(Point p : ranges) {
 			rel += expr.substring(cur, p.x);
 			String rest = expr.substring(p.y + 1).trim();
-			if(rel.trim().endsWith("==") || rel.trim().endsWith("!=")) {
+			if(rel.trim().endsWith("==") || rel.trim().endsWith("!=") || rel.trim().endsWith(">=") || rel.trim().endsWith("<=")) {
 				// string comparison, replace the string with integer
 				rel += "1";
-			} else if (rest.startsWith("==") || rest.startsWith("!=")) {
+			} else if (rest.startsWith("==") || rest.startsWith("!=") || rest.trim().startsWith(">=") || rest.trim().startsWith("<=")) {
 				rel += "1";
 			}
 			cur = p.y + 1;

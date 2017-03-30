@@ -252,6 +252,14 @@ public class SATTest {
 	}
 	
 	@Test
+	public void testNormalizePredicateWithCharComparison() {
+		SAT sat = new SAT();
+		String p = "true && arg0 <= 'z' && s.startsWith(String.valueOf(arg0))";
+		String p_norm = sat.normalize(p);
+		assertEquals("true && arg0 <= 1 && s.m0", p_norm);
+	}
+	
+	@Test
 	public void testZ3QueryGeneration() {
 		SAT sat = new SAT();
 		String p1 = "(! (== 1 a0))";
