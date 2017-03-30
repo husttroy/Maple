@@ -65,14 +65,14 @@ public class PartialProgramAnalyzer {
 		return seqs;
 	}
 	
-	public HashSet<String> retrieveTypes() {
+	public APITypeVisitor resolveTypes() {
 		if (this.cu == null) {
 			return null;
 		}
 		
 		APITypeVisitor visitor = new APITypeVisitor();
 		this.cu.accept(visitor);
-		return visitor.types;
+		return visitor;
 	}
 	
 	public static void main(String[] args) throws Exception {
