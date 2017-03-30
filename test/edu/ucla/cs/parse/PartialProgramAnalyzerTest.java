@@ -29,4 +29,31 @@ public class PartialProgramAnalyzerTest {
 		seqs.add(seq);
 		assertEquals(seqs, analyzer.retrieveAPICallSequences(apis));
 	}
+	
+	@Test
+	public void testSnippet28300736() throws Exception {
+		String sample = "/home/troy/research/BOA/Maple/test/edu/ucla/cs/parse/snippet_28300736.txt";
+		String snippet = FileUtils.readFileToString(sample);
+		PartialProgramAnalyzer analyzer = new PartialProgramAnalyzer(snippet);
+		HashSet<String> apis = new HashSet<String>();
+		apis.add("firstKey");
+		ArrayList<ArrayList<APISeqItem>> seqs = analyzer.retrieveAPICallSequences(apis);
+		assertEquals(1, seqs.size());
+		ArrayList<APISeqItem> seq = seqs.get(0);
+		APICall call = (APICall) seq.get(2);
+		assertEquals("map1", call.receiver);
+	}
+	
+	@Test
+	public void testSnippetWithException() throws Exception {
+		String sample = "/home/troy/research/BOA/Maple/test/edu/ucla/cs/parse/snippet_37551851.txt";
+		String snippet = FileUtils.readFileToString(sample);
+		PartialProgramAnalyzer analyzer = new PartialProgramAnalyzer(snippet);
+		HashSet<String> apis = new HashSet<String>();
+		apis.add("new FileInputStream");
+		ArrayList<ArrayList<APISeqItem>> seqs = analyzer.retrieveAPICallSequences(apis);
+		ArrayList<APISeqItem> seq = seqs.get(0);
+		assertEquals(ControlConstruct.TRY, seq.get(0));
+		assertEquals(ControlConstruct.CATCH, seq.get(seq.size() - 2));
+	}
 }
