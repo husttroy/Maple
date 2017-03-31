@@ -1,0 +1,77 @@
+Total number of relevant Java snippets: 63
+Total number of unreliable Java snippets: 34
+Answer Id --- http://stackoverflow.com/questions/22705103
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/7379326
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/10395283
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/33185228
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/24184803
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/25639798
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/32635881
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/21146309
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/14792831
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/20328926
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/16683098
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/15415841
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/10156203
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/35593057
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/29883790
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/39194332
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/7493897
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/10775737
+Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/15372452
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/35164180
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/2569843
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/32860587
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/2567861
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/21852023
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/35917843
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/35725139
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/21421729
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/31531250
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/17956583
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/29498831
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/26550768
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/30673742
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/20492610
+Violation: MissingMethodCall, close@true
+Answer Id --- http://stackoverflow.com/questions/13773625
+Violation: MissingMethodCall, close@true
+Missing Control-flow Structure: 0
+Disorder Control-flow Structure: 0
+Missing API Call: 34
+Disorder API Call: 0
+Incorrect Predicates: 0
+
