@@ -11,11 +11,11 @@ import edu.ucla.cs.model.ControlConstruct;
 public class FileInputStream {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("new FileInputStream", "arg0.exists()"));
+		pattern1.add(new APICall("new FileInputStream", "arg0.exists()", 1));
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
 		pattern2.add(ControlConstruct.TRY);
-		pattern2.add(new APICall("new FileInputStream", "true"));
+		pattern2.add(new APICall("new FileInputStream", "true", 1));
 		pattern2.add(ControlConstruct.END_BLOCK);
 		pattern2.add(ControlConstruct.CATCH);
 		pattern2.add(ControlConstruct.END_BLOCK);
@@ -27,7 +27,7 @@ public class FileInputStream {
 		HashSet<String> types = new HashSet<String>();
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("new FileInputStream");
+		apis.add("new FileInputStream(1)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

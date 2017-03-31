@@ -1,637 +1,78 @@
-Total number of relevant Java snippets: 4687
-Total number of unreliable Java snippets: 306
-Answer Id --- http://stackoverflow.com/questions/19215685
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38711489
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23340800
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32888375
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23337017
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/17736462
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/18994233
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32070798
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/37048388
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/25378856
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34646445
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7734703
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/34830570
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/39143988
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36749953
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12164775
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15174359
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15371926
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19886414
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/28330515
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16358515
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36052980
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24122951
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20274698
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20902933
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/35865520
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/39180273
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19723909
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/26247417
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14483215
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14389797
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23022184
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34111464
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27084272
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23672034
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16400981
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31920480
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24998485
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/26396097
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21505254
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34571392
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/5070922
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34697548
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/3000515
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20801536
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27221470
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/23652449
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19954774
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22531731
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/30522831
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24483388
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/27847077
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24969615
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/4900874
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11477762
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/25396427
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20772237
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33414340
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23507316
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/2041984
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33216833
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/17070392
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11540390
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27223784
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7430042
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15827350
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/30145797
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12238524
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33268281
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14766601
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/8962765
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33170606
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33865751
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36331398
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16910725
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/8120645
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33958153
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7463351
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16207470
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35139933
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38873329
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27839404
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/25235192
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/8234476
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12754919
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/18673333
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/28680888
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9273423
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33203511
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16234011
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29888921
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38356828
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15986613
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36971707
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24895558
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/5987093
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29280492
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/28877608
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16501931
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/18483269
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38356813
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32153828
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9966531
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22816292
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19085244
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29946598
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21766610
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10701851
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/18637218
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/17836397
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6517632
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7755584
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19659171
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20790410
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20093683
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22800371
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11697788
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/4077478
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12472977
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15352772
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35170057
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15359459
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/39027718
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27848519
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6678152
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/25271596
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32584199
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20105627
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33687575
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19828243
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12074764
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6491260
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29400827
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34432769
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/13994437
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/13908375
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31906717
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27592159
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33056337
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22988589
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7806748
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24775556
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9449352
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29774202
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21119321
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27211384
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27899039
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10080885
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10163696
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15562670
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16971640
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10765353
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/5149674
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24029254
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36692208
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/13626415
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36386565
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/18219249
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10460558
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24645272
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14120968
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23825977
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7556813
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35764298
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11259753
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20376465
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29153665
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20026186
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/37001539
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20452622
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31131371
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29085865
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/29469557
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11610857
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19167332
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38420692
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24969620
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22181142
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36646304
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33897583
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22340198
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31969693
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21799336
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/30713673
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10209509
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14031861
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12491099
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9729409
-Violation: MissingMethodCall, super.onCreate@true
+Total number of relevant Java snippets: 4425
+Total number of unreliable Java snippets: 35
+Answer Id --- http://stackoverflow.com/questions/14198153
+Violation: MissingMethodCall, super.onCreate(1)@true
 Answer Id --- http://stackoverflow.com/questions/19018721
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21395676
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/37140164
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/13710319
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/37225434
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/13625660
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/37298073
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/28966851
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/39095984
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31670649
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/12692365
-Violation: MissingMethodCall, super.onCreate@true
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/34571392
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/5070922
+Violation: MissingMethodCall, super.onCreate(1)@true
 Answer Id --- http://stackoverflow.com/questions/36084734
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/37966809
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35404800
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/13409870
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19724098
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23124957
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38737925
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14510092
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/26277770
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9626165
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27899893
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20520816
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20456402
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/5635707
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35701747
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6371778
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31955673
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/30424140
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36936053
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9152127
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/27830024
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14875416
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19457060
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24122977
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22532465
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21990447
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/17900001
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24928366
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21435266
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7147769
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36347955
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6978060
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/30713671
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34585389
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32246288
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/5007365
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14759297
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38273066
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24317021
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11335889
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34646424
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33875464
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/18616087
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/25564693
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22293608
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22130748
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19456168
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20929346
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/17120851
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35523155
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/16322540
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36453943
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33597699
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/7676396
-Violation: MissingMethodCall, super.onCreate@true
+Violation: DisorderMethodCall, setContentView(1)@true
+Answer Id --- http://stackoverflow.com/questions/25271596
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/27221470
+Violation: DisorderMethodCall, setContentView(1)@true
+Answer Id --- http://stackoverflow.com/questions/12754919
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/18994233
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/24483388
+Violation: DisorderMethodCall, setContentView(1)@true
+Answer Id --- http://stackoverflow.com/questions/26190803
+Violation: MissingMethodCall, super.onCreate(1)@true
 Answer Id --- http://stackoverflow.com/questions/26988925
-Violation: DisorderMethodCall, setContentView@true
-Answer Id --- http://stackoverflow.com/questions/37935446
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36532009
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38737688
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10652886
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/4362583
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10892960
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32542302
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/2125082
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23408894
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9864914
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/14121287
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6353556
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24315781
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/36354084
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/35381815
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/38652768
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11253473
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20053575
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10322849
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23066021
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/37387450
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22976443
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22130698
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31906709
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/19369207
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/11403022
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/39180185
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23166339
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/22984337
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10209651
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/39286017
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/6880580
-Violation: MissingMethodCall, super.onCreate@true
+Violation: DisorderMethodCall, setContentView(1)@true
 Answer Id --- http://stackoverflow.com/questions/14064673
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/32850426
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/33172500
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20520794
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/8438192
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/10321332
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/9555556
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/21952093
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/15120235
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23789254
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20821136
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/31233389
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/8573919
-Violation: MissingMethodCall, super.onCreate@true
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/17070182
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/23166093
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/20252114
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/24646130
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/3751729
-Violation: MissingMethodCall, super.onCreate@true
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/20772237
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/9626165
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/7734703
+Violation: DisorderMethodCall, setContentView(1)@true
+Answer Id --- http://stackoverflow.com/questions/24895558
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/20456402
+Violation: DisorderMethodCall, setContentView(1)@true
+Answer Id --- http://stackoverflow.com/questions/29469557
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/2125082
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/21644114
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/20274698
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/20902933
+Violation: DisorderMethodCall, setContentView(1)@true
+Answer Id --- http://stackoverflow.com/questions/27223784
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/26247417
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/22800371
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/11697788
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/33268281
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/14483215
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/22532465
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/5149674
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/26191814
+Violation: MissingMethodCall, super.onCreate(1)@true
 Answer Id --- http://stackoverflow.com/questions/25385546
-Violation: MissingMethodCall, super.onCreate@true
-Answer Id --- http://stackoverflow.com/questions/34767076
-Violation: MissingMethodCall, super.onCreate@true
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/18881063
+Violation: MissingMethodCall, super.onCreate(1)@true
+Answer Id --- http://stackoverflow.com/questions/16400981
+Violation: MissingMethodCall, super.onCreate(1)@true
 Missing Control-flow Structure: 0
 Disorder Control-flow Structure: 0
-Missing API Call: 299
+Missing API Call: 28
 Disorder API Call: 7
 Incorrect Predicates: 0
 

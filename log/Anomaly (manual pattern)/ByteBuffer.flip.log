@@ -1,26 +1,16 @@
-Total number of relevant Java snippets: 16
-Total number of unreliable Java snippets: 9
-Answer Id --- http://stackoverflow.com/questions/3670889
-Violation: DisorderMethodCall, get@true
-Answer Id --- http://stackoverflow.com/questions/7709034
-Violation: MissingMethodCall, flip@true
-Answer Id --- http://stackoverflow.com/questions/19554284
-Violation: MissingMethodCall, flip@true
-Answer Id --- http://stackoverflow.com/questions/8533736
-Violation: MissingMethodCall, flip@true
-Answer Id --- http://stackoverflow.com/questions/34193166
-Violation: DisorderMethodCall, get@true
-Answer Id --- http://stackoverflow.com/questions/18033757
-Violation: MissingMethodCall, flip@true
-Answer Id --- http://stackoverflow.com/questions/9104204
-Violation: MissingMethodCall, flip@true
-Answer Id --- http://stackoverflow.com/questions/34196979
-Violation: MissingMethodCall, flip@true
-Answer Id --- http://stackoverflow.com/questions/8959925
-Violation: MissingMethodCall, flip@true
+Total number of relevant Java snippets: 11
+Total number of unreliable Java snippets: 4
+Answer Id --- http://stackoverflow.com/questions/12100651
+Violation: MissingMethodCall, position(1)@true
+Answer Id --- http://stackoverflow.com/questions/12878957
+Violation: MissingMethodCall, position(1)@true
+Answer Id --- http://stackoverflow.com/questions/37631139
+Violation: MissingMethodCall, position(1)@true
+Answer Id --- http://stackoverflow.com/questions/7966478
+Violation: MissingMethodCall, position(1)@true
 Missing Control-flow Structure: 0
 Disorder Control-flow Structure: 0
-Missing API Call: 7
-Disorder API Call: 2
+Missing API Call: 4
+Disorder API Call: 0
 Incorrect Predicates: 0
 

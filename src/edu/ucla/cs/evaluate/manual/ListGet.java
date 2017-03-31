@@ -10,11 +10,11 @@ import edu.ucla.cs.model.APISeqItem;
 public class ListGet {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("get", "arg0 < rcv.size()"));
+		pattern1.add(new APICall("get", "arg0 < rcv.size()", 1));
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("add", "true"));
-		pattern2.add(new APICall("get", "true"));
+		pattern2.add(new APICall("add", "true", 1));
+		pattern2.add(new APICall("get", "true", 1));
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
@@ -24,7 +24,7 @@ public class ListGet {
 		types.add("ArrayList");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("get");
+		apis.add("get(1)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

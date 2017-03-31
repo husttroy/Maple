@@ -1,18 +1,16 @@
-Total number of relevant Java snippets: 802
-Total number of unreliable Java snippets: 5
+Total number of relevant Java snippets: 797
+Total number of unreliable Java snippets: 4
 Answer Id --- http://stackoverflow.com/questions/21509930
-Violation: MissingMethodCall, mkdirs@true
-Violation: MissingMethodCall, mkdirs@true
+Violation: MissingMethodCall, mkdirs(0)@true
+Violation: MissingMethodCall, mkdirs(0)@true
 Answer Id --- http://stackoverflow.com/questions/24483834
-Violation: MissingMethodCall, mkdirs@true
+Violation: MissingMethodCall, mkdirs(0)@true
 Answer Id --- http://stackoverflow.com/questions/27794674
-Violation: MissingMethodCall, mkdirs@true
-Answer Id --- http://stackoverflow.com/questions/28886373
-Violation: MissingMethodCall, mkdirs@true
+Violation: MissingMethodCall, mkdirs(0)@true
 Answer Id --- http://stackoverflow.com/questions/13361286
-Violation: MissingMethodCall, mkdirs@true
+Violation: MissingMethodCall, mkdirs(0)@true
 Missing Control-flow Structure: 0
 Disorder Control-flow Structure: 0
-Missing API Call: 5
+Missing API Call: 4
 Disorder API Call: 0
 Incorrect Predicates: 0

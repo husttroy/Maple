@@ -9,7 +9,7 @@ Answer Id --- http://stackoverflow.com/questions/12387395
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/9393740
-Violation: DisorderMethodCall, loadIcon@i < packs.size()
+Violation: DisorderMethodCall, loadIcon(1)@i < packs.size()
 Answer Id --- http://stackoverflow.com/questions/9142469
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH

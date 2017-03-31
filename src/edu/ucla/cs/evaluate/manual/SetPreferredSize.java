@@ -10,8 +10,8 @@ import edu.ucla.cs.model.APISeqItem;
 public class SetPreferredSize {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("setPreferredSize", "true"));
-		pattern1.add(new APICall("pack", "true"));
+		pattern1.add(new APICall("setPreferredSize", "true", 1));
+		pattern1.add(new APICall("pack", "true", 0));
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
@@ -20,7 +20,7 @@ public class SetPreferredSize {
 		types.add("JFrame");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("setPreferredSize");
+		apis.add("setPreferredSize(1)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

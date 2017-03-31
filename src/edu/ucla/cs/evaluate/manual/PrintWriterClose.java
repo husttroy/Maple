@@ -12,7 +12,7 @@ public class PrintWriterClose {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(ControlConstruct.FINALLY);
-		pattern1.add(new APICall("close", "true"));
+		pattern1.add(new APICall("close", "true", 0));
 		pattern1.add(ControlConstruct.END_BLOCK);
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
@@ -22,7 +22,7 @@ public class PrintWriterClose {
 		types.add("PrintWriter");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("close");
+		apis.add("close(0)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

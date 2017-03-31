@@ -1,5 +1,5 @@
-Total number of relevant Java snippets: 526
-Total number of unreliable Java snippets: 160
+Total number of relevant Java snippets: 329
+Total number of unreliable Java snippets: 113
 Answer Id --- http://stackoverflow.com/questions/23113617
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -10,7 +10,7 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/7303080
+Answer Id --- http://stackoverflow.com/questions/14952130
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -40,26 +40,12 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/34093905
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/9846760
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/38837336
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/35773340
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -74,11 +60,6 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/29668927
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/11528491
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -86,35 +67,12 @@ Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/3985508
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/23039955
-Violation: MissingStructure, TRY
-Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/32108274
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/37671850
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/26611703
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/33300707
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/12066050
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -153,27 +111,12 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/3451823
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/27260575
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/16586921
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/10332664
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/13784098
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -189,11 +132,6 @@ Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/17860708
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/16144016
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -218,22 +156,7 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/11090193
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/32166210
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/18745714
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/3177591
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -298,16 +221,6 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/115540
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/14297219
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/13072154
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -351,11 +264,6 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/28024135
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/21805065
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -385,11 +293,6 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/32006988
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/20689409
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -398,26 +301,6 @@ Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/23723450
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/30154158
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/14845785
-Violation: MissingStructure, TRY
-Violation: DisorderStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: DisorderStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/32055879
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/10227813
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/2027694
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -452,11 +335,6 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/38482749
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/5245184
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -464,24 +342,14 @@ Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/36736209
 Violation: MissingStructure, TRY
-Violation: DisorderMethodCall, init@true && !(selectingApplet())
+Violation: DisorderMethodCall, init(2)@true && !(selectingApplet())
 Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/28506922
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/14922107
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/11920297
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/13209169
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -506,11 +374,6 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/10705757
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/15683916
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -527,11 +390,6 @@ Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/35297928
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/30597814
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -568,36 +426,12 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/33768305
-Violation: MissingStructure, TRY
-Violation: DisorderStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: DisorderStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/11187720
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/20680129
-Violation: MissingStructure, TRY
-Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/27558509
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/15595200
-Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/20401655
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/26516035
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -618,6 +452,9 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
+Answer Id --- http://stackoverflow.com/questions/16548981
+Violation: MissingStructure, TRY
+Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/32498941
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -628,20 +465,7 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/4490169
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/4806623
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/25793893
-Violation: MissingStructure, TRY
-Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/29354222
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -654,11 +478,6 @@ Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/859402
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/23323835
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/9537017
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -674,23 +493,13 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/11065183
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/29152379
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/37401465
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/22449445
-Violation: DisorderMethodCall, init@true
+Violation: DisorderMethodCall, init(2)@true
 Answer Id --- http://stackoverflow.com/questions/22502525
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -701,7 +510,7 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/24397104
+Answer Id --- http://stackoverflow.com/questions/16912933
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -716,37 +525,22 @@ Violation: MissingStructure, TRY
 Violation: DisorderStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: DisorderStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/10087962
+Answer Id --- http://stackoverflow.com/questions/1962976
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, TRY
-Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/13991540
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/36860629
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/35318524
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/9596335
-Violation: MissingStructure, TRY
-Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/12136740
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/8396018
-Violation: DisorderMethodCall, init@true
-Violation: DisorderMethodCall, init@true
+Violation: DisorderMethodCall, init(2)@true
+Violation: DisorderMethodCall, init(2)@true
 Answer Id --- http://stackoverflow.com/questions/11271845
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
@@ -757,32 +551,12 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/21265768
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/39292633
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/6824475
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/37593463
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/28050457
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/10398040
 Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
@@ -797,22 +571,8 @@ Violation: MissingStructure, TRY
 Violation: MissingStructure, END_BLOCK
 Violation: MissingStructure, CATCH
 Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/32167799
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Answer Id --- http://stackoverflow.com/questions/38134300
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
-Missing Control-flow Structure: 158
-Disorder Control-flow Structure: 4
+Missing Control-flow Structure: 111
+Disorder Control-flow Structure: 2
 Missing API Call: 0
 Disorder API Call: 3
 Incorrect Predicates: 0

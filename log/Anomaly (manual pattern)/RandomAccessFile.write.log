@@ -1,28 +1,20 @@
-Total number of relevant Java snippets: 56
-Total number of unreliable Java snippets: 10
+Total number of relevant Java snippets: 47
+Total number of unreliable Java snippets: 6
 Answer Id --- http://stackoverflow.com/questions/7740406
-Violation: MissingMethodCall, close@true
-Answer Id --- http://stackoverflow.com/questions/10631214
-Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close(0)@true
 Answer Id --- http://stackoverflow.com/questions/15815496
-Violation: MissingMethodCall, close@true
-Answer Id --- http://stackoverflow.com/questions/32857941
-Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close(0)@true
 Answer Id --- http://stackoverflow.com/questions/10291282
-Violation: MissingMethodCall, close@true
-Answer Id --- http://stackoverflow.com/questions/825972
-Violation: MissingMethodCall, close@true
-Answer Id --- http://stackoverflow.com/questions/6731213
-Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close(0)@true
 Answer Id --- http://stackoverflow.com/questions/15016898
-Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close(0)@true
 Answer Id --- http://stackoverflow.com/questions/26083751
-Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close(0)@true
 Answer Id --- http://stackoverflow.com/questions/26423494
-Violation: MissingMethodCall, close@true
+Violation: MissingMethodCall, close(0)@true
 Missing Control-flow Structure: 0
 Disorder Control-flow Structure: 0
-Missing API Call: 10
+Missing API Call: 6
 Disorder API Call: 0
 Incorrect Predicates: 0
 

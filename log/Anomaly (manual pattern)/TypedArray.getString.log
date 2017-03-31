@@ -1,12 +1,7 @@
-Total number of relevant Java snippets: 16
-Total number of unreliable Java snippets: 16
+Total number of relevant Java snippets: 15
+Total number of unreliable Java snippets: 15
 Answer Id --- http://stackoverflow.com/questions/37017982
 Violation: MissingStructure, CATCH
-Answer Id --- http://stackoverflow.com/questions/34484016
-Violation: MissingStructure, TRY
-Violation: MissingStructure, END_BLOCK
-Violation: MissingStructure, CATCH
-Violation: MissingStructure, END_BLOCK
 Answer Id --- http://stackoverflow.com/questions/8090772
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
@@ -57,7 +52,7 @@ Violation: MissingStructure, CATCH
 Answer Id --- http://stackoverflow.com/questions/38784660
 Violation: MissingStructure, TRY
 Violation: MissingStructure, CATCH
-Missing Control-flow Structure: 16
+Missing Control-flow Structure: 15
 Disorder Control-flow Structure: 0
 Missing API Call: 0
 Disorder API Call: 0

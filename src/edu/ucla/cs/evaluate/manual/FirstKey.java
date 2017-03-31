@@ -12,16 +12,16 @@ public class FirstKey {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(ControlConstruct.TRY);
-		pattern1.add(new APICall("firstKey", "true"));
+		pattern1.add(new APICall("firstKey", "true", 0));
 		pattern1.add(ControlConstruct.END_BLOCK);
 		pattern1.add(ControlConstruct.CATCH);
 		pattern1.add(ControlConstruct.END_BLOCK);
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("firstKey", "!rcv.isEmpty()"));
+		pattern2.add(new APICall("firstKey", "!rcv.isEmpty()", 0));
 				
 		ArrayList<APISeqItem> pattern3 = new ArrayList<APISeqItem>();
-		pattern3.add(new APICall("firstKey", "rcv.size() > 0"));
+		pattern3.add(new APICall("firstKey", "rcv.size() > 0", 0));
 			
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
@@ -31,7 +31,7 @@ public class FirstKey {
 		HashSet<String> types = new HashSet<String>();
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("firstKey");
+		apis.add("firstKey(0)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

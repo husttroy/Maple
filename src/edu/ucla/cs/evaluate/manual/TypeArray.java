@@ -12,7 +12,7 @@ public class TypeArray {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(ControlConstruct.TRY);
-		pattern1.add(new APICall("getString", "true"));
+		pattern1.add(new APICall("getString", "true", 1));
 		pattern1.add(ControlConstruct.END_BLOCK);
 		pattern1.add(ControlConstruct.CATCH);
 		pattern1.add(ControlConstruct.END_BLOCK);
@@ -24,7 +24,7 @@ public class TypeArray {
 		types.add("TypedArray");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("getString");
+		apis.add("getString(1)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);

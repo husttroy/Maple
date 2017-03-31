@@ -10,7 +10,7 @@ import edu.ucla.cs.model.APISeqItem;
 public class NextToken {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("nextToken", "rcv.hasMoreTokens()"));
+		pattern1.add(new APICall("nextToken", "rcv.hasMoreTokens()", 0));
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
@@ -19,7 +19,7 @@ public class NextToken {
 		types.add("StringTokenizer");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("nextToken");
+		apis.add("nextToken(0)");
 		queries.add(apis);
 		
 		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);
