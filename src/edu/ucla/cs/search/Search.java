@@ -5,20 +5,26 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import edu.ucla.cs.main.Utils;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
+import edu.ucla.cs.parse.APITypeVisitor;
 import edu.ucla.cs.parse.PartialProgramAnalyzer;
 
 public class Search {
-	public HashSet<Answer> search(HashSet<String> typeQuery, HashSet<HashSet<String>> apiQueries) {
+	public HashSet<Answer> search(HashSet<String> typeQuery, HashSet<ArrayList<String>> apiQueries) {
 		MySQLAccess access = new MySQLAccess();
 		access.connect();
 		HashSet<HashSet<String>> keywords = new HashSet<HashSet<String>>();
-		for(HashSet<String> apiQuery : apiQueries) {
+		for(ArrayList<String> apiQuery : apiQueries) {
 			HashSet<String> keyword = new HashSet<String>();
+			ArrayList<String> apiNames = new ArrayList<String>();
+			for(String api : apiQuery) {
+				apiNames.add(api.substring(0, api.indexOf('(')));
+			}
 			keyword.addAll(typeQuery);
-			keyword.addAll(apiQuery);
+			keyword.addAll(apiNames);
 			keywords.add(keyword);
 		}
 		
@@ -31,7 +37,7 @@ public class Search {
 			String content = answer.body;
 			ArrayList<String> snippets = getCode(content);
 			Iterator<String> iter2 = snippets.iterator();
-			boolean flag1 = false;
+			boolean flag1 = false; // this flag indicates whether this SO post contains a satisfiable snippet
 			while(iter2.hasNext()) {
 				String snippet = iter2.next();
 				// coarse-grained filtering by checking whether it is just a single code term
@@ -41,7 +47,7 @@ public class Search {
 				}
 				
 				// coarse-grained filtering by checking whether the snippet contains keywords from one of the queries
-				boolean flag2 = true;
+				boolean flag2 = true; // this flag indicates whether this snippet satisfies the coarse-grained filtering criteria
 				for(HashSet<String> query : keywords) {
 					for(String keyword : query) {
 						if(!snippet.contains(keyword)) {
@@ -76,12 +82,12 @@ public class Search {
 					iter2.remove();
 					continue;
 				} else {
-					boolean flag3 = false; 
+					boolean flag3 = false;  // this flag indicates whether this snippet contains a method that satisfies the fine-grained filtering criteria
 					for(String method : seqs.keySet()) {
 						ArrayList<APISeqItem> seq = seqs.get(method);
 						
-						// check whether the API call sequences contain all queried keywords
-						HashSet<String> calls = new HashSet<String>();
+						// check whether the API call sequences contain all queried APIs in the same order
+						ArrayList<String> calls = new ArrayList<String>();
 						for(APISeqItem item : seq) {
 							if(item instanceof APICall) {
 								APICall call = (APICall)item;
@@ -89,10 +95,10 @@ public class Search {
 							}
 						}
 						
-						// remove the snippet if it does not contain the APIs in any of the input queries
+						// remove the snippet if it does not contain the APIs in the same order in any of the input queries
 						boolean flag = false;
-						for(HashSet<String> apis : apiQueries) {
-							if(calls.containsAll(apis)) {
+						for(ArrayList<String> apis : apiQueries) {
+							if(Utils.isSubsequence(calls, apis)) {
 								flag = true;
 								break;
 							} 
@@ -103,13 +109,37 @@ public class Search {
 						} else {
 							if(!typeQuery.isEmpty()) {
 								// additional check on types to handle ambiguous API calls
-								HashSet<String> ts = analyzer.retrieveTypes();
+								APITypeVisitor tv = analyzer.resolveTypes();
+								HashSet<String> ts = tv.types;
+								HashMap<String, String> tm = tv.map;
 								if(!ts.containsAll(typeQuery)) {
 									continue;
 								} else {
-									answer.seq.put(snippet, seq);
-									flag1 = true;
-									flag3 = true;
+									boolean flag4 = true; // this flag indicates whether the matched API calls in this method are the API calls with the same queried type
+									// further check the receiver type of each searched API call to ensure it is the same API
+									for(APISeqItem item : seq) {
+										if(item instanceof APICall) {
+											APICall call = (APICall)item;
+											for(ArrayList<String> apis: apiQueries) {
+												if(apis.contains(call.name)) {
+													// look up the map to resolve the type of its receiver
+													if(tm.containsKey(call.receiver) && typeQuery.contains(tm.get(call.receiver))) {
+														// yes the receiver has the searched type
+														continue;
+													} else {
+														flag4 = false;
+														break;
+													}
+												}
+											}
+										}
+									}
+									
+									if(flag4) {
+										answer.seq.put(snippet, seq);
+										flag1 = true;
+										flag3 = true;
+									}
 								}
 							} else {
 								answer.seq.put(snippet, seq);

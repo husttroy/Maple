@@ -8,15 +8,15 @@ public class APICall implements APISeqItem{
 	public String receiver;
 	public ArrayList<String> arguments;
 	
-	public APICall(String name, String condition) {
-		this.name = name;
+	public APICall(String name, String condition, int args) {
+		this.name = name + "(" + args + ")";
 		this.condition = condition;
 		this.receiver = null;
 		this.arguments = null;
 	}
 	
 	public APICall(String name, String condition, String receiver, ArrayList<String> args) {
-		this.name = name;
+		this.name = name + "(" + args.size() + ")";
 		this.condition = condition;
 		this.receiver = receiver;
 		this.arguments = args;

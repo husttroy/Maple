@@ -24,7 +24,7 @@ public class PatternMiner {
 			int seq_support = patterns.get(seq_pattern);
 			int threshold2 = (int) (support * seq_support);
 			HashMap<String, HashMap<String, Integer>> predicate_patterns = pm2.find_the_most_common_predicate(threshold2);
-			HashMap<ArrayList<APISeqItem>, Integer> cp = compose(seq_pattern, seq_support, predicate_patterns);
+			HashMap<ArrayList<APISeqItem>, Integer> cp = compose(seq_pattern, seq_support, predicate_patterns, size);
 			if(cp != null) {
 				composed_patterns.putAll(cp);
 			}
@@ -36,7 +36,7 @@ public class PatternMiner {
 	private static HashMap<ArrayList<APISeqItem>, Integer> compose(
 			ArrayList<String> seq_pattern,
 			int seq_support,
-			HashMap<String, HashMap<String, Integer>> pred_patterns) {
+			HashMap<String, HashMap<String, Integer>> pred_patterns, int size) {
 		HashMap<ArrayList<APISeqItem>, Integer> composed_patterns = new HashMap<ArrayList<APISeqItem>, Integer>();
 		
 		for(String api : seq_pattern) {
@@ -126,12 +126,17 @@ public class PatternMiner {
 					conditions.put("true", seq_support);
 				}
 				
+				// split the name and the number of arguments of the API
+				String tmp = api.substring(api.indexOf('(') + 1, api.indexOf(')'));
+				int args = Integer.parseInt(tmp);
+				String name = api.substring(0, api.indexOf('('));
+				
 				if(composed_patterns.isEmpty()) {
 					// this is the first element in the sequence pattern
 					for(String condition : conditions.keySet()) {
 						// initialize
 						ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
-						s.add(new APICall(api, condition));
+						s.add(new APICall(name, condition, args));
 						composed_patterns.put(s, conditions.get(condition));
 					}
 				} else {
@@ -151,11 +156,12 @@ public class PatternMiner {
 						}
 						
 						for(String condition : conditions.keySet()) {
+//							int support2 = (int) (conditions.get(condition) * ((double) support1) / size);
 							int support2 = conditions.get(condition);
 							int value = Math.min(support1, support2);
 							ArrayList<APISeqItem> newS = new ArrayList<APISeqItem>();
 							newS.addAll(s);
-							newS.add(new APICall(api, condition));
+							newS.add(new APICall(name, condition, args));
 							newAll.put(newS, value);
 						}
 					}
@@ -192,13 +198,13 @@ public class PatternMiner {
 	}
 	
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/Maple/example/InputStream.read/small-sequence.txt";
-		String seq = "/home/troy/research/BOA/Maple/example/InputStream.read/small-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-sequence.txt";
+		String seq = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("read");
+		q1.add("nextToken");
 		queries.add(q1);
-		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, queries, 0.6, 47);
+		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, queries, 0.6, 74);
 		for(ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}

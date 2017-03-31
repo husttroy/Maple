@@ -19,13 +19,13 @@ public class PartialProgramAnalyzerTest {
 		String snippet = FileUtils.readFileToString(sample);
 		PartialProgramAnalyzer analyzer = new PartialProgramAnalyzer(snippet);
 		HashSet<String> apis = new HashSet<String>();
-		apis.add("next");
+		apis.add("next(0)");
 		ArrayList<ArrayList<APISeqItem>> seqs = new ArrayList<ArrayList<APISeqItem>>();
 		ArrayList<APISeqItem> seq = new ArrayList<APISeqItem>();
 		seq.add(ControlConstruct.IF);
-		seq.add(new APICall("new NoSuchElementException", "!hasNext()"));
+		seq.add(new APICall("new NoSuchElementException", "!hasNext()", 0));
 		seq.add(ControlConstruct.END_BLOCK);
-		seq.add(new APICall("next", "true && !(!hasNext())"));
+		seq.add(new APICall("next", "true && !(!hasNext())", 0));
 		seqs.add(seq);
 		assertEquals(seqs, analyzer.retrieveAPICallSequences(apis));
 	}
@@ -36,7 +36,7 @@ public class PartialProgramAnalyzerTest {
 		String snippet = FileUtils.readFileToString(sample);
 		PartialProgramAnalyzer analyzer = new PartialProgramAnalyzer(snippet);
 		HashSet<String> apis = new HashSet<String>();
-		apis.add("firstKey");
+		apis.add("firstKey(0)");
 		ArrayList<ArrayList<APISeqItem>> seqs = analyzer.retrieveAPICallSequences(apis);
 		assertEquals(1, seqs.size());
 		ArrayList<APISeqItem> seq = seqs.get(0);
@@ -50,7 +50,7 @@ public class PartialProgramAnalyzerTest {
 		String snippet = FileUtils.readFileToString(sample);
 		PartialProgramAnalyzer analyzer = new PartialProgramAnalyzer(snippet);
 		HashSet<String> apis = new HashSet<String>();
-		apis.add("new FileInputStream");
+		apis.add("new FileInputStream(1)");
 		ArrayList<ArrayList<APISeqItem>> seqs = analyzer.retrieveAPICallSequences(apis);
 		ArrayList<APISeqItem> seq = seqs.get(0);
 		assertEquals(ControlConstruct.TRY, seq.get(0));
