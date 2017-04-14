@@ -196,7 +196,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				// this has to be done here because we do not want previous
 				// argument to be part of the receiver of API calls in the next
 				// argument
-				arguments = getArguments(args);
+				arguments = ProcessUtils.getArguments(args);
 				for (String arg : arguments) {
 					HashMap<String, ArrayList<String>> p2 = propagatePredicates(
 							arg, arg, predicate);
@@ -225,7 +225,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				}
 			}
 
-			if (!pattern.contains(apiName)) {
+			if (!pattern.contains(apiName + "(" + arguments.size() + ")")) {
 				// skip if the API call does not appear in the sequence pattern
 				continue;
 			}
@@ -263,17 +263,17 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 
-			if (normalized_predicate.equals("true && !rcv.get(\"feedbackMatrixCall\",)!=null) && true")) {
+			if (normalized_predicate.equals("true||pageList.size()==arg0 && !rcv==null||rcv.size()==arg0 && true")) {
 				System.out.println("oops");
 			}
 			ArrayList<String> value;
-			if (predicates.containsKey(apiName)) {
-				value = predicates.get(apiName);
+			if (predicates.containsKey(apiName + "(" + arguments.size() + ")")) {
+				value = predicates.get(apiName + "(" + arguments.size() + ")");
 			} else {
 				value = new ArrayList<String>();
 			}
 			value.add(normalized_predicate);
-			predicates.put(apiName, value);
+			predicates.put(apiName + "(" + arguments.size() + ")", value);
 		}
 
 		return predicates;
@@ -336,105 +336,24 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 //		return list;
 //	}
 	
-	public ArrayList<String> getArguments(String args) {
-		ArrayList<String> list = new ArrayList<String>();
-		boolean inQuote = false;
-		int stack = 0;
-		StringBuilder sb = new StringBuilder();
-		char[] chars = args.toCharArray();
-		for(int i = 0; i < chars.length; i++) {
-			char cur = chars[i];
-			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
-				// count the number of backslashes
-				int count = 0;
-				while(i - count - 1 >= 0) {
-					if(chars[i - count - 1] == '\\') {
-						count ++;
-					} else {
-						break;
-					}
-				} 
-				if(count % 2 == 0) {
-					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
-					sb.append(cur);
-				} else {
-					// escape quote, not the end of the quote
-					sb.append(cur);
-				}
-			} else if(cur == '"' && !inQuote) {
-				// quote starts
-				inQuote = true;
-				sb.append(cur);
-			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
-				// count the number of backslashes
-				int count = 0;
-				while(i - count - 1 >= 0) {
-					if(chars[i - count - 1] == '\\') {
-						count ++;
-					} else {
-						break;
-					}
-				} 
-				if(count % 2 == 0) {
-					// escape one or more backslashes instead of this quote, end of quote
-					// quote ends
-					inQuote = false;
-					sb.append(cur);
-				} else {
-					// escape single quote, not the end of the quote
-					sb.append(cur);
-				}
-			} else if(cur == '\'' && !inQuote) {
-				// single quote starts
-				inQuote = true;
-				sb.append(cur);
-			} else if(cur == '"' && inQuote) {
-				// quote ends
-				inQuote = false;
-				sb.append(cur);
-			} else if (cur == '\'' && inQuote) {
-				// single quote ends
-				inQuote = false;
-				sb.append(cur);
-			} else if (cur == '(' && !inQuote) {
-				// look behind to check if this is a method call
-				sb.append(cur);
-				stack ++;
-			} else if (cur == ')' && !inQuote) {
-				sb.append(cur);
-				stack --;
-			} else if (inQuote || stack != 0) {
-				// ignore any separator in quote or in a method call
-				sb.append(cur);
-			} else if (cur == ',' && !inQuote && stack == 0){
-				if(sb.length() > 0) {
-					list.add(sb.toString());
-					sb.setLength(0);
-				} else {
-					sb.append(cur);
-				}
-			} else {
-				sb.append(cur);
-			}
-		}
-		
-		// push the last token if any
-		if(sb.length() > 0) {
-			list.add(sb.toString());
-		}
-		
-		return list;
-	}
+	
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("get");
-		String path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-output.txt";
+		pattern.add("nextToken(0)");
+		String path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();
+		int min_support = 20;
+		HashMap<String, HashMap<String, Integer>> predicates = pm.find_the_most_common_predicate(min_support);
+		for(String api : predicates.keySet()) {
+			System.out.println(api);
+			HashMap<String, Integer> pset = predicates.get(api);
+			for(String p : pset.keySet()) {
+				System.out.println(p + " : " + pset.get(p));
+			}
+		}
 	}
 }

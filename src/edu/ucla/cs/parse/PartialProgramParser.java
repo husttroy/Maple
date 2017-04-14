@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 public class PartialProgramParser {
-	private int cutype;
+	public int cutype;
 	private int flag = 0;
 
 	public CompilationUnit getCompilationUnitFromString(String code)

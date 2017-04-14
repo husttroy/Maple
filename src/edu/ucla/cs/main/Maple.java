@@ -4,19 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import edu.ucla.cs.check.UseChecker;
-import edu.ucla.cs.mine.FrequentSequenceMiner;
-import edu.ucla.cs.mine.LightweightPredicateMiner;
 import edu.ucla.cs.mine.PatternMiner;
-import edu.ucla.cs.mine.SequencePatternMiner;
-import edu.ucla.cs.mine.PredicatePatternMiner;
-import edu.ucla.cs.mine.TraditionalPredicateMiner;
-import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
-import edu.ucla.cs.model.ControlConstruct;
 import edu.ucla.cs.model.Violation;
-import edu.ucla.cs.model.ViolationType;
 import edu.ucla.cs.search.Search;
 import edu.ucla.cs.utils.FileUtils;
 
@@ -25,14 +16,16 @@ public class Maple {
 	HashSet<ArrayList<String>> apis;
 	String raw_output;
 	String seq;
-	double min_support;
+	double sigma;
+	double theta;
 	
-	public Maple(HashSet<String> types, HashSet<ArrayList<String>> apis, String raw_output, String seq, double threshold) {
+	public Maple(HashSet<String> types, HashSet<ArrayList<String>> apis, String raw_output, String seq, double seq_threshold, double pred_threshold) {
 		this.types = types;
 		this.apis = apis;
 		this.raw_output = raw_output;
 		this.seq = seq;
-		this.min_support = threshold;
+		this.sigma = seq_threshold;
+		this.theta = pred_threshold;
 	}
 	
 	public void run() {
@@ -58,7 +51,7 @@ public class Maple {
 		for(ArrayList<String> l : apis) {
 			sets.add(new HashSet<String>(l));
 		}
-		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, sets, min_support, FileUtils.countLines(seq));
+		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, sets, sigma, FileUtils.countLines(seq), theta);
 		HashSet<ArrayList<APISeqItem>> set = new HashSet<ArrayList<APISeqItem>>();
 		set.addAll(patterns.keySet());
 		

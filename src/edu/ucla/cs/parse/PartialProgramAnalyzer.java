@@ -14,12 +14,14 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class PartialProgramAnalyzer {
 	CompilationUnit cu;
+	public boolean isIncomplete = false;
 	
 	public PartialProgramAnalyzer(String snippet) throws Exception {
 		PartialProgramParser parser = new PartialProgramParser();
 		// unescape html special characters, e.g., &amp;&amp; will become &&
 		String code = StringEscapeUtils.unescapeHtml4(snippet);
 		this.cu = parser.getCompilationUnitFromString(code);
+		this.isIncomplete = parser.cutype == 0 ? false : true;
 		if(this.cu == null) {
 			throw new Exception("Partial Program Parse Error!");
 		} else {

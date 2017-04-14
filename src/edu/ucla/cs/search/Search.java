@@ -34,6 +34,9 @@ public class Search {
 		Iterator<Answer> iter1 = answers.iterator();
 		while(iter1.hasNext()) {
 			Answer answer = iter1.next();
+//			if(answer.id == 6896319) {
+//				System.out.println();
+//			}
 			String content = answer.body;
 			ArrayList<String> snippets = getCode(content);
 			Iterator<String> iter2 = snippets.iterator();
@@ -71,6 +74,7 @@ public class Search {
 				HashMap<String, ArrayList<APISeqItem>> seqs = null;
 				try {
 					analyzer = new PartialProgramAnalyzer(snippet);
+					answer.containsIncompleteSnippet = analyzer.isIncomplete;
 					seqs = analyzer.retrieveAPICallSequences();
 				} catch (Exception e) {
 					// parse error
@@ -84,6 +88,9 @@ public class Search {
 				} else {
 					boolean flag3 = false;  // this flag indicates whether this snippet contains a method that satisfies the fine-grained filtering criteria
 					for(String method : seqs.keySet()) {
+//						if(!method.equals("onCreate")) {
+//							continue;
+//						}
 						ArrayList<APISeqItem> seq = seqs.get(method);
 						
 						// check whether the API call sequences contain all queried APIs in the same order

@@ -12,7 +12,7 @@ public class CatastrophicBacktrackingProcess {
 	
 	public static void main(String[] args) {
 		Process p = new Process();
-		String seq = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
+		String seq = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
 		try {
 			p.s = new CatastrophicBacktrackingProcessor();
 			p.processByLine(seq);

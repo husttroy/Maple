@@ -36,6 +36,7 @@ public class CatastrophicBacktrackingProcessor extends SequenceProcessor{
 					String apiName = m.group(1);
 					String args = m.group(3);
 					String rest = null;
+					ArrayList<String> arguments = new ArrayList<String>();
 					if (args != null) {
 						// check whether this is a chained method call by checking whether the argument is balanced
 						if(!ProcessUtils.isBalanced(args)) {
@@ -58,12 +59,14 @@ public class CatastrophicBacktrackingProcessor extends SequenceProcessor{
 							}
 						}
 						
+						arguments = ProcessUtils.getArguments(args);
+
 						// this api call has arguments
 						ArrayList<String> apis2 = extractMethodCalls(args);
 						items.addAll(apis2);
 						
-						// the add this API call
-						items.add(apiName);
+						// then add this API call
+						items.add(apiName + "(" + arguments.size() + ")");
 						
 						// then process the rest of the API calls in the chain (if any)
 						if(rest != null) {
@@ -71,7 +74,7 @@ public class CatastrophicBacktrackingProcessor extends SequenceProcessor{
 							items.addAll(apis3);
 						}
 					} else {
-						items.add(apiName);
+						items.add(apiName + "(0)");
 					}
 				}
 				return "yes";

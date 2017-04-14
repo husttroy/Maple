@@ -17,8 +17,8 @@ public class ProcessTest {
 		String expr = "indexEntry=new String(\"index=\"+curIndexthis+\"\\n\",).getBytes()@";
 		SequenceProcessor sp = new SequenceProcessor();
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("new String");
-		expected.add("getBytes");
+		expected.add("new String(1)");
+		expected.add("getBytes(0)");
 		assertEquals(expected, sp.extractItems(expr));
 	}
 	
@@ -27,9 +27,9 @@ public class ProcessTest {
 		String expr = "saveFile=new File(getMyPath()+File.separator+SAVE_FILE_NAME,getMyPath()+File.separator+SAVE_FILE_NAME,)@ ";
 		SequenceProcessor sp = new SequenceProcessor();
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("getMyPath");
-		expected.add("getMyPath");
-		expected.add("new File");
+		expected.add("getMyPath(0)");
+		expected.add("getMyPath(0)");
+		expected.add("new File(2)");
 		assertEquals(expected, sp.extractItems(expr));
 	}
 	
@@ -38,8 +38,8 @@ public class ProcessTest {
 		String expr = "domainService=(DomainService) ApplicationContextHolder.getContext().getBean(\"domainService\",)";
 		SequenceProcessor sp = new SequenceProcessor();
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("getContext");
-		expected.add("getBean");
+		expected.add("getContext(0)");
+		expected.add("getBean(1)");
 		assertEquals(expected, sp.extractItems(expr));
 	}
 	
@@ -48,10 +48,10 @@ public class ProcessTest {
 		String expr = "domainService=(DomainService) ApplicationContextHolder.getContext(getBean().getArgs(a,),).getBean(\"domainService\",)";
 		SequenceProcessor sp = new SequenceProcessor();
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("getBean");
-		expected.add("getArgs");
-		expected.add("getContext");
-		expected.add("getBean");
+		expected.add("getBean(0)");
+		expected.add("getArgs(1)");
+		expected.add("getContext(1)");
+		expected.add("getBean(1)");
 		assertEquals(expected, sp.extractItems(expr));
 	}
 	
@@ -60,7 +60,7 @@ public class ProcessTest {
 		String expr = "file.createNewFile()@!file.exists()";
 		SequenceProcessor sp = new SequenceProcessor();
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("createNewFile");
+		expected.add("createNewFile(0)");
 		assertEquals(expected, sp.extractItems(expr));
 	}
 	
@@ -69,7 +69,7 @@ public class ProcessTest {
 		String expr = "individus=new ArrayList<>()";
 		SequenceProcessor sp = new SequenceProcessor();
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("new ArrayList<>");
+		expected.add("new ArrayList<>(0)");
 		assertEquals(expected, sp.extractItems(expr));
 	}
 	
@@ -120,10 +120,10 @@ public class ProcessTest {
 		SequenceProcessor sp = new SequenceProcessor();
 		sp.buildSequenceMap(mock, expr);
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("foo");
+		expected.add("foo(0)");
 		expected.add("}");
-		expected.add("foo");
-		expected.add("bar");
+		expected.add("foo(0)");
+		expected.add("bar(1)");
 		expected.add("}");
 		expected.add("}");
 		expected.add("ELSE {");
@@ -139,8 +139,8 @@ public class ProcessTest {
 		sp.buildSequenceMap(mock, expr);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("TRY {");
-		expected.add("foo");
-		expected.add("bar");
+		expected.add("foo(0)");
+		expected.add("bar(1)");
 		expected.add("}");
 		expected.add("CATCH {");
 		expected.add("}");

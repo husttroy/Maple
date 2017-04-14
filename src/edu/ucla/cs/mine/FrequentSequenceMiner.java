@@ -65,34 +65,11 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		}
 	}
 	
-	/**
-	 * Check whether the second sequence is a subseqeunce of the first one.
-	 * 
-	 * @param seq1
-	 * @param seq2
-	 * @return
-	 */
-	private boolean isSubsequence(ArrayList<String> seq1, ArrayList<String> seq2){
-		ArrayList<String> seq2_copy = new ArrayList<String>(seq2);
-		for(String s1 : seq1) {
-			if (seq2_copy.isEmpty()) return true;
-			String s2 = seq2_copy.get(0);
-			if(s1.equals(s2)) {
-				seq2_copy.remove(0);
-			}
-		}
-		
-		return seq2_copy.isEmpty();
-	}
-	
 	public static void main(String[] args){
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("mkdir");
+		q1.add("nextToken(0)");
 		queries.add(q1);
-		HashSet<String> q2 = new HashSet<String>();
-		q2.add("mkdirs");
-		queries.add(q2);
 		//query.add("mkdirs");
 		// learn from the output of the light-weight output
 		//PatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
@@ -102,8 +79,8 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		
 		// learn from the output of the traditional output
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-				"/home/troy/research/BOA/Maple/example/File.mkdir/small-output.txt",
-				117,
+				"/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt",
+				50,
 				queries);
 
 		pm.mine();

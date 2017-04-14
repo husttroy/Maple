@@ -594,7 +594,13 @@ public abstract class PredicatePatternMiner {
 			} else {
 				// keep looking forward
 				if(behind < clause.length()) {
-					return containsVar(var, clause, behind);
+					try {
+						return containsVar(var, clause, behind);
+					} catch (StackOverflowError err) {
+						err.printStackTrace();
+					}
+					
+					return false;
 				} else {
 					return false;
 				}

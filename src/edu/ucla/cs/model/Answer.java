@@ -15,6 +15,8 @@ public class Answer {
 	
 	public HashMap<String, ArrayList<APISeqItem>> seq;
 	public int buggy_seq_count = 0;
+	
+	public boolean containsIncompleteSnippet = false;
 
 	public Answer(String id, String parentId, String body, String score,
 			String isAccepted, String tags, String viewCount) {

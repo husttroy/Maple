@@ -1,16 +1,10 @@
 package edu.ucla.cs.process.traditional;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.ucla.cs.model.Method;
-import edu.ucla.cs.utils.FileUtils;
 import edu.ucla.cs.utils.ProcessUtils;
 
 public class SequenceProcessor extends ProcessStrategy {
@@ -27,8 +21,9 @@ public class SequenceProcessor extends ProcessStrategy {
 	protected void buildSequenceMap(Method method, String line) {
 		String s = line.substring(line.indexOf("] =") + 3).trim();
 		ArrayList<String> ss = ProcessUtils.splitByArrow(line);
-		// skip the first element because it is empty string
 		for (String str : ss) {
+			str = str.trim();
+			if(str.isEmpty())  continue;
 			int count1 = 0;
 			if(str.endsWith("}")) {
 				while(str.endsWith("}")) {
@@ -109,6 +104,7 @@ public class SequenceProcessor extends ProcessStrategy {
 			String apiName = m.group(1);
 			String args = m.group(3);
 			String rest = null;
+			ArrayList<String> arguments = new ArrayList<String>();
 			if (args != null) {
 				// check whether this is a chained method call by checking whether the argument is balanced
 				if(!ProcessUtils.isBalanced(args)) {
@@ -131,12 +127,14 @@ public class SequenceProcessor extends ProcessStrategy {
 					}
 				}
 				
+				arguments = ProcessUtils.getArguments(args);
+				
 				// this api call has arguments
 				ArrayList<String> apis2 = extractMethodCalls(args);
 				items.addAll(apis2);
 				
 				// the add this API call
-				items.add(apiName);
+				items.add(apiName + "(" + arguments.size() + ")");
 				
 				// then process the rest of the API calls in the chain (if any)
 				if(rest != null) {
@@ -144,7 +142,7 @@ public class SequenceProcessor extends ProcessStrategy {
 					items.addAll(apis3);
 				}
 			} else {
-				items.add(apiName);
+				items.add(apiName + "(0)");
 			}
 		}
 		return items;

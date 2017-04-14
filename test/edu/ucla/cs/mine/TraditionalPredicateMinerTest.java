@@ -13,12 +13,7 @@ public class TraditionalPredicateMinerTest {
 	@Test
 	public void testExtractArguments() {
 		String args = "getMyPath(a,c,d)+File.separator+SAVE_FILE_NAME,File.separator(d,)+SAVE_FILE_NAME,";
-		// mock pattern
-		ArrayList<String> pattern = new ArrayList<String>();
-		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
-		ArrayList<String> list = pm.getArguments(args);
+		ArrayList<String> list = ProcessUtils.getArguments(args);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("getMyPath(a,c,d)+File.separator+SAVE_FILE_NAME");
 		expected.add("File.separator(d,)+SAVE_FILE_NAME");
@@ -28,12 +23,7 @@ public class TraditionalPredicateMinerTest {
 	@Test
 	public void testExtractArguments2() {
 		String args = "\"index=\"+curIndexthis+\"\\n\",";
-		// mock pattern
-		ArrayList<String> pattern = new ArrayList<String>();
-		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
-		ArrayList<String> list = pm.getArguments(args);
+		ArrayList<String> list = ProcessUtils.getArguments(args);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("\"index=\"+curIndexthis+\"\\n\"");
 		assertEquals(expected, list);
@@ -44,12 +34,12 @@ public class TraditionalPredicateMinerTest {
 		String expr = "file.createNewFile()";
 		String predicate = "!file.exists()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("createNewFile");
+		pattern.add("createNewFile(0)");
 		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, expr, predicate);
-		ArrayList<String> predicates = map.get("createNewFile");
+		ArrayList<String> predicates = map.get("createNewFile(0)");
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("!rcv.exists()");
 		assertEquals(expected, predicates);
@@ -60,17 +50,17 @@ public class TraditionalPredicateMinerTest {
 		String expr = "indexEntry=new String(\"index=\"+curIndexthis+\"\\n\",).getBytes()";
 		String predicate = "\"index=\"+curIndexthis+\"\\n\".length() > 0 && !new String(\"index=\"+curIndexthis+\"\\n\",).exists()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("new String");
-		pattern.add("getBytes");
+		pattern.add("new String(1)");
+		pattern.add("getBytes(0)");
 		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, expr, predicate);
-		ArrayList<String> predicates1 = map.get("new String");
+		ArrayList<String> predicates1 = map.get("new String(1)");
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("arg0.length() > 0 && !new String(arg0,).exists()");
 		assertEquals(expected1, predicates1);
-		ArrayList<String> predicates2 = map.get("getBytes");
+		ArrayList<String> predicates2 = map.get("getBytes(0)");
 		ArrayList<String> expected2 = new ArrayList<String>();
 		expected2.add("true && !rcv.exists()");
 		assertEquals(expected2, predicates2);
@@ -81,21 +71,25 @@ public class TraditionalPredicateMinerTest {
 		String expr = "saveFile=file.createNewFile(getMyPath(file,)+File.separator+SAVE_FILE_NAME,getMyPath()+File.separator+SAVE_FILE_NAME,)";
 		String predicate = "!file.exists()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("createNewFile");
-		pattern.add("getMyPath");
+		pattern.add("getMyPath(1)");
+		pattern.add("getMyPath(0)");
+		pattern.add("createNewFile(2)");
 		String path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-sequence.txt";
 		String sequence_path = "/home/troy/research/BOA/Maple/example/File.createNewFile/small-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, path, sequence_path);
 		HashMap<String, ArrayList<String>> map = pm.propagatePredicates(expr, expr, predicate);
-		ArrayList<String> predicates1 = map.get("createNewFile");
+		ArrayList<String> predicates1 = map.get("createNewFile(2)");
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("!rcv.exists()");
 		assertEquals(expected1, predicates1);
-		ArrayList<String> predicates2 = map.get("getMyPath");
+		ArrayList<String> predicates2 = map.get("getMyPath(1)");
 		ArrayList<String> expected2 = new ArrayList<String>();
 		expected2.add("!arg0.exists()");
-		expected2.add("true");
 		assertEquals(expected2, predicates2);
+		ArrayList<String> predicates3 = map.get("getMyPath(0)");
+		ArrayList<String> expected3 = new ArrayList<String>();
+		expected3.add("true");
+		assertEquals(expected3, predicates3);
 	}
 	
 	@Test
@@ -103,12 +97,12 @@ public class TraditionalPredicateMinerTest {
 		String expr = "System.out.println(st.nextToken(),)";
 		String predicate = "st.hasMoreTokens() && docComment!=null";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
+		pattern.add("nextToken(0)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("rcv.hasMoreTokens() && true");
-		assertEquals(expected1, predicates.get("nextToken"));
+		assertEquals(expected1, predicates.get("nextToken(0)"));
 		assertEquals(null, predicates.get("println"));
 	}
 	
@@ -117,14 +111,14 @@ public class TraditionalPredicateMinerTest {
 		String expr = "new TL1Line(command.nextToken().trim(),)";
 		String predicate = "i<pllines && termCode==';'||termCode=='>' && command.hasMoreTokens() && !(rawOutput==null) && !(msgType.charAt(0,)=='M')";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
+		pattern.add("nextToken(0)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("true && rcv.hasMoreTokens() && true");
-		assertEquals(expected1, predicates.get("nextToken"));
-		assertEquals(null, predicates.get("TL1Line"));
-		assertEquals(null, predicates.get("trim"));
+		assertEquals(expected1, predicates.get("nextToken(0)"));
+		assertEquals(null, predicates.get("TL1Line(1)"));
+		assertEquals(null, predicates.get("trim(0)"));
 	}
 	
 	@Test
@@ -132,15 +126,15 @@ public class TraditionalPredicateMinerTest {
 		String expr = "otherRealIn=(String) shortTtToFullTt.foo(in,).get(in,)";
 		String predicate = "prncvs[sex.toInteger()].containsKey(in,)";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("get");
-		pattern.add("foo");
+		pattern.add("get(1)");
+		pattern.add("foo(1)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
 		expected1.add("prncvs[sex.toInteger()].containsKey(arg0,)");
-		assertEquals(expected1, predicates.get("get"));
-		assertEquals(null, predicates.get("toInteger"));
-		assertEquals(expected1, predicates.get("foo"));
+		assertEquals(expected1, predicates.get("get(1)"));
+		assertEquals(null, predicates.get("toInteger(0)"));
+		assertEquals(expected1, predicates.get("foo(1)"));
 	}
 	
 	@Test
@@ -148,12 +142,12 @@ public class TraditionalPredicateMinerTest {
 		String expr = "tok=t.nextToken()";
 		String predicate = "t.hasMoreTokens()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
+		pattern.add("nextToken(0)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("rcv.hasMoreTokens()");
-		assertEquals(expected, predicates.get("nextToken"));
+		assertEquals(expected, predicates.get("nextToken(0)"));
 	}
 	
 	@Test
@@ -161,12 +155,12 @@ public class TraditionalPredicateMinerTest {
 		String expr = "line=new StringBuilder(lines.nextToken(),)";
 		String predicate = "lines.hasMoreTokens()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
+		pattern.add("nextToken(0)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("rcv.hasMoreTokens()");
-		assertEquals(expected, predicates.get("nextToken"));
+		assertEquals(expected, predicates.get("nextToken(0)"));
 		assertEquals(null, predicates.get("new StringBuilder"));
 	}
 	
@@ -175,12 +169,12 @@ public class TraditionalPredicateMinerTest {
 		String expr = "Util.copyDocFiles(configuration,pathTokens.nextToken()+File.separator,DocletConstants.DOC_FILES_DIR_NAME,first,)";
 		String predicate = "!(root.classes().length==0) && pathTokens.hasMoreTokens()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
+		pattern.add("nextToken(0)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("true && rcv.hasMoreTokens()");
-		assertEquals(expected, predicates.get("nextToken"));
+		assertEquals(expected, predicates.get("nextToken(0)"));
 		assertEquals(null, predicates.get("copyDocFiles"));
 	}
 	
@@ -189,14 +183,14 @@ public class TraditionalPredicateMinerTest {
 		String expr = "url=fileToURL(new File(st.nextToken(),),)";
 		String predicate = "st.hasMoreTokens()";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken");
+		pattern.add("nextToken(0)");
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("rcv.hasMoreTokens()");
-		assertEquals(expected, predicates.get("nextToken"));
-		assertEquals(null, predicates.get("new File"));
-		assertEquals(null, predicates.get("fileToURL"));
+		assertEquals(expected, predicates.get("nextToken(0)"));
+		assertEquals(null, predicates.get("new File(1)"));
+		assertEquals(null, predicates.get("fileToURL(1)"));
 	}
 	
 	@Test
@@ -231,8 +225,7 @@ public class TraditionalPredicateMinerTest {
 	@Test
 	public void testExtractArgumentWithCommaInQuote() {
 		String args = "strVal,\"[,]\",";
-		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
-		ArrayList<String> argList = pm.getArguments(args);
+		ArrayList<String> argList = ProcessUtils.getArguments(args);
 		ArrayList<String> expected = new ArrayList<String>();
 		expected.add("strVal");
 		expected.add("\"[,]\"");

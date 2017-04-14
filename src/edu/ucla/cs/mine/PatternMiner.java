@@ -10,21 +10,21 @@ import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
 
 public class PatternMiner {
-	public static HashMap<ArrayList<APISeqItem>, Integer> mine(String raw_output, String sequence, HashSet<HashSet<String>> apis, double support, int size) {
-		int threshold = (int) (support * size);
+	public static HashMap<ArrayList<APISeqItem>, Integer> mine(String raw_output, String sequence, HashSet<HashSet<String>> apis, double sigma, int size, double theta) {
+		int sequence_support = (int) (sigma * size);
 		SequencePatternMiner pm = new FrequentSequenceMiner(
 				"/home/troy/research/BOA/Maple/mining/freq_seq.py",
 				sequence,
-				threshold, apis);
+				sequence_support, apis);
 		HashMap<ArrayList<String>, Integer>  patterns = pm.mine();
 		HashMap<ArrayList<APISeqItem>, Integer> composed_patterns = new HashMap<ArrayList<APISeqItem>, Integer>();
 		for(ArrayList<String> seq_pattern : patterns.keySet()) {
 			PredicatePatternMiner pm2 = new TraditionalPredicateMiner(seq_pattern, raw_output, sequence);
 			pm2.process();
-			int seq_support = patterns.get(seq_pattern);
-			int threshold2 = (int) (support * seq_support);
-			HashMap<String, HashMap<String, Integer>> predicate_patterns = pm2.find_the_most_common_predicate(threshold2);
-			HashMap<ArrayList<APISeqItem>, Integer> cp = compose(seq_pattern, seq_support, predicate_patterns, size);
+			int support = patterns.get(seq_pattern);
+			int predicate_support = (int) (theta * support);
+			HashMap<String, HashMap<String, Integer>> predicate_patterns = pm2.find_the_most_common_predicate(predicate_support);
+			HashMap<ArrayList<APISeqItem>, Integer> cp = compose(seq_pattern, support, predicate_patterns, size);
 			if(cp != null) {
 				composed_patterns.putAll(cp);
 			}
@@ -202,9 +202,9 @@ public class PatternMiner {
 		String seq = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("nextToken");
+		q1.add("nextToken(0)");
 		queries.add(q1);
-		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, queries, 0.6, 74);
+		HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, queries, 0.6, 74, 0.6);
 		for(ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
