@@ -1,3 +1,71 @@
+Status ERROR: org.eclipse.jdt.core code=4 Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+CREATE OR REPLACE AND RESOLVE JAVA SOURCE NAMED BALT_CHECK."WebDocs" AS
+import java.io.*;
+import java.sql.*;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.lang.String;
+
+public class WebDocs
+{
+
+public static long fileID;
+
+public static void GetDocs(String rootdirectory) throws SQLException
+{
+    stepinto(rootdirectory);
+}
+
+public static void stepinto(String rootdirectory) throws SQLException
+{
+    File path = new File( rootdirectory );
+    String[] DirList = path.list();       
+
+     for( int x = 0; x < DirList.length; x++)
+    {
+        String newPath = rootdirectory  + DirList[x]; 
+         if (newPath != null) {
+            File f = new File(newPath);
+            if (f.isDirectory()) {
+             GetDocs(newPath +"/");
+            }
+            if (f.isFile()){
+             WriteFile(f);    
+            }else{
+            }
+        }
+    }    
+ }
+
+public static void WriteFile(File file) throws SQLException
+ {
+    String fileName;
+    String filePath; 
+    String elementID;
+    long len;
+    Date date;
+    String sqlDate;
+    SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss");
+
+    fileID = fileID + 1;
+
+    elementID = String.valueOf(fileID);
+    fileName = file.getName();
+    filePath = file.getPath();
+    len = file.length();
+    date = new Date(file.lastModified());
+    sqlDate = df.format(date);
+
+#sql { INSERT INTO WEB_STATICDOCS (ID, FILE_NAME, FILE_SIZE,  CREATE_DATE, FILE_PATH)
+         VALUES (:elementID, :fileName, :len, to_date(:sqlDate, 'YYYY-MM-DD HH24:MI:SS'), :filePath) };
+
+ }        
+
+ }
+
+/
+----------------------------------- SOURCE END ------------------------------------- java.lang.IllegalArgumentException
 Total number of relevant Java snippets: 8163
 Total number of unreliable Java snippets: 7149
 Answer Id --- http://stackoverflow.com/questions/34448677
@@ -14898,4 +14966,9 @@ Disorder Control-flow Structure: 0
 Missing API Call: 7149
 Disorder API Call: 0
 Incorrect Predicates: 0
+Total number of recognized snippets: 5635
+Average score: 5.097781721384206
+Unreliable recognized snippets: 4877
+Total number of unrecognized snippets: 2528
+Unreliable unrecognized snippets: 2272
 

@@ -313,4 +313,9 @@ Disorder Control-flow Structure: 0
 Missing API Call: 0
 Disorder API Call: 0
 Incorrect Predicates: 153
+Total number of recognized snippets: 126
+Average score: 13.682539682539682
+Unreliable recognized snippets: 102
+Total number of unrecognized snippets: 67
+Unreliable unrecognized snippets: 51
 
