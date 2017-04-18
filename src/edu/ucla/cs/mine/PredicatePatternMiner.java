@@ -15,10 +15,10 @@ import edu.ucla.cs.utils.SAT;
 
 public abstract class PredicatePatternMiner {
 	// id -> predicates (filtered + normalized)
-	HashMap<String, HashMap<String, ArrayList<String>>> predicates; 
-	ArrayList<String> pattern;
+	protected HashMap<String, HashMap<String, ArrayList<String>>> predicates; 
+	protected ArrayList<String> pattern;
 	// api -> clusters of predicates
-	HashMap<String, ArrayList<PredicateCluster>> clusters;
+	protected HashMap<String, ArrayList<PredicateCluster>> clusters;
 	
 	public PredicatePatternMiner (ArrayList<String> pattern) {
 		this.pattern = new ArrayList<String>();
@@ -197,35 +197,35 @@ public abstract class PredicatePatternMiner {
 		setup();
 
 		// print initial clusters
-//		System.out
-//				.println("Before checking predicate equivalence and merging:");
-//		for (String api : clusters.keySet()) {
-//			System.out.println("[" + api + "]");
-//			int count = 0;
-//			for (PredicateCluster pc : clusters.get(api)) {
-//				System.out.print("Cluster" + count + ": ");
-//				for (String p : pc.cluster.elementSet()) {
-//					System.out.println(p + "---" + pc.cluster.count(p));
-//				}
-//				count++;
-//			}
-//		}
+		System.out
+				.println("Before checking predicate equivalence and merging:");
+		for (String api : clusters.keySet()) {
+			System.out.println("[" + api + "]");
+			int count = 0;
+			for (PredicateCluster pc : clusters.get(api)) {
+				System.out.print("Cluster" + count + ": ");
+				for (String p : pc.cluster.elementSet()) {
+					System.out.println(p + "---" + pc.cluster.count(p));
+				}
+				count++;
+			}
+		}
 
 		// keep merging predicates until reaching a fix point
 		optimized_merge();
 
-//		System.out.println("After checking predicate equivalence and merging:");
-//		for (String api : clusters.keySet()) {
-//			System.out.println("[" + api + "]");
-//			int count = 0;
-//			for (PredicateCluster pc : clusters.get(api)) {
-//				System.out.print("Cluster" + count + ": ");
-//				for (String p : pc.cluster.elementSet()) {
-//					System.out.println(p + "---" + pc.cluster.count(p));
-//				}
-//				count++;
-//			}
-//		}
+		System.out.println("After checking predicate equivalence and merging:");
+		for (String api : clusters.keySet()) {
+			System.out.println("[" + api + "]");
+			int count = 0;
+			for (PredicateCluster pc : clusters.get(api)) {
+				System.out.print("Cluster" + count + ": ");
+				for (String p : pc.cluster.elementSet()) {
+					System.out.println(p + "---" + pc.cluster.count(p));
+				}
+				count++;
+			}
+		}
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {

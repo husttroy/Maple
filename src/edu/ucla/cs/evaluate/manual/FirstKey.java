@@ -6,16 +6,12 @@ import java.util.HashSet;
 import edu.ucla.cs.main.AnomalyDetection;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
-import edu.ucla.cs.model.ControlConstruct;
 
 public class FirstKey {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(ControlConstruct.TRY);
+		pattern1.add(new APICall("put", "true", 2));
 		pattern1.add(new APICall("firstKey", "true", 0));
-		pattern1.add(ControlConstruct.END_BLOCK);
-		pattern1.add(ControlConstruct.CATCH);
-		pattern1.add(ControlConstruct.END_BLOCK);
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
 		pattern2.add(new APICall("firstKey", "!rcv.isEmpty()", 0));

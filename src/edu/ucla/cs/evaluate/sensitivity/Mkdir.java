@@ -3,8 +3,8 @@ package edu.ucla.cs.evaluate.sensitivity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
@@ -39,7 +39,7 @@ public class Mkdir {
 				
 				for(double support : supports) {
 					// mine patterns with different support
-					HashMap<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, output, queries, support, size);
+					Map<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, output, queries, support, size, support);
 					System.out.println("Setting: size=" + size + " support=" + support);
 					for(ArrayList<APISeqItem> pattern : patterns.keySet()) {
 						System.out.println(pattern + ":" + patterns.get(pattern));

@@ -19,7 +19,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 	static final Pattern METHOD_CALL = Pattern
 			.compile("((new )?[a-zA-Z0-9_]+)\\(((.+),)*\\)");
 
-	String path;
+	protected String path;
 	String sequence_path;
 
 	public TraditionalPredicateMiner(ArrayList<String> pattern,
@@ -340,13 +340,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("nextToken(0)");
-		String path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt";
+		pattern.add("mkdirs(0)");
+		String path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();
-		int min_support = 20;
+		int min_support = (int) (0.05 * 32205);
 		HashMap<String, HashMap<String, Integer>> predicates = pm.find_the_most_common_predicate(min_support);
 		for(String api : predicates.keySet()) {
 			System.out.println(api);

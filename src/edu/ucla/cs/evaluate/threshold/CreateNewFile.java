@@ -13,7 +13,7 @@ public class CreateNewFile {
 		int num = FileUtils.countLines(output);
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> query = new HashSet<String>();
-		query.add("createNewFile");
+		query.add("createNewFile(0)");
 		queries.add(query);
 		double[] supports = {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
 		for(double support: supports) {

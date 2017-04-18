@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
+import edu.ucla.cs.utils.FileUtils;
+
 public class Sample {
 	ArrayList<String> seqs;
 	
@@ -17,7 +19,7 @@ public class Sample {
 		try(BufferedReader br = new BufferedReader(new FileReader(new File(path)))) {
 			String line;
 			while((line = br.readLine()) != null) {
-				if(line.startsWith("https:")) {
+				if(line.contains("https:")) {
 					this.seqs.add(line);
 				}
 			}
@@ -44,7 +46,7 @@ public class Sample {
 		int count = 0;
 		while(count < num) {
 			int n = rand.nextInt(size);
-			if (res.contains(res)) {
+			if (res.contains(n)) {
 				continue;
 			} else {
 				res.add(n);
@@ -53,5 +55,17 @@ public class Sample {
 		}
 		
 		return res;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		String path = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence.txt";
+		Sample sam = new Sample(path);
+		ArrayList<String> sample = sam.sample(10000);
+		String output = path.substring(0, path.lastIndexOf(".")) + "-sample.txt";
+		File f = new File(output);
+		if(!f.exists()) {
+			f.createNewFile();
+		}
+		FileUtils.writeArrayToFile(sample, output);
 	}
 }

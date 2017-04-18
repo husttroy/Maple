@@ -10,11 +10,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class SAT {
 	static final Pattern METHOD_CALL_START = Pattern
@@ -102,13 +99,18 @@ public class SAT {
 		
 		// convert infix expressions to prefix expressions because Z3 encodes
 		// expression in prefix order
-		String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
-		String p2_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p2_sym);
+		try {
+			String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
+			String p2_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p2_sym);
 
-		// For expression A and B, encode them in the format of (A && !B) || (!A && B) in Z3 to
-		// check semantic equivalence
-		String query = generateEquvalenceQueryInZ3(p1_prefix, p2_prefix);
-		return !isSAT(query);
+			// For expression A and B, encode them in the format of (A && !B) || (!A && B) in Z3 to
+			// check semantic equivalence
+			String query = generateEquvalenceQueryInZ3(p1_prefix, p2_prefix);
+			return !isSAT(query);
+		} catch(Exception e) {
+			// conversion error
+			return true;
+		}
 	}
 	
 	private String normalizePlusPlusAndMinusMinus(String expr) {
@@ -215,11 +217,16 @@ public class SAT {
 		p1_sym = normalizePlusPlusAndMinusMinus(p1_sym);
 		p2_sym = normalizePlusPlusAndMinusMinus(p2_sym);
 		
-		String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
-		String p2_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p2_sym);
-		
-		String query = generateImplicationQueryInZ3(p1_prefix, p2_prefix);
-		return !isSAT(query);
+		try {
+			String p1_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p1_sym);
+			String p2_prefix = InfixToPrefixConvertor.infixToPrefixConvert(p2_sym);
+
+			String query = generateImplicationQueryInZ3(p1_prefix, p2_prefix);
+			return !isSAT(query);
+		} catch (Exception e) {
+			// conversion error
+			return true;
+		}
 	}
 	
 	public String generateImplicationQueryInZ3(String p1, String p2) {
@@ -274,7 +281,7 @@ public class SAT {
 		} else if (output.equals("unsat")) {
 			result = false;
 		} else {
-			result = false;
+//			throw new Exception("Z3 formatting error.");
 			System.err.println("Z3 Formating error!");
 			// delete the temporary file
 			FileUtils.delete("./temp.z3");

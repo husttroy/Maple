@@ -19,7 +19,7 @@ public class FileChannel {
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
-		patterns.add(pattern2);
+		//patterns.add(pattern2);
 		
 		HashSet<String> types = new HashSet<String>();
 		types.add("FileChannel");

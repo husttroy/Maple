@@ -68,7 +68,8 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 	public static void main(String[] args){
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("nextToken(0)");
+		q1.add("put(1)");
+		q1.add("getInt(0)");
 		queries.add(q1);
 		//query.add("mkdirs");
 		// learn from the output of the light-weight output
@@ -79,8 +80,8 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		
 		// learn from the output of the traditional output
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-				"/home/troy/research/BOA/Maple/example/StringTokenizer.nextToken/small-output.txt",
-				50,
+				"/home/troy/research/BOA/Maple/example/ByteBuffer.getInt/large-output.txt",
+				90,
 				queries);
 
 		pm.mine();

@@ -20,7 +20,7 @@ public class SequenceProcessor extends ProcessStrategy {
 
 	protected void buildSequenceMap(Method method, String line) {
 		String s = line.substring(line.indexOf("] =") + 3).trim();
-		ArrayList<String> ss = ProcessUtils.splitByArrow(line);
+		ArrayList<String> ss = ProcessUtils.splitByArrow(s);
 		for (String str : ss) {
 			str = str.trim();
 			if(str.isEmpty())  continue;

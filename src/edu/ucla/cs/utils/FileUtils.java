@@ -125,4 +125,64 @@ public class FileUtils {
 		temp.renameTo(file);
 	}
 
+	public static void removeLinesById(String path, HashSet<String> ids) {
+		File file = new File(path);
+		File temp = new File(path + ".temp");
+		
+		if(temp.exists()) {
+			temp.delete();
+		}
+		
+		try {
+			temp.createNewFile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		BufferedReader reader = null;
+		BufferedWriter writer = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			writer = new BufferedWriter(new FileWriter(temp));
+			String line;
+			while((line = reader.readLine()) != null) {
+				if(line.startsWith("results[")) {
+					// the input file is the raw output file
+					String id = line.substring(line.indexOf("[") + 1, line.indexOf("][SEQ]"));
+					id = id.replaceAll("\\!", " ** ");
+					if(ids.contains(id)) {
+						continue;
+					}
+				} else if(line.contains("---")){
+					// the input file is the sequence file
+					String id = line.split("---")[0];
+					if(ids.contains(id)) {
+						continue;
+					}
+				}
+				
+				
+				writer.write(line + System.lineSeparator());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		temp.renameTo(file);
+	}
 }

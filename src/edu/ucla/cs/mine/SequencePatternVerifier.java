@@ -73,12 +73,10 @@ public class SequencePatternVerifier {
 	}
 	
 	public static void main(String[] args){
-//		String output = "/home/troy/research/BOA/Maple/example/new_output.txt";
-		String output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output-sample-100.txt";
+		String output = "/home/troy/research/BOA/Maple/example/ProgressDialog.dismiss/large-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("IF {");
-		pattern.add("createNewFile");
-		pattern.add("}");
+//		pattern.add("show(0)");
+		pattern.add("dismiss(0)");
 		SequencePatternVerifier pv = new SequencePatternVerifier(pattern);
 		pv.verify(output);
 		System.out.println(pv.support.size());
