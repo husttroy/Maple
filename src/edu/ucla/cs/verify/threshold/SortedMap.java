@@ -8,8 +8,8 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class SortedMap {
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/Maple/example/SortedMap.firstKey/large-sequence.txt";
-		String seq_output = "/home/troy/research/BOA/Maple/example/SortedMap.firstKey/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/SortedMap.firstKey/large-sequence-filter-tests.txt";
+		String seq_output = "/home/troy/research/BOA/Maple/example/SortedMap.firstKey/large-output-filter-tests.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("firstKey(0)");
 		int size = FileUtils.countLines(seq_output);

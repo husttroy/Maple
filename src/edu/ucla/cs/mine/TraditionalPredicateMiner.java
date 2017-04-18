@@ -262,10 +262,16 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			} else {
 				normalized_predicate = "true";
 			}
+			
+			// Optimize 2: remove 'true &&' and '&& true'
+			normalized_predicate = normalized_predicate.replaceAll("true\\s*&&", "");
+			normalized_predicate = normalized_predicate.replaceAll("&&\\s*true", "");
+			normalized_predicate = normalized_predicate.trim();
 
 			if (normalized_predicate.equals("true||pageList.size()==arg0 && !rcv==null||rcv.size()==arg0 && true")) {
 				System.out.println("oops");
 			}
+			
 			ArrayList<String> value;
 			if (predicates.containsKey(apiName + "(" + arguments.size() + ")")) {
 				value = predicates.get(apiName + "(" + arguments.size() + ")");
@@ -340,13 +346,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("mkdirs(0)");
-		String path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
+		pattern.add("dismiss(0)");
+		String path = "/home/troy/research/BOA/Maple/example/ProgressDialog.dismiss/large-sequence.txt";
+		String sequence_path = "/home/troy/research/BOA/Maple/example/ProgressDialog.dismiss/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();
-		int min_support = (int) (0.05 * 32205);
+		int min_support = (int) (0.05 * 9818);
 		HashMap<String, HashMap<String, Integer>> predicates = pm.find_the_most_common_predicate(min_support);
 		for(String api : predicates.keySet()) {
 			System.out.println(api);

@@ -2,6 +2,8 @@ package edu.ucla.cs.mine;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
@@ -82,13 +84,36 @@ public abstract class PredicatePatternMiner {
 		Set<String> apis = this.clusters.keySet();
 		for(String api : apis) {
 			ArrayList<PredicateCluster> arr = this.clusters.get(api);
-			ArrayList<PredicateCluster> newArr = optimized_merge(arr);
+			ArrayList<PredicateCluster> newArr = optimized_merge2(arr);
 			this.clusters.put(api, newArr);
 		}
 	}
 	
+	private ArrayList<PredicateCluster> optimized_merge2(
+			ArrayList<PredicateCluster> arr) {
+		ArrayList<PredicateCluster> newArr = new ArrayList<PredicateCluster>();
+		SAT sat = new SAT();
+		// only cluster the top 10 preconditions
+		for(int i = 0; i < 10; i++) {
+			PredicateCluster pc1 = arr.get(i);
+			ArrayList<PredicateCluster> temp = new ArrayList<PredicateCluster>();
+			for(int j = i + 1; j < arr.size(); j++) {
+				PredicateCluster pc2 = arr.get(j);
+				if(sat.checkEquivalence(pc1.shortest, pc2.shortest)) {
+					temp.add(pc2);
+				}
+			}
+			arr.removeAll(temp);
+			for(PredicateCluster pc2 : temp) {
+				pc1 = new PredicateCluster(pc1, pc2);
+			}
+			
+			newArr.add(pc1);
+		}
+		
+		return newArr;
+	}
 	
-
 	private ArrayList<PredicateCluster> optimized_merge(
 			ArrayList<PredicateCluster> arr) {
 		ArrayList<PredicateCluster> newArr = new ArrayList<PredicateCluster>();
@@ -108,7 +133,8 @@ public abstract class PredicatePatternMiner {
 			} else {
 				// there is an equivalent cluster
 				newArr.remove(eq);
-				newArr.add(new PredicateCluster(p1, eq));
+				// Optimize 3: place the merged cluster in the first place since previously merged clusters have a bigger chance to be merged again
+				newArr.add(0, new PredicateCluster(p1, eq));
 			}
 		}
 		
@@ -171,13 +197,32 @@ public abstract class PredicatePatternMiner {
 			Multiset<String> set = HashMultiset.create();
 			set.addAll(preds);
 			for (String pred : set.elementSet()) {
+				// Optimize 1: remove clusters that contain only one or two instances.
+				// When we mine from over 10k examples, such singleton clusters really slow us down and they are not that meaning full.
+				if(set.count(pred) < 3) {
+					continue;
+				}
+				
 				PredicateCluster pc = new PredicateCluster(pred,
 						set.count(pred));
 				hs.add(pc);
 			}
 			clusters.put(api, hs);
 		}
-	}
+		
+		// Optimize 4: for each API, rank its clusters by the number of support
+		for(String api: clusters.keySet()) {
+			ArrayList<PredicateCluster> pcs = clusters.get(api);
+			Collections.sort(pcs, new Comparator<PredicateCluster>() {
+				@Override 
+		        public int compare(PredicateCluster pc1, PredicateCluster pc2)
+		        { 
+		 
+		            return new Integer(pc2.cluster.size()).compareTo(pc1.cluster.size());
+		        } 
+			});
+		}
+	} 
 	
 	protected abstract void loadAndFilterPredicate();
 	
