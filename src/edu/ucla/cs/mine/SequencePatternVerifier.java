@@ -41,8 +41,64 @@ public class SequencePatternVerifier {
 		}	
 	}
 	
+	public void readOnlyOneSequenceFromEachProject(String path) {
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(path)))){
+			String line;
+			while((line = br.readLine()) != null) {
+				if(line.contains("---")){
+					String id = line.split("---")[0];
+					String project = id.split("\\*\\*")[0];
+					String s = line.split("---")[1];
+					s = s.substring(1, s.length() - 1);
+					ArrayList<String> seq = new ArrayList<String>();
+					for(String api : s.split(",")){
+						seq.add(api.trim());
+					}
+					if(!seqs.containsKey(project)) {
+						seqs.put(project, seq);
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	public void verify(String path){
 		readAPISeqeunces(path);
+		
+		if(pattern.isEmpty()) {
+			for(String id : seqs.keySet()) {
+				support.put(id, seqs.get(id));
+			}
+			
+			return;
+		}
+		
+		ArrayList<String> temp = new ArrayList<String>(pattern);
+		for(String id : seqs.keySet()){
+			ArrayList<String> seq = seqs.get(id); 
+			for(String api : seq){
+				String s = temp.get(0);
+				if(api.equals(s)) {
+					temp.remove(0);
+					if(temp.isEmpty()) {
+						support.put(id, seq);
+						break;
+					}
+				}
+			}
+			
+			// reset
+			temp.clear();
+			temp.addAll(pattern);
+		}
+	}
+	
+	public void verify2(String path){
+		readOnlyOneSequenceFromEachProject(path);
 		
 		if(pattern.isEmpty()) {
 			for(String id : seqs.keySet()) {

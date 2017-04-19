@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 public abstract class SequencePatternMiner {
 	final private String script_path;
-	final private String seqs_path;
+	protected final String seqs_path;
 	final private int min_support;
 	//ArrayList<String> query;
 	HashSet<HashSet<String>> queries;

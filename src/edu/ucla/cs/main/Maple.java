@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
@@ -52,7 +54,7 @@ public class Maple {
 		for(ArrayList<String> l : apis) {
 			sets.add(new HashSet<String>(l));
 		}
-		Map<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq, sets, sigma, FileUtils.countLines(seq), theta);
+		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(raw_output, seq, sets, sigma, FileUtils.countLines(seq), theta);
 		HashSet<ArrayList<APISeqItem>> set = new HashSet<ArrayList<APISeqItem>>();
 		set.addAll(patterns.keySet());
 		

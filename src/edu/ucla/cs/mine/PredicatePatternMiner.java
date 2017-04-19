@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
@@ -94,7 +95,8 @@ public abstract class PredicatePatternMiner {
 		ArrayList<PredicateCluster> newArr = new ArrayList<PredicateCluster>();
 		SAT sat = new SAT();
 		// only cluster the top 10 preconditions
-		for(int i = 0; i < 10; i++) {
+		int n = arr.size();
+		for(int i = 0; i < 10 && i < n; i++) {
 			PredicateCluster pc1 = arr.get(i);
 			ArrayList<PredicateCluster> temp = new ArrayList<PredicateCluster>();
 			for(int j = i + 1; j < arr.size(); j++) {
@@ -104,6 +106,7 @@ public abstract class PredicatePatternMiner {
 				}
 			}
 			arr.removeAll(temp);
+			n = arr.size() - temp.size();
 			for(PredicateCluster pc2 : temp) {
 				pc1 = new PredicateCluster(pc1, pc2);
 			}
@@ -176,7 +179,8 @@ public abstract class PredicatePatternMiner {
 					.get(id);
 
 			for (String api : api_predicates.keySet()) {
-				ArrayList<String> preds = api_predicates.get(api);
+				// count distinct predicates only once from each instance
+				HashSet<String> preds = new HashSet<String>(api_predicates.get(api));
 				ArrayList<String> existing_preds;
 				if (ps.containsKey(api)) {
 					existing_preds = ps.get(api);
@@ -199,7 +203,7 @@ public abstract class PredicatePatternMiner {
 			for (String pred : set.elementSet()) {
 				// Optimize 1: remove clusters that contain only one or two instances.
 				// When we mine from over 10k examples, such singleton clusters really slow us down and they are not that meaning full.
-				if(set.count(pred) < 3) {
+				if(set.count(pred) < 3 || pred.equals("bitwise") || pred.equals("bitshift") || pred.equals("conditional")) {
 					continue;
 				}
 				
@@ -242,35 +246,35 @@ public abstract class PredicatePatternMiner {
 		setup();
 
 		// print initial clusters
-		System.out
-				.println("Before checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
+//		System.out
+//				.println("Before checking predicate equivalence and merging:");
+//		for (String api : clusters.keySet()) {
+//			System.out.println("[" + api + "]");
+//			int count = 0;
+//			for (PredicateCluster pc : clusters.get(api)) {
+//				System.out.print("Cluster" + count + ": ");
+//				for (String p : pc.cluster.elementSet()) {
+//					System.out.println(p + "---" + pc.cluster.count(p));
+//				}
+//				count++;
+//			}
+//		}
 
 		// keep merging predicates until reaching a fix point
 		optimized_merge();
 
-		System.out.println("After checking predicate equivalence and merging:");
-		for (String api : clusters.keySet()) {
-			System.out.println("[" + api + "]");
-			int count = 0;
-			for (PredicateCluster pc : clusters.get(api)) {
-				System.out.print("Cluster" + count + ": ");
-				for (String p : pc.cluster.elementSet()) {
-					System.out.println(p + "---" + pc.cluster.count(p));
-				}
-				count++;
-			}
-		}
+//		System.out.println("After checking predicate equivalence and merging:");
+//		for (String api : clusters.keySet()) {
+//			System.out.println("[" + api + "]");
+//			int count = 0;
+//			for (PredicateCluster pc : clusters.get(api)) {
+//				System.out.print("Cluster" + count + ": ");
+//				for (String p : pc.cluster.elementSet()) {
+//					System.out.println(p + "---" + pc.cluster.count(p));
+//				}
+//				count++;
+//			}
+//		}
 	}
 	
 	public static String condition(Set<String> vars, String predicate) {

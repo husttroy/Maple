@@ -1,5 +1,7 @@
 package edu.ucla.cs.mine;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,21 +12,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
 import edu.ucla.cs.utils.FileUtils;
 
 public class PatternMiner {
-	public static Map<ArrayList<APISeqItem>, Integer> mine(
+	public static Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> mine(
 			String raw_output, String sequence, HashSet<HashSet<String>> apis,
 			double sigma, int size, double theta) {
+		long startTime = System.currentTimeMillis();
 		int sequence_support = (int) (sigma * size);
 		SequencePatternMiner pm = new FrequentSequenceMiner(
 				"/home/troy/research/BOA/Maple/mining/freq_seq.py", sequence,
 				sequence_support, apis);
 		HashMap<ArrayList<String>, Integer> patterns = pm.mine();
-		HashMap<ArrayList<APISeqItem>, Integer> composed_patterns = new HashMap<ArrayList<APISeqItem>, Integer>();
+		HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>> composed_patterns = new HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>>();
 		for (ArrayList<String> seq_pattern : patterns.keySet()) {
 			PredicatePatternMiner pm2 = new TraditionalPredicateMiner(
 					seq_pattern, raw_output, sequence);
@@ -33,7 +38,7 @@ public class PatternMiner {
 			int predicate_support = (int) (theta * support);
 			HashMap<String, HashMap<String, Integer>> predicate_patterns = pm2
 					.find_the_most_common_predicate(predicate_support);
-			HashMap<ArrayList<APISeqItem>, Integer> cp = compose(seq_pattern,
+			HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>> cp = compose(seq_pattern,
 					support, predicate_patterns, size);
 			if (cp != null) {
 				composed_patterns.putAll(cp);
@@ -41,47 +46,58 @@ public class PatternMiner {
 		}
 
 		// rank by support numbers
-		Map<ArrayList<APISeqItem>, Integer> ranked_patterns = sortByValue(composed_patterns);
+		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> ranked_patterns = sortByValue(composed_patterns);
+		long estimatedTime = System.currentTimeMillis() - startTime;
+		System.out.println("Mining time (millis) : " + estimatedTime);
 		return ranked_patterns;
 	}
 
-	private static Map<ArrayList<APISeqItem>, Integer> sortByValue(
-			Map<ArrayList<APISeqItem>, Integer> unsortMap) {
+	private static Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> sortByValue(
+			Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> unsortMap) {
 
 		// 1. Convert Map to List of Map
-		List<Map.Entry<ArrayList<APISeqItem>, Integer>> list = new LinkedList<Map.Entry<ArrayList<APISeqItem>, Integer>>(
+		List<Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>>> list = new LinkedList<Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>>>(
 				unsortMap.entrySet());
 
 		// 2. sort the list of map in descending order
-		Collections.sort(list, new Comparator<Map.Entry<ArrayList<APISeqItem>, Integer>>() {
-			public int compare(Map.Entry<ArrayList<APISeqItem>, Integer> o1,
-					Map.Entry<ArrayList<APISeqItem>, Integer> o2) {
-				return (o2.getValue()).compareTo(o1.getValue());
+		Collections.sort(list, new Comparator<Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>>>() {
+			public int compare(Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>> o1,
+					Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>> o2) {
+				Double seq1 = o1.getValue().getLeft();
+				Double seq2 = o2.getValue().getLeft();
+				Double pre1 = o1.getValue().getRight();
+				Double pre2 = o2.getValue().getRight();
+				Double total1 = new Double(seq1 * pre1);
+				Double total2 = new Double(seq2 * pre2);
+				return total2.compareTo(total1);
 			}
 		});
 
 		// 3. Loop the sorted list and put it into a new insertion order Map
 		// LinkedHashMap
-		Map<ArrayList<APISeqItem>, Integer> sortedMap = new LinkedHashMap<ArrayList<APISeqItem>, Integer>();
-		for (Map.Entry<ArrayList<APISeqItem>, Integer> entry : list) {
+		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> sortedMap = new LinkedHashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>>();
+		for (Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>> entry : list) {
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 
 		return sortedMap;
 	}
 
-	private static HashMap<ArrayList<APISeqItem>, Integer> compose(
+	private static HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>> compose(
 			ArrayList<String> seq_pattern, int seq_support,
 			HashMap<String, HashMap<String, Integer>> pred_patterns, int size) {
-		HashMap<ArrayList<APISeqItem>, Integer> composed_patterns = new HashMap<ArrayList<APISeqItem>, Integer>();
-
+		HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>> composed_patterns = new HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>>();
+		double seq_ratio = ((double)seq_support) / size;
+		seq_ratio = round(seq_ratio, 2);
+		
 		for (String api : seq_pattern) {
 			if (api.equals("}")) {
 				if (composed_patterns.isEmpty()) {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.END_BLOCK);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.END_BLOCK);
@@ -92,7 +108,8 @@ public class PatternMiner {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.TRY);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.TRY);
@@ -103,7 +120,8 @@ public class PatternMiner {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.IF);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.IF);
@@ -114,7 +132,8 @@ public class PatternMiner {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.LOOP);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.LOOP);
@@ -125,7 +144,8 @@ public class PatternMiner {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.CATCH);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.CATCH);
@@ -136,7 +156,8 @@ public class PatternMiner {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.FINALLY);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.FINALLY);
@@ -147,7 +168,8 @@ public class PatternMiner {
 					// this is the first element in the sequence pattern
 					ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 					s.add(ControlConstruct.ELSE);
-					composed_patterns.put(s, seq_support);
+					MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, Double.MAX_VALUE);
+					composed_patterns.put(s, pair);
 				} else {
 					for (ArrayList<APISeqItem> s : composed_patterns.keySet()) {
 						s.add(ControlConstruct.ELSE);
@@ -174,17 +196,24 @@ public class PatternMiner {
 						// initialize
 						ArrayList<APISeqItem> s = new ArrayList<APISeqItem>();
 						s.add(new APICall(name, condition, args));
-						composed_patterns.put(s, conditions.get(condition));
+						int support2 = conditions.get(condition);
+						double pre_ratio = ((double) support2) / seq_support;
+						if(pre_ratio > 1) {
+							pre_ratio = 1;
+						}
+						pre_ratio = round(pre_ratio, 2);
+						MutablePair<Double, Double> pair = new MutablePair<Double, Double>(seq_ratio, pre_ratio);
+						composed_patterns.put(s, pair);
 					}
 				} else {
-					HashMap<ArrayList<APISeqItem>, Integer> newAll = new HashMap<ArrayList<APISeqItem>, Integer>();
+					HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>> newAll = new HashMap<ArrayList<APISeqItem>, MutablePair<Double, Double>>();
 					boolean flag = isConditional(seq_pattern, api);
 					// propagate the new API with all possible predicates to
 					// each record in the map
-					for (Map.Entry<ArrayList<APISeqItem>, Integer> entry : composed_patterns
+					for (Map.Entry<ArrayList<APISeqItem>, MutablePair<Double, Double>> entry : composed_patterns
 							.entrySet()) {
 						ArrayList<APISeqItem> s = entry.getKey();
-						int support1 = entry.getValue();
+						MutablePair<Double, Double> pair = entry.getValue();
 
 						if (conditions.size() > 1
 								&& conditions.containsKey("true")) {
@@ -201,11 +230,17 @@ public class PatternMiner {
 							// int support2 = (int) (conditions.get(condition) *
 							// ((double) support1) / size);
 							int support2 = conditions.get(condition);
-							int value = Math.min(support1, support2);
+							double pre_ratio = ((double) support2) / seq_support;
+							if(pre_ratio > 1) {
+								pre_ratio = 1;
+							}
+							pre_ratio = round(pre_ratio, 2);
+							double value = Math.min(pair.getRight(), pre_ratio);
+							MutablePair<Double, Double> newPair = new MutablePair<Double, Double>(pair.getLeft(), value);
 							ArrayList<APISeqItem> newS = new ArrayList<APISeqItem>();
 							newS.addAll(s);
 							newS.add(new APICall(name, condition, args));
-							newAll.put(newS, value);
+							newAll.put(newS, newPair);
 						}
 					}
 					composed_patterns = newAll;
@@ -240,17 +275,25 @@ public class PatternMiner {
 
 		return count > 0;
 	}
+	
+	private static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+	 
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.FLOOR);
+	    return bd.doubleValue();
+	} 
 
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/Maple/example/File.mkdir/large-sequence.txt";
-		String seq = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/Maple/example/InputStream.read/1/large-sequence.txt";
+		String seq = "/home/troy/research/BOA/Maple/example/InputStream.read/1/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("mkdirs(0)");
+		q1.add("read(0)");
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
-		Map<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.7, size, 0.7);
+		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
+				raw_output, seq, queries, 0.16, size, 0.05);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
