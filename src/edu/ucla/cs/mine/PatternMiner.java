@@ -179,6 +179,9 @@ public class PatternMiner {
 				HashMap<String, Integer> conditions;
 				if (pred_patterns.containsKey(api)) {
 					conditions = pred_patterns.get(api);
+					if(conditions.isEmpty()) {
+						conditions.put("true", seq_support);
+					}
 				} else {
 					conditions = new HashMap<String, Integer>();
 					conditions.put("true", seq_support);

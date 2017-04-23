@@ -43,7 +43,7 @@ public class FilterByContainingMethod {
 	}
 	
 	public static void main(String[] args) {
-		String path = "/home/troy/research/BOA/Maple/example/Activity.setContentView/large-sequence.txt";
+		String path = "/home/troy/research/BOA/Maple/example/Activity.setContentView/3/large-sequence.txt";
 		FilterByContainingMethod f = new FilterByContainingMethod();
 		f.filter(path, "onCreate");
 	}

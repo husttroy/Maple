@@ -2,6 +2,7 @@ package edu.ucla.cs.utils;
 
 import java.awt.Point;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -20,11 +21,20 @@ public class SAT {
 	private HashMap<String, String> bool_symbol_map;
 	private HashMap<String, String> int_symbol_map;
 	private HashMap<String, String> call_symbol_map;
+	private String temp;
 	
 	public SAT() {
 		bool_symbol_map = new HashMap<String, String>();
 		int_symbol_map = new HashMap<String, String>();
 		call_symbol_map = new HashMap<String, String>();
+		int i = 0;
+		temp = "/home/troy/temp" + i + ".z3";
+		File f = new File(temp);
+		while(f.exists()) {
+			i++;
+			temp = "home/troy/temp" + i + ".z3";
+			f = new File(temp);
+		}
 	}
 
 	/***** Check Equivalence *****/
@@ -257,22 +267,32 @@ public class SAT {
 	/***** General Utility *****/
 	
 	public boolean isSAT(String query) {
-		// write query to a temporary file
-		FileUtils.writeStringToFile(query, "./temp.z3");
+		FileUtils.writeStringToFile(query, temp);
 
 		// run Z3
 		String output = "";
+		BufferedReader stdInput = null;
 		try {
-			Process p = Runtime.getRuntime().exec("z3 ./temp.z3");
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+			Process p = Runtime.getRuntime().exec("z3 " + temp);
+			stdInput = new BufferedReader(new InputStreamReader(
 					p.getInputStream()));
 
 			String s = null;
 			while ((s = stdInput.readLine()) != null) {
 				output += s;
 			}
-		} catch (IOException e) {
+			
+			p.waitFor();
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			if(stdInput != null) {
+				try {
+					stdInput.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		boolean result;
@@ -284,14 +304,14 @@ public class SAT {
 //			throw new Exception("Z3 formatting error.");
 			System.err.println("Z3 Formating error!");
 			// delete the temporary file
-			FileUtils.delete("./temp.z3");
+			FileUtils.delete(temp);
 			
 			// let it elapse
 			return true;
 		}
 
 		// delete the temporary file
-		FileUtils.delete("./temp.z3");
+		FileUtils.delete(temp);
 
 		return result;
 	}

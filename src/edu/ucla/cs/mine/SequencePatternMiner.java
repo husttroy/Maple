@@ -73,6 +73,29 @@ public abstract class SequencePatternMiner {
 	}
 	
 	/**
+	 * Check whether the pattern has lingering catch or else blocks
+	 * @param pattern
+	 * @return
+	 */
+	protected boolean isLingering(ArrayList<String> pattern) {
+		for(int i = 0; i < pattern.size(); i++) {
+			String item = pattern.get(i);
+			if(item.equals("ELSE {") || item.equals("CATCH {")) {
+				if(i == 0) {
+					return true;
+				} else {
+					String prev = pattern.get(i-1);
+					if(!prev.equals("}")) {
+						return true;
+					}
+				}
+			} 
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Check whether the pattern has complete try catch
 	 * 
 	 * @param pattern

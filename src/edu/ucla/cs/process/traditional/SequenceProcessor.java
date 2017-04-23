@@ -21,6 +21,20 @@ public class SequenceProcessor extends ProcessStrategy {
 	protected void buildSequenceMap(Method method, String line) {
 		String s = line.substring(line.indexOf("] =") + 3).trim();
 		ArrayList<String> ss = ProcessUtils.splitByArrow(s);
+		// check whether this example throws exceptions to caller
+		if(ss.size() > 0) {
+			String last = ss.get(ss.size() - 1);
+			if(last.contains("} CATCH {}")) {
+				ss.remove(0);
+				ss.remove(ss.size() - 1);
+				last = last.substring(0, last.indexOf("} CATCH {}"));
+				last = last.trim();
+				if(!last.isEmpty()) {
+					ss.add(last);
+				}
+			}
+		}
+		
 		for (String str : ss) {
 			str = str.trim();
 			if(str.isEmpty())  continue;

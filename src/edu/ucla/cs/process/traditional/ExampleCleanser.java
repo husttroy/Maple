@@ -100,16 +100,16 @@ public class ExampleCleanser {
 	}
 	
 	public static void main(String[] args) {
-		String path = "/home/troy/research/BOA/Maple/example/String.getBytes/large-output.txt";
+		String path = "/home/troy/research/BOA/example/FileChannel.write/1/large-output.txt";
 		ArrayList<String> query1 = new ArrayList<String>();
-		query1.add("getBytes(0)");
-		ArrayList<String> query2 = new ArrayList<String>();
-		query2.add("getBytes(1)");
-		ArrayList<ArrayList<String>> queries = new ArrayList<ArrayList<String>>();
-		queries.add(query1);
-		queries.add(query2);
+		query1.add("write(1)");
+//		ArrayList<String> query2 = new ArrayList<String>();
+//		query2.add("new SimpleDateFormat(2)");
+//		ArrayList<ArrayList<String>> queries = new ArrayList<ArrayList<String>>();
+//		queries.add(query1);
+//		queries.add(query2);
 		ExampleCleanser ec = new ExampleCleanser();
-//		ec.clean(path, query1);
-		ec.cleanAll(path, queries);
+		ec.clean(path, query1);
+//		ec.cleanAll(path, queries);
 	}
 }

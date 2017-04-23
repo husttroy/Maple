@@ -88,9 +88,9 @@ public class Search {
 				} else {
 					boolean flag3 = false;  // this flag indicates whether this snippet contains a method that satisfies the fine-grained filtering criteria
 					for(String method : seqs.keySet()) {
-						if(!method.equals("onCreate")) {
-							continue;
-						}
+//						if(!method.equals("onCreate")) {
+//							continue;
+//						}
 						ArrayList<APISeqItem> seq = seqs.get(method);
 						
 						// check whether the API call sequences contain all queried APIs in the same order

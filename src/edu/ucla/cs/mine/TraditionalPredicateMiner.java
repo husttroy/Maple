@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-
 import edu.ucla.cs.utils.ProcessUtils;
 import edu.ucla.cs.utils.SAT;
 
@@ -47,6 +45,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 						line.indexOf("][SEQ]"));
 				key = key.replaceAll("\\!", " ** ");
 				if (pv.support.containsKey(key)) {
+//					System.out.println("Processing " + key);
 					// this sequence follows the pattern
 					String seq = line.substring(line.indexOf("] =") + 3).trim();
 //					if(seq.contains("?") || seq.contains(">>") || seq.contains("<<") || seq.matches("^.+(?<!\\|)\\|(?!\\|).+$") || seq.matches("^.+(?<!&)&(?!&).+$")) {

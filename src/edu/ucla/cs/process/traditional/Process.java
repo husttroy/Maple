@@ -57,7 +57,7 @@ public class Process {
 		
 		public static void main(String[] args) {
 			Process p = new Process();
-			String seq = "/home/troy/research/BOA/Maple/example/FileInputStream.new/large-sequence-filter-tests.txt";
+			String seq = "/home/troy/research/BOA/example/String.getBytes/1/large-sequence.txt";
 			try {
 				p.s = new SequenceProcessor();
 				p.processByLine(seq);
@@ -73,7 +73,7 @@ public class Process {
 				// write to file
 				File f_seq = new File(seq);
 				String dir = f_seq.getParent();
-				File output = new File(dir + File.separator + "/large-output-filter-tests.txt");
+				File output = new File(dir + File.separator + "/large-output.txt");
 				
 				if(output.exists()) {
 					output.delete();

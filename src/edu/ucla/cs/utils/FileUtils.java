@@ -1,12 +1,18 @@
 package edu.ucla.cs.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -32,7 +38,24 @@ public class FileUtils {
 		try {
 			File f = new File(path);
 			FileWriter w = new FileWriter(f, false);
-			BufferedWriter writer = new BufferedWriter(w);
+			// increase the buffer size since we often need to write big files
+			BufferedWriter writer = new BufferedWriter(w, 1048576);
+			writer.write(s);
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void appendStringToFile(String s, String path) {
+		try {
+			File f = new File(path);
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			FileWriter w = new FileWriter(f, true);
+			BufferedWriter writer = new BufferedWriter(w, 8192);
 			writer.write(s);
 			writer.flush();
 			writer.close();
@@ -51,7 +74,106 @@ public class FileUtils {
 			content += ss.get(ss.size() - 1);
 		}
 		
-		writeStringToFile(content, path);;
+		writeStringToFile(content, path);
+	}
+	
+	public static void copyFileContent(String src, String tgt, boolean append) {
+		File f2 = new File(tgt);
+		if(!f2.exists()) {
+			try {
+				f2.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		InputStream fis = null;
+        OutputStream fos = null;
+        try {
+            fis = new BufferedInputStream(new FileInputStream(src));
+            fos = new BufferedOutputStream(new FileOutputStream(tgt, true));
+
+            byte[] buf = new byte[8192];
+
+            int i;
+            while ((i = fis.read(buf)) != -1) {
+                fos.write(buf, 0, i);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(fis != null) {
+            	try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
+            if(fos != null) {
+            	try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
+        }
+	}
+	
+	public static void writeFirstNLinesToFileWithPadding(String src, int size, String tgt) {
+		int lNum = countLines(src);
+		int times = size / lNum;
+		int remains = size % lNum;
+		while (times > 0) {
+			copyFileContent(src, tgt, true);
+			times --;
+		}
+		
+		writeFirstNLinesToFile(src, remains, tgt);
+	}
+	
+	public static void writeFirstNLinesToFile(String src, int size, String tgt) {
+		File f1 = new File(src);
+		File f2 = new File(tgt);
+		if(!f2.exists()) {
+			try {
+				f2.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		String content = "";
+		FileWriter w = null;
+		try (BufferedReader br = new BufferedReader(new FileReader(f1))){
+			w = new FileWriter(f2, true);
+			BufferedWriter writer = new BufferedWriter(w, 8192);
+			
+			String line = null;
+			int i = 0;
+			while((line = br.readLine()) != null) {
+				if(i < size) {
+					if(i % 1000 == 0) {
+						writer.write(content);
+						writer.flush();
+						content = "";
+					} 
+					
+					content += line + System.lineSeparator();
+					i++;
+				} else {
+					break;
+				}
+			}
+			
+			writer.write(content);
+			writer.flush();
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static int countLines(String path) {
