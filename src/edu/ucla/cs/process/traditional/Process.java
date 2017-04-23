@@ -19,6 +19,9 @@ public class Process {
 		
 		public void processByLine(String path) throws IOException {
 			File f = new File(path);
+			String dir = f.getParent();
+			File output = new File(dir + File.separator + "large-output.txt");
+			
 			try (BufferedReader br = new BufferedReader(new FileReader(f))){
 				String line = null;
 			    while ((line = br.readLine()) != null) {
@@ -27,6 +30,16 @@ public class Process {
 			    		s.process(line);
 			    		System.out.println("hit!");
 			    	}
+			    	
+			    	// spill methods to the disk if there are over 1000 methods in the hash map
+					if(Process.methods.size() >= 1000) {
+						try (FileWriter fw = new FileWriter(output, true)) {
+							for(String k : Process.methods.keySet()) {
+								fw.append(k.replaceAll("\\!", " ** ") + "---" + Process.methods.get(k).seq + System.lineSeparator());
+							}
+						}
+						Process.methods.clear();
+					}
 			    }
 			}
 		}

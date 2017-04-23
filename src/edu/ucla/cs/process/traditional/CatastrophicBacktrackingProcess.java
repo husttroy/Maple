@@ -14,19 +14,18 @@ public class CatastrophicBacktrackingProcess {
 		Process p = new Process();
 		String seq = "/home/troy/research/BOA/example/FileChannel.write/1/large-sequence.txt";
 		try {
-			p.s = new CatastrophicBacktrackingProcessor();
-			p.processByLine(seq);
-			
-			// write to file
 			File f_seq = new File(seq);
 			String dir = f_seq.getParent();
-			File output = new File(dir + File.separator + "/large-output.txt");
-			
+			File output = new File(dir + File.separator + "large-output.txt");
 			if(output.exists()) {
 				output.delete();
 				output.createNewFile();
 			}
 			
+			p.s = new CatastrophicBacktrackingProcessor();
+			p.processByLine(seq);
+			
+			// write to file
 			try (FileWriter fw = new FileWriter(output, true)) {
 				int size = Process.methods.keySet().size();
 				int count = 0;
