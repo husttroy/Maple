@@ -10,9 +10,9 @@ import edu.ucla.cs.utils.FileUtils;
 public class Runner {
 	final static double SIGMA = 0.5;
 	final static double THETA = 0.5;
-	final static String LOG_FILE = "/home/troy/research/BOA/performance/size.log";
+	final static String LOG_FILE = "/home/troy/research/BOA/performance/size.csv";
 	final static String ROOT_FOLDER = "/home/troy/research/BOA/example/";
-	final static int K = 1;
+	final static String K = "1";
 	final int[] sizes = {10, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200, 102400};
 	
 	public static void main(String[] args) {
@@ -43,6 +43,13 @@ public class Runner {
 	}
 	
 	public void run() throws IOException {
+		// delete the previous log file
+		File log_file = new File(LOG_FILE);
+		if(log_file.exists()) {
+			log_file.delete();
+			log_file.createNewFile();
+		}
+		
 		// warm up the JVM
 		warmup();
 		
@@ -400,8 +407,8 @@ public class Runner {
 	}
 	
 	private void runTypedArrrayGetString() throws IOException {
-		String raw_output = ROOT_FOLDER + "StringTokenizer.nextToken" + File.separator + K + File.separator + "large-sequence.txt";
-		String seq_output = ROOT_FOLDER + "StringTokenizer.nextToken" + File.separator + K + File.separator + "large-output.txt";
+		String raw_output = ROOT_FOLDER + "TypedArray.getString" + File.separator + K + File.separator + "large-sequence.txt";
+		String seq_output = ROOT_FOLDER + "TypedArray.getString" + File.separator + K + File.separator + "large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
 		q1.add("getString(1)");
