@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
@@ -36,7 +38,7 @@ public class CreateNewFile {
 				
 				for(double support : supports) {
 					// mine patterns with different support
-					Map<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, output, queries, support, size, support);
+					Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(raw_output, output, queries, support, size, support);
 					System.out.println("Setting: size=" + size + " support=" + support);
 					for(ArrayList<APISeqItem> pattern : patterns.keySet()) {
 						System.out.println(pattern + ":" + patterns.get(pattern));
