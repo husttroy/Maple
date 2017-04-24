@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
@@ -23,7 +25,7 @@ public class ProgressDialog {
 		for(double sigma : supports1) {
 			for(double theta : supports2) {
 				// mine patterns with different support
-				Map<ArrayList<APISeqItem>, Integer> patterns = PatternMiner.mine(raw_output, seq_output, queries, sigma, size, theta);
+				Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(raw_output, seq_output, queries, sigma, size, theta);
 				System.out.println("Setting: sigma=" + sigma + " theta=" + theta);
 				for(ArrayList<APISeqItem> pattern : patterns.keySet()) {
 					System.out.println(pattern + ":" + patterns.get(pattern));
