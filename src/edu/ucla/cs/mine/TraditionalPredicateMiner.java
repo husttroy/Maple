@@ -266,6 +266,14 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 			normalized_predicate = normalized_predicate.replaceAll("true\\s*&&", "");
 			normalized_predicate = normalized_predicate.replaceAll("&&\\s*true", "");
 			normalized_predicate = normalized_predicate.trim();
+			
+			if(normalized_predicate.isEmpty()) {
+				normalized_predicate = "true";
+			}
+			
+			if(normalized_predicate.startsWith("&&")) {
+				normalized_predicate = normalized_predicate.substring(2).trim();
+			}
 
 			if (normalized_predicate.equals("true||pageList.size()==arg0 && !rcv==null||rcv.size()==arg0 && true")) {
 				System.out.println("oops");

@@ -32,7 +32,7 @@ public class SAT {
 		File f = new File(temp);
 		while(f.exists()) {
 			i++;
-			temp = "home/troy/temp" + i + ".z3";
+			temp = "/home/troy/temp" + i + ".z3";
 			f = new File(temp);
 		}
 	}

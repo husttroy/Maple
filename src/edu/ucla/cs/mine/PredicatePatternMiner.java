@@ -85,7 +85,9 @@ public abstract class PredicatePatternMiner {
 		Set<String> apis = this.clusters.keySet();
 		for(String api : apis) {
 			ArrayList<PredicateCluster> arr = this.clusters.get(api);
-			ArrayList<PredicateCluster> newArr = optimized_merge2(arr);
+//			ArrayList<PredicateCluster> newArr = optimized_merge2(arr);
+			// disable the optimization in precondition mining
+			ArrayList<PredicateCluster> newArr = optimized_merge(arr);
 			this.clusters.put(api, newArr);
 		}
 	}
@@ -207,6 +209,9 @@ public abstract class PredicatePatternMiner {
 					continue;
 				}
 				
+				if(pred.isEmpty()) {
+					continue;
+				}
 				PredicateCluster pc = new PredicateCluster(pred,
 						set.count(pred));
 				hs.add(pc);
