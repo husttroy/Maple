@@ -1,5 +1,4 @@
 Mining time (millis) : 142316
-[close(0)@true]:(0.99,0.88)
 [new PrintWriter(1)@true, close(0)@true]:(0.62,0.91)
 [println(1)@true, close(0)@true]:(0.5,0.92)
 [TRY, close(0)@true, END_BLOCK]:(0.45,1.0)

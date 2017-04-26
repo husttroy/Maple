@@ -1,11 +1,4 @@
-Mining time (millis) : 41098
-[new FileInputStream(1)@true]:(1.0,0.85)
-[new FileInputStream(1)@true, read(1)@true]:(0.62,0.86)
-[new FileInputStream(1)@true, close(0)@rcv!=null]:(0.65,0.25)
-[new FileInputStream(1)@arg0.exists()]:(1.0,0.05)
-[TRY, new FileInputStream(1)@arg0.exists(), END_BLOCK]:(0.99,0.05)
-[new FileInputStream(1)@arg0.exists(), close(0)@rcv!=null]:(0.65,0.06)
-[TRY, new FileInputStream(1)@arg0.exists(), close(0)@rcv!=null, END_BLOCK]:(0.65,0.06)
-[new FileInputStream(1)@arg0.exists(), read(1)@true]:(0.62,0.05)
-[TRY, new FileInputStream(1)@arg0.exists(), read(1)@true, END_BLOCK]:(0.62,0.05)
+Mining time (millis) : 107749
+[new FileInputStream(1)@arg0.exists()]:(1.0,0.07)
+[TRY, new FileInputStream(1)@arg0.exists(), END_BLOCK]:(0.99,0.07)
 

@@ -1,5 +1,4 @@
 Mining time (millis) : 36796
-[put(1)@true, getInt(0)@true]:(1.0,0.73)
 [put(1)@true, IF, END_BLOCK, getInt(0)@true]:(0.41,1.0)
 [put(1)@true, getInt(0)@true, IF, END_BLOCK]:(0.4,1.0)
 [allocate(1)@true, put(1)@true, getInt(0)@true]:(0.54,0.65)

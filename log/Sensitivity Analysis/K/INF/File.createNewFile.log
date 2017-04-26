@@ -1,5 +1,4 @@
 Mining time (millis) : 806412
-[createNewFile(0)@true]:(1.0,0.64)
 [createNewFile(0)@!(rcv.exists())]:(1.0,0.31)
 [TRY, createNewFile(0)@!(rcv.exists()), END_BLOCK]:(0.56,0.55)
 [IF, createNewFile(0)@!(rcv.exists()), END_BLOCK]:(0.54,0.57)

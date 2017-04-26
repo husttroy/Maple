@@ -1,5 +1,4 @@
 Mining time (millis) : 19162
-[getString(1)@true]:(1.0,0.92)
 [getString(1)@true, recycle(0)@true]:(0.7,0.92)
 [getString(1)@true, IF, END_BLOCK]:(0.53,1.0)
 [obtainStyledAttributes(2)@true, getString(1)@true]:(0.33,0.93)

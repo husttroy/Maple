@@ -1,5 +1,4 @@
 Mining time (millis) : 6110
-[getString(1)@true]:(1.0,0.92)
 [getString(1)@true, recycle(0)@true]:(0.7,0.92)
 [getString(1)@true, IF, END_BLOCK]:(0.34,1.0)
 [TRY, getString(1)@true, END_BLOCK]:(0.27,1.0)

@@ -1,5 +1,4 @@
 Mining time (millis) : 19706
-[write(1)@true]:(1.0,0.96)
 [TRY, write(1)@true, END_BLOCK]:(0.34,1.0)
 [write(1)@true, close(0)@true]:(0.38,0.89)
 [getWriter(0)@true, write(1)@true]:(0.32,0.98)
