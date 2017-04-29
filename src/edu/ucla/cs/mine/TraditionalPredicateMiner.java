@@ -262,10 +262,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 				normalized_predicate = "true";
 			}
 			
-			// Optimize 2: remove 'true &&' and '&& true'
-			normalized_predicate = normalized_predicate.replaceAll("true\\s*&&", "");
-			normalized_predicate = normalized_predicate.replaceAll("&&\\s*true", "");
-			normalized_predicate = normalized_predicate.trim();
+			if(enableSMT) {
+				// Optimize 2: remove 'true &&' and '&& true'
+				normalized_predicate = normalized_predicate.replaceAll("true\\s*&&", "");
+				normalized_predicate = normalized_predicate.replaceAll("&&\\s*true", "");
+				normalized_predicate = normalized_predicate.trim();
+			}
+			
 			
 			if(normalized_predicate.isEmpty()) {
 				normalized_predicate = "true";

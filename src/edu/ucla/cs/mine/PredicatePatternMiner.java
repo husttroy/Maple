@@ -22,6 +22,7 @@ public abstract class PredicatePatternMiner {
 	protected ArrayList<String> pattern;
 	// api -> clusters of predicates
 	protected HashMap<String, ArrayList<PredicateCluster>> clusters;
+	public static boolean enableSMT = false;
 	
 	public PredicatePatternMiner (ArrayList<String> pattern) {
 		this.pattern = new ArrayList<String>();
@@ -85,9 +86,9 @@ public abstract class PredicatePatternMiner {
 		Set<String> apis = this.clusters.keySet();
 		for(String api : apis) {
 			ArrayList<PredicateCluster> arr = this.clusters.get(api);
-//			ArrayList<PredicateCluster> newArr = optimized_merge2(arr);
+			ArrayList<PredicateCluster> newArr = optimized_merge2(arr);
 			// disable the optimization in precondition mining
-			ArrayList<PredicateCluster> newArr = optimized_merge(arr);
+//			ArrayList<PredicateCluster> newArr = optimized_merge(arr);
 			this.clusters.put(api, newArr);
 		}
 	}
@@ -265,8 +266,10 @@ public abstract class PredicatePatternMiner {
 //			}
 //		}
 
-		// keep merging predicates until reaching a fix point
-		optimized_merge();
+		if(enableSMT) {
+			// keep merging predicates until reaching a fix point
+			optimized_merge();
+		}
 
 //		System.out.println("After checking predicate equivalence and merging:");
 //		for (String api : clusters.keySet()) {
@@ -608,7 +611,7 @@ public abstract class PredicatePatternMiner {
 			}
 		}
 
-		return norm;
+		return norm.trim();
 	}
 	
 	public static boolean containsVar(String var, String clause, int start) {
