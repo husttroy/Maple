@@ -219,9 +219,23 @@ public class APICallVisitor extends ASTVisitor {
 		Expression expr = node.getExpression();
 		String oldCond = condition;
 		if (oldCond.equals("true")) {
-			condition = expr.toString() + ".size() > 0";
+			String s = expr.toString();
+			if(s.contains("keySet()")) {
+				String rcv = s.substring(0, s.indexOf("keySet()") - 1);
+				String arg = node.getParameter().getName().toString();
+				condition = rcv + ".containsKey(" + arg + ") && " + rcv + ".size() > 0";
+			} else {
+				condition = expr.toString() + ".size() > 0";
+			}
 		} else {
-			condition = oldCond + " && " + expr.toString() + ".size() > 0";
+			String s = expr.toString();
+			if(s.contains("keySet()")) {
+				String rcv = s.substring(0, s.indexOf("keySet()") - 1);
+				String arg = node.getParameter().getName().toString();
+				condition = oldCond + " && " + rcv + ".containsKey(" + arg + ") && " + rcv + ".size() > 0";
+			} else {
+				condition = oldCond + " && " + expr.toString() + ".size() > 0";
+			}
 		}
 
 		Statement stmt = node.getBody();
