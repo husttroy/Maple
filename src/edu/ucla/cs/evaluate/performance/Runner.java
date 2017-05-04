@@ -3,13 +3,18 @@ package edu.ucla.cs.evaluate.performance;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.utils.FileUtils;
 
 public class Runner {
-	final static double SIGMA = 0.5;
-	final static double THETA = 0.5;
+	final static double SIGMA = 0.1;
+	final static double THETA = 0.1;
 	final static String LOG_FILE = "/home/troy/research/BOA/performance/size.csv";
 	final static String ROOT_FOLDER = "/home/troy/research/BOA/example/";
 	final static String K = "1";
@@ -33,7 +38,23 @@ public class Runner {
 			
 			long startTime = System.currentTimeMillis();
 			String sample_output = seq_output.substring(0, seq_output.lastIndexOf(".")) + "-" + size + ".txt";
-			PatternMiner.mine(raw_output, sample_output, queries, SIGMA, size, THETA);
+			
+			final ExecutorService service = Executors.newSingleThreadExecutor();
+			try {
+				final Future<Object> f = service.submit(() -> {
+					PatternMiner.mine(raw_output, sample_output, queries, SIGMA, size, THETA);
+					return "yes";
+				});
+				
+				f.get(2, TimeUnit.HOURS);
+			} catch (final TimeoutException e) {
+				System.out.println("The mining process does not terminate with sigma=" + SIGMA + " and theta=" + THETA + " on " + sample_output);
+			} catch (final Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+				service.shutdown();
+			}
+			
 			long estimatedTime = System.currentTimeMillis() - startTime;
 			log += estimatedTime + ",";
 		}
@@ -78,7 +99,7 @@ public class Runner {
 		runRandomFileAccessRead();
 		runRandomFileAccessWrite();
 		runSimpleDateFormatNew();
-		runSortedMapFirstKey();
+//		runSortedMapFirstKey();
 		runSQLiteDatabaseQuery();
 		runStringGetBytes();
 		runStringTokenizer();
