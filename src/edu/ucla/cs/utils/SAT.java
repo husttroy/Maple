@@ -27,14 +27,15 @@ public class SAT {
 		bool_symbol_map = new HashMap<String, String>();
 		int_symbol_map = new HashMap<String, String>();
 		call_symbol_map = new HashMap<String, String>();
-		int i = 0;
-		temp = "/home/troy/temp" + i + ".z3";
-		File f = new File(temp);
-		while(f.exists()) {
-			i++;
-			temp = "/home/troy/temp" + i + ".z3";
-			f = new File(temp);
-		}
+//		int i = 0;
+//		temp = "/home/troy/temp" + i + ".z3";
+//		File f = new File(temp);
+//		while(f.exists()) {
+//			i++;
+//			temp = "/home/troy/temp" + i + ".z3";
+//			f = new File(temp);
+//		}
+		temp = "/home/troy/temp.z3";
 	}
 
 	/***** Check Equivalence *****/

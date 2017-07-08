@@ -1,5 +1,7 @@
 package edu.ucla.cs.mine;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -47,8 +49,34 @@ public class PatternMiner {
 
 		// rank by support numbers
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> ranked_patterns = sortByValue(composed_patterns);
+		
+		// if querying a single API, remove the pattern "api@true"
+		if(apis.size() == 1) {
+			HashSet<String> query = apis.iterator().next();
+			ArrayList<APISeqItem> remove = null;
+			for(ArrayList<APISeqItem> pattern : ranked_patterns.keySet()) {
+				if(pattern.size() == query.size()) {
+					boolean flag = true;
+					for(APISeqItem item : pattern) {
+						if(item instanceof APICall && !((APICall)item).condition.equals("true")) {
+							flag = false;
+						}
+					}
+					
+					if(flag) {
+						remove = pattern;
+					}
+				}
+			}
+			
+			if(remove != null) {
+				ranked_patterns.remove(remove);
+			}
+		}
+		
 		long estimatedTime = System.currentTimeMillis() - startTime;
 		System.out.println("Mining time (millis) : " + estimatedTime);
+		System.out.println("Total Count: " + size);
 		return ranked_patterns;
 	}
 
@@ -285,7 +313,44 @@ public class PatternMiner {
 	    BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(places, RoundingMode.FLOOR);
 	    return bd.doubleValue();
-	} 
+	}
+	
+	/**
+	 * 
+	 * Print the patterns to pattern.txt in the given destination path
+	 * Also print n samples to the sample-i.txt for the i-th pattern
+	 * 
+	 * @param seqFile
+	 * @param size
+	 * @param patterns
+	 * @param dest
+	 * @param n
+	 * @throws IOException
+	 */
+	public static void sample(String seqFile, String orgFile, int size, Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns, String dest, int n) {
+		File dir = new File(dest);
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		String pFile = dir.getAbsolutePath() + File.separator + "pattern.txt";
+		String s = "Total Count:" + size + System.lineSeparator();
+		int i = 1;
+		for (ArrayList<APISeqItem> pattern : patterns.keySet()) {
+			double d = size * patterns.get(pattern).left * patterns.get(pattern).right;
+			int count = (int) Math.round(d);
+			s += i + ":" + pattern.toString() + ":" + count + System.lineSeparator();
+			// find 10 sample examples of this pattern
+			String sFile = dir.getAbsolutePath() + File.separator + "sample-" + i + ".txt";
+			
+			PatternSampler sampler = new PatternSampler(seqFile, orgFile);
+			ArrayList<String> sample = sampler.sample(pattern, 10);
+			FileUtils.writeArrayToFile(sample, sFile);
+			i++;
+		}
+		
+		FileUtils.writeStringToFile(s, pFile);
+	}
 
 	public static void main(String[] args) {
 		String raw_output = "/home/troy/research/BOA/Maple/example/InputStream.read/1/large-sequence.txt";

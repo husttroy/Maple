@@ -1,7 +1,6 @@
 package edu.ucla.cs.mine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import edu.ucla.cs.model.PredicateCluster;
 import edu.ucla.cs.utils.SAT;

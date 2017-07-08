@@ -112,7 +112,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 								item.trim(), item.trim(), predicate);
 
 						// aggregate the predicates with those from previous
-						// sequences
+						// items
 						for (String name : predicates.keySet()) {
 							if (map.containsKey(name)) {
 								map.get(name).addAll(predicates.get(name));

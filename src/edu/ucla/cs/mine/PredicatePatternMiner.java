@@ -22,7 +22,7 @@ public abstract class PredicatePatternMiner {
 	protected ArrayList<String> pattern;
 	// api -> clusters of predicates
 	protected HashMap<String, ArrayList<PredicateCluster>> clusters;
-	public static boolean enableSMT = false;
+	public static boolean enableSMT = true;
 	
 	public PredicatePatternMiner (ArrayList<String> pattern) {
 		this.pattern = new ArrayList<String>();

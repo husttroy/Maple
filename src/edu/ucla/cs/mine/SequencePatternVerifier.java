@@ -1,10 +1,5 @@
 package edu.ucla.cs.mine;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,55 +14,8 @@ public class SequencePatternVerifier {
 		this.support = new HashMap<String, ArrayList<String>>();
 	}
 	
-	public void readAPISeqeunces(String path){
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(path)))){
-			String line;
-			while((line = br.readLine()) != null) {
-				if(line.contains("---")){
-					String id = line.split("---")[0];
-					String s = line.split("---")[1];
-					s = s.substring(1, s.length() - 1);
-					ArrayList<String> seq = new ArrayList<String>();
-					for(String api : s.split(",")){
-						seq.add(api.trim());
-					}
-					seqs.put(id, seq);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-	}
-	
-	public void readOnlyOneSequenceFromEachProject(String path) {
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(path)))){
-			String line;
-			while((line = br.readLine()) != null) {
-				if(line.contains("---")){
-					String id = line.split("---")[0];
-					String project = id.split("\\*\\*")[0];
-					String s = line.split("---")[1];
-					s = s.substring(1, s.length() - 1);
-					ArrayList<String> seq = new ArrayList<String>();
-					for(String api : s.split(",")){
-						seq.add(api.trim());
-					}
-					if(!seqs.containsKey(project)) {
-						seqs.put(project, seq);
-					}
-				}
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-	}
-	
 	public void verify(String path){
-		readAPISeqeunces(path);
+		seqs = PatternUtils.readAPISequences(path);
 		
 		if(pattern.isEmpty()) {
 			for(String id : seqs.keySet()) {
@@ -98,7 +46,7 @@ public class SequencePatternVerifier {
 	}
 	
 	public void verify2(String path){
-		readOnlyOneSequenceFromEachProject(path);
+		seqs = PatternUtils.readOnlyOneSequenceFromEachProject(path);
 		
 		if(pattern.isEmpty()) {
 			for(String id : seqs.keySet()) {
