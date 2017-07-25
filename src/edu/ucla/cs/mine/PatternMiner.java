@@ -344,7 +344,7 @@ public class PatternMiner {
 			String sFile = dir.getAbsolutePath() + File.separator + "sample-" + i + ".txt";
 			
 			PatternSampler sampler = new PatternSampler(seqFile, orgFile);
-			ArrayList<String> sample = sampler.sample(pattern, 10);
+			ArrayList<String> sample = sampler.sample(pattern, n);
 			FileUtils.writeArrayToFile(sample, sFile);
 			i++;
 		}

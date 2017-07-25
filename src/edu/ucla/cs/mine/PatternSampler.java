@@ -15,6 +15,8 @@ import java.util.Map.Entry;
 
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
+import edu.ucla.cs.model.ControlConstruct;
+import edu.ucla.cs.utils.ProcessUtils;
 import edu.ucla.cs.utils.SAT;
 import edu.ucla.cs.utils.SubsequenceCounter;
 
@@ -33,7 +35,7 @@ public class PatternSampler {
 
 		// extract the API call sequence only without guard conditions
 		ArrayList<String> patternS = PatternUtils
-				.extractSequenceWithoutGuardAndArgCount(pattern);
+				.extractSequenceWithoutGuard(pattern);
 		SequencePatternVerifier verifyS = new SequencePatternVerifier(patternS);
 		verifyS.verify(seqFile);
 
@@ -55,6 +57,7 @@ public class PatternSampler {
 				// first we prefer non-ambiguous examples
 				ArrayList<String> seq1 = o1.getValue();
 				ArrayList<String> seq2 = o2.getValue();
+				
 				if (!isAmbiguous(patternS, seq1) && isAmbiguous(patternS, seq2)) {
 					return -1;
 				} else if (isAmbiguous(patternS, seq1) && !isAmbiguous(patternS, seq2)) {
@@ -72,30 +75,49 @@ public class PatternSampler {
 
 			private boolean isAmbiguous(ArrayList<String> pattern,
 					ArrayList<String> seq) {
-				// make a copy of seq
-				ArrayList<String> copy = new ArrayList<String>(seq);
-				
-				// strip all items in value that are not in pattern to reduce complexity
-				for(int i = copy.size() -1; i > 0; i--) {
-					if(!pattern.contains(copy.get(i))) {
-						copy.remove(i);
+				// make a copy of seq, remove all parentheses
+				ArrayList<String> seqCopy = new ArrayList<String>();
+				for(String s : seq) {
+					if(!s.equals("}")) {
+						seqCopy.add(s);
 					}
 				}
 				
-				SubsequenceCounter counter = new SubsequenceCounter(copy, pattern);
-				return counter.countMatches() > 1;
+				// make a copy of pattern, remove all parentheses
+				ArrayList<String> patternCopy = new ArrayList<String>();
+				for(String s : pattern) {
+					if(!s.equals("}")) {
+						patternCopy.add(s);
+					}
+				}
+				
+				// strip all items in value that are not in pattern to reduce complexity
+				for(int i = seqCopy.size() -1; i > 0; i--) {
+					if(!pattern.contains(seqCopy.get(i))) {
+						seqCopy.remove(i);
+					}
+				}
+				
+				SubsequenceCounter counter = new SubsequenceCounter(seqCopy, patternCopy);
+				int count = counter.countMatches();
+				return count > 1;
 			}
 			
 		});
-
+		
 		// get ids of all code examples that respect the sequence ordering and the guard condition
 		ArrayList<String> sampleIDs = new ArrayList<String>();
+		// store the sampled sequences to check for duplication
+		HashMap<ArrayList<String>, String> seq_id = new HashMap<ArrayList<String>, String>();
+		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
 		SAT sat = new SAT();
 		for (Map.Entry<String, ArrayList<String>> entry : sortedList) {
 			String id = entry.getKey();
+			ArrayList<String> seq = entry.getValue();
 			HashMap<String, ArrayList<String>> map = minerP.predicates.get(id);
 			if(map == null)  continue;
 			boolean flag = true;
+			// check guard conditions
 			for (APISeqItem item : pattern) {
 				if (!flag) {
 					break;
@@ -119,22 +141,93 @@ public class PatternSampler {
 					}
 				}
 			}
+			
 
 			if (flag) {
-				sampleIDs.add(id);
-				if(sampleIDs.size() == n) {
-					break;
+//				// check for if checks on return values
+//				boolean containIfCheck = false;
+//				for(int i = 0; i < pattern.size(); i++) {
+//					APISeqItem item = pattern.get(i);
+//					if(item == ControlConstruct.IF) {
+//						APISeqItem next = pattern.get(i+1);
+//						if(next == ControlConstruct.END_BLOCK) {
+//							containIfCheck = true;
+//							break;
+//						}
+//					}
+//				}
+//				
+//				if(containIfCheck) {
+//					// check if the if check checks the return value of the previous API call
+//					String theAPICall = null;
+//					ArrayList<String> temp = new ArrayList<String>(patternS);
+//					for(int i = 0; i < seq.size(); i ++) {
+//						String item = seq.get(i);
+//						String s = temp.get(0);
+//						if(item.equals(s)) {
+//							if(s.equals("IF {") && temp.get(1).equals("}")) {
+//								theAPICall = seq.get(i+1);
+//								break;
+//							} else {
+//								temp.remove(item);
+//							}
+//						}
+//						
+//						if(temp.isEmpty()) {
+//							break;
+//						}
+//					}
+//					
+//					if(theAPICall == null || !theAPICall.contains("(")) {
+//						continue;
+//					} else {
+//						boolean flag2 = false;
+//						String s = ProcessUtils.readRawSequenceById(id.replaceAll(" \\*\\* ", "!"), orgFile);
+//						if(s == null) {
+//							continue;
+//						}
+//						
+//						ArrayList<String> arr = ProcessUtils.splitByArrow(s);
+//						for(String item : arr) {
+//							if(item.contains("@")) {
+//								String[] ss = ProcessUtils.splitByAt(item);
+//								String api = ss[0];
+//								String predicate = ss[1];
+//								String apiName = theAPICall.substring(0, theAPICall.indexOf("("));
+//								if(api.contains(apiName) && (predicate.contains("!=null") || predicate.contains("!= null"))) {
+//									flag2 = true;
+//									break;
+//								}
+//							}
+//						}
+//						
+//						if(!flag2) {
+//							continue;
+//						}
+//					}
+//				} 
+				
+				if(seq_id.containsKey(seq)) {
+					// duplicate sequence
+					String sampledId = seq_id.get(seq);
+					int count = frequencies.get(sampledId);
+					frequencies.put(sampledId, count + 1);
+				} else {
+					// no duplicated sequences
+					sampleIDs.add(id);
+					seq_id.put(seq, id);
+					frequencies.put(id, 1);
+					if(sampleIDs.size() == n) {
+						break;
+					}
 				}
 			}
 		}
-
+		
 		// read the original file again to get the complete sequence of each
 		// sample
 		ArrayList<String> sample = new ArrayList<String>();
-		for(int i = 0; i < n; i ++) {
-			// initialize the list with null so that we can insert an element to anywhere we want without IndexOutOfBounds error 
-			sample.add(null);
-		}
+		HashMap<String, String> id_sample = new HashMap<String, String>();
 		File output = new File(orgFile);
 		try (BufferedReader br = new BufferedReader(new FileReader(output))) {
 			String line;
@@ -146,18 +239,15 @@ public class PatternSampler {
 						line.indexOf("][SEQ]"));
 				key = key.replaceAll("\\!", " ** ");
 				if (sampleIDs.contains(key)) {
-					sample.add(sampleIDs.indexOf(key), line);
+					id_sample.put(key, line.replace("[SEQ]", "[" + frequencies.get(key) + "]"));
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// post-process, remove all nulls from the sample list
-		for(int i = sample.size() - 1; i > -1; i--) {
-			if(sample.get(i) == null) {
-				sample.remove(i);
-			}
+		for(String id : sampleIDs) {
+			sample.add(id_sample.get(id));
 		}
 
 		return sample;

@@ -35,7 +35,7 @@ public class SubsequenceCounter {
 
 		int result = 0;
 
-		if (currSeqDigit == currSubseqDigit)
+		if (currSeqDigit.equals(currSubseqDigit))
 			result += tbl[seqDigitsLeft - 1][subseqDigitsLeft - 1];
 
 		result += tbl[seqDigitsLeft - 1][subseqDigitsLeft];

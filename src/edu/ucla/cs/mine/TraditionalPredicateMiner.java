@@ -91,7 +91,7 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 						}
 
 						// split by @
-						String[] ss = splitByAt(str);
+						String[] ss = ProcessUtils.splitByAt(str);
 						String predicate = null;
 						String item = ss[0];
 						if(ss[1].trim().isEmpty()) {
@@ -128,30 +128,6 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public String[] splitByAt(String s) {
-		ArrayList<String> ss = new ArrayList<String>();
-		String[] arr = s.split("@");
-		int index = 0;
-		for(int i = 0; i < arr.length; i++) {
-			String item = arr[i];
-			if(!ProcessUtils.isInQuote(s, index)) {
-				ss.add(item);
-			} else {
-				String last = ss.get(ss.size() - 1);
-				ss.remove(ss.size() - 1);
-				ss.add(last + "@" + item);
-			}
-			index += item.length() + 1;
-		}
-		
-		if(ss.size() == 1) {
-			ss.add("true");
-		}
-		
-		String[] arr2 = new String[ss.size()];
-		return ss.toArray(arr2);
 	}
 
 	public HashMap<String, ArrayList<String>> propagatePredicates(String expr, String original,

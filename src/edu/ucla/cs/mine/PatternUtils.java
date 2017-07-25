@@ -69,7 +69,7 @@ public class PatternUtils {
 		return seqs;
 	}
 	
-	public static ArrayList<String> extractSequenceWithoutGuardAndArgCount(ArrayList<APISeqItem> pattern) {
+	public static ArrayList<String> extractSequenceWithoutGuard(ArrayList<APISeqItem> pattern) {
 		ArrayList<String> patternS = new ArrayList<String>();
 		
 		for(APISeqItem item : pattern) {

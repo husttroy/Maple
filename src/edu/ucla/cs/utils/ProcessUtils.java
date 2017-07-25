@@ -1,5 +1,10 @@
 package edu.ucla.cs.utils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProcessUtils {
@@ -397,5 +402,48 @@ public class ProcessUtils {
 		}
 		
 		return list;
+	}
+	
+	public static String readRawSequenceById(String id, String path) {
+		String seq = null;
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(path)))){
+			String line = null;
+			while((line = br.readLine()) != null) {
+				if(line.contains(id)) {
+					seq = line.substring(line.indexOf("] =") + 3).trim();
+					break;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return seq;
+	}
+	
+	public static String[] splitByAt(String s) {
+		ArrayList<String> ss = new ArrayList<String>();
+		String[] arr = s.split("@");
+		int index = 0;
+		for(int i = 0; i < arr.length; i++) {
+			String item = arr[i];
+			if(!ProcessUtils.isInQuote(s, index)) {
+				ss.add(item);
+			} else {
+				String last = ss.get(ss.size() - 1);
+				ss.remove(ss.size() - 1);
+				ss.add(last + "@" + item);
+			}
+			index += item.length() + 1;
+		}
+		
+		if(ss.size() == 1) {
+			ss.add("true");
+		}
+		
+		String[] arr2 = new String[ss.size()];
+		return ss.toArray(arr2);
 	}
 }
