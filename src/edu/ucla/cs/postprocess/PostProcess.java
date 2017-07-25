@@ -17,7 +17,7 @@ public class PostProcess {
 		}
 		
 		for(File f : rootDir.listFiles()) {
-			if(!f.isDirectory()) {
+			if(!f.isDirectory() || !f.getName().equals("Activity.findViewById")) {
 				continue;
 			}
 			

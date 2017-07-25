@@ -68,7 +68,7 @@ public class ConstructURL {
 			String id = example.repo_url + " ** " + example.file_path;
 			String url = map.get(id);
 			if(url != null) {
-				s += "results[" + url + "][" + example.method_name + "] = " + example.seq.trim() + System.lineSeparator();
+				s += "results[" + url + "][" + example.method_name + "][" + example.frequency + "] = " + example.seq.trim() + System.lineSeparator();
 			}
 		}
 		
@@ -138,8 +138,9 @@ public class ConstructURL {
 					String file_path = ss[1];
 					String class_name = ss[2];
 					String method_name = ss[3];
-					String seq = line.substring(line.indexOf("][SEQ] =") + 8);
-					AbstractedExample example = new AbstractedExample(repo_url, file_path, class_name, method_name, seq);
+					int count = Integer.parseInt(line.substring(line.indexOf("][") + 2, line.indexOf("] =")));
+					String seq = line.substring(line.indexOf("] =") + 3);
+					AbstractedExample example = new AbstractedExample(repo_url, file_path, class_name, method_name, count, seq);
 					examples.add(example);				
 				}
 			}

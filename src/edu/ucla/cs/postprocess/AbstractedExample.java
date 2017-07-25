@@ -6,13 +6,15 @@ public class AbstractedExample {
 	public String class_name;
 	public String method_name;
 	public String seq;
+	public int frequency;
 	
-	public AbstractedExample(String repo_url, String file_path, String class_name, String method_name, String seq) {
+	public AbstractedExample(String repo_url, String file_path, String class_name, String method_name, int frequency, String seq) {
 		this.repo_url = repo_url;
 		this.file_path = file_path;
 		this.class_name = class_name;
 		this.method_name = method_name;
 		this.seq = seq;
+		this.frequency = frequency;
 	}
 	
 	@Override
