@@ -16,14 +16,14 @@ public class PostProcess {
 			return;
 		}
 		
-		for(File f : rootDir.listFiles()) {
-			if(!f.isDirectory() || !f.getName().equals("Activity.findViewById")) {
+		for(File f : rootDir.listFiles()) {			
+			if(!f.isDirectory()) {
 				continue;
 			}
 			
 			System.out.println("Processing " + f.getName());
 			for(File f2: f.listFiles()) {
-				if (f2.getName().startsWith("sample-")) {
+				if (f2.getName().startsWith("sample-") && !f2.getName().endsWith("~")) {
 					System.out.println("Processing " + f2.getName());
 					ConstructURL constructor = new ConstructURL(f2.getAbsolutePath());
 					constructor.construct();
@@ -33,7 +33,7 @@ public class PostProcess {
 	}
 	
 	public static void main(String[] args) {
-		String dir = "/home/troy/research/BOA/patterns";
+		String dir = "/media/troy/Disk2/Boa/sample";
 		PostProcess pp = new PostProcess(dir);
 		pp.updateExamplesWithValidURLs();
 	}
