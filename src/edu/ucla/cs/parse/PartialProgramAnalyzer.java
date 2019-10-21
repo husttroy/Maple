@@ -32,7 +32,21 @@ public class PartialProgramAnalyzer {
 		}
 	}
 	
-	public HashMap<String, ArrayList<APISeqItem>> retrieveAPICallSequences() {
+	public HashMap<String, ArrayList<APISeqItem>> retrieveAPICallSequencesClassLevel() {
+		if (this.cu == null) {
+			return null;
+		}
+		
+		APICallVisitorInClassLevel v = new APICallVisitorInClassLevel();
+		this.cu.accept(v);
+		
+		HashMap<String, ArrayList<APISeqItem>> seqs = new HashMap<String, ArrayList<APISeqItem>>();
+		
+		seqs.put("class", v.seq);
+		return seqs;
+	}
+	
+	public HashMap<String, ArrayList<APISeqItem>> retrieveAPICallSequencesMethodLevel() {
 		if (this.cu == null) {
 			return null;
 		}
@@ -42,7 +56,7 @@ public class PartialProgramAnalyzer {
 		return mv.seqs;
 	}
 	
-	public ArrayList<ArrayList<APISeqItem>> retrieveAPICallSequences(HashSet<String> apis) {
+	public ArrayList<ArrayList<APISeqItem>> retrieveAPICallSequencesMethodLevel(HashSet<String> apis) {
 		if (this.cu == null) {
 			return null;
 		}
@@ -81,6 +95,6 @@ public class PartialProgramAnalyzer {
 		String sample = "/home/troy/research/BOA/Maple/example/sample.txt";
 		String snippet = FileUtils.readFileToString(sample);
 		PartialProgramAnalyzer a = new PartialProgramAnalyzer(snippet);
-		System.out.println(a.retrieveAPICallSequences());	
+		System.out.println(a.retrieveAPICallSequencesMethodLevel());	
 	}
 }

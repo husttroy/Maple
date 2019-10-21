@@ -3,8 +3,8 @@ package edu.ucla.cs.parse;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
@@ -13,11 +13,13 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
@@ -57,6 +59,7 @@ public class APICallVisitor extends ASTVisitor {
 		for(String exit : exits) {
 			path_condition += " && !(" + exit + ")";
 		}
+		
 		seq.add(new APICall(node.getName().toString(), path_condition, receiver, arguments));
 
 		return false;
@@ -90,16 +93,36 @@ public class APICallVisitor extends ASTVisitor {
 		// list
 		List<Expression> args = node.arguments();
 		ArrayList<String> arguments = new ArrayList<String>();
-		for (Expression arg : args) {
-			arguments.add(arg.toString());
-			arg.accept(this);
+		if(args.isEmpty()) {
+			// check if the argument is an anonymous class
+			AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration();
+			if(decl != null) {
+				arguments.add("anonymous");
+				node.getAnonymousClassDeclaration().accept(this);
+			}
+		} else {
+			for (Expression arg : args) {
+				arguments.add(arg.toString());
+				arg.accept(this);
+			}
 		}
+		
 		
 		String path_condition = condition;
 		for(String exit : exits) {
 			path_condition += " && !(" + exit + ")";
 		}
-		seq.add(new APICall("new " + node.getType().toString(), path_condition, null, arguments));
+		
+		Type t  = node.getType();
+		if(t.isParameterizedType()) {
+			ParameterizedType pt = (ParameterizedType) t;
+			t = pt.getType();
+		}
+		String tS = t.toString();
+		if(tS.contains(".")) {
+			tS = tS.substring(tS.lastIndexOf('.') + 1);
+		}
+		seq.add(new APICall("new " + tS, path_condition, null, arguments));
 
 		return false;
 	}
@@ -220,7 +243,7 @@ public class APICallVisitor extends ASTVisitor {
 		String oldCond = condition;
 		if (oldCond.equals("true")) {
 			String s = expr.toString();
-			if(s.contains("keySet()")) {
+			if(s.contains("keySet()") && !s.equals("keySet()")) {
 				String rcv = s.substring(0, s.indexOf("keySet()") - 1);
 				String arg = node.getParameter().getName().toString();
 				condition = rcv + ".containsKey(" + arg + ") && " + rcv + ".size() > 0";

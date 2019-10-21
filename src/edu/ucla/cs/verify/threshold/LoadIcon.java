@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class LoadIcon {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/ApplicationInfo.loadIcon/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/ApplicationInfo.loadIcon/3/large-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("TRY {");
 		pattern.add("loadIcon(1)");

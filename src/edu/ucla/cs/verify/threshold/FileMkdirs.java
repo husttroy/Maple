@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class FileMkdirs {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/File.mkdir/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/File.mkdir/Small/small-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("mkdirs(0)");
 		

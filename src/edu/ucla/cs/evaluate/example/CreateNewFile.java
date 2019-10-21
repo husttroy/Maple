@@ -3,7 +3,7 @@ package edu.ucla.cs.evaluate.example;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import edu.ucla.cs.main.Maple;
+import edu.ucla.cs.check.Maple;
 
 public class CreateNewFile {
 	public static void main(String[] args) {

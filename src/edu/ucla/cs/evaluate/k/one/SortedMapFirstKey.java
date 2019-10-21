@@ -20,7 +20,7 @@ public class SortedMapFirstKey {
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.5, size, 0.06);
+				raw_output, seq, queries, 1, size, 0.0077);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}

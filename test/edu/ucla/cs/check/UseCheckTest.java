@@ -7,7 +7,6 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import edu.ucla.cs.main.Utils;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;

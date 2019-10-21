@@ -1,4 +1,4 @@
-package edu.ucla.cs.main;
+package edu.ucla.cs.check;
 
 import java.util.ArrayList;
 import java.util.HashMap;

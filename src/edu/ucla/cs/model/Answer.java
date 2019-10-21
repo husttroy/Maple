@@ -17,6 +17,8 @@ public class Answer {
 	public int buggy_seq_count = 0;
 	
 	public boolean containsIncompleteSnippet = false;
+	
+	public ArrayList<String> snippets = new ArrayList<String>();
 
 	public Answer(String id, String parentId, String body, String score,
 			String isAccepted, String tags, String viewCount) {

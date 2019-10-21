@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class SimpleDateFormat {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/SimpleDateFormat.new/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/SimpleDateFormat.new/Small/small-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("new SimpleDateFormat(2)");
 		

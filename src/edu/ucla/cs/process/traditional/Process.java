@@ -70,8 +70,17 @@ public class Process {
 		
 		public static void main(String[] args) {
 			Process p = new Process();
-			String seq = "/home/troy/research/BOA/example/String.getBytes/1/large-sequence.txt";
+			String seq = "/home/troy/research/BOA/example/RandomFileAccess.write/NO/large-sequence.txt";
 			try {
+				File f_seq = new File(seq);
+				String dir = f_seq.getParent();
+				File output = new File(dir + File.separator + "/large-output.txt");
+				
+				if(output.exists()) {
+					output.delete();
+					output.createNewFile();
+				}
+				
 				p.s = new SequenceProcessor();
 				p.processByLine(seq);
 				
@@ -84,15 +93,6 @@ public class Process {
 //				}
 				
 				// write to file
-				File f_seq = new File(seq);
-				String dir = f_seq.getParent();
-				File output = new File(dir + File.separator + "/large-output.txt");
-				
-				if(output.exists()) {
-					output.delete();
-					output.createNewFile();
-				}
-				
 				try (FileWriter fw = new FileWriter(output, true)) {
 					int size = methods.keySet().size();
 					int count = 0;

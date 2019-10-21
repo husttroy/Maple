@@ -136,10 +136,10 @@ public class APICount {
 
 		});
 
-		String output = "/home/troy/research/BOA/api_count.txt";
+		String output = "/home/troy/research/BOA/api_count_no_constructor.txt";
 		for (Entry<String, Integer> entry : sortedList) {
 			FileUtils.appendStringToFile(
-					entry.getKey() + "," + entry.getValue(), output);
+					entry.getKey() + "," + entry.getValue() + System.lineSeparator(), output);
 		}
 	}
 }
@@ -271,23 +271,23 @@ class MethodCallCollector extends ASTVisitor {
 		return true;
 	}
 
-	@Override
-	public boolean visit(ClassInstanceCreation node) {
-		Type t = node.getType();
-		if (t.isParameterizedType()) {
-			ParameterizedType pt = (ParameterizedType) t;
-			t = pt.getType();
-		}
-
-		String methodCall = "new " + t;
-		if (count.containsKey(methodCall)) {
-			count.put(methodCall, count.get(methodCall) + 1);
-		} else {
-			count.put(methodCall, 1);
-		}
-
-		return true;
-	}
+//	@Override
+//	public boolean visit(ClassInstanceCreation node) {
+//		Type t = node.getType();
+//		if (t.isParameterizedType()) {
+//			ParameterizedType pt = (ParameterizedType) t;
+//			t = pt.getType();
+//		}
+//
+//		String methodCall = "new " + t;
+//		if (count.containsKey(methodCall)) {
+//			count.put(methodCall, count.get(methodCall) + 1);
+//		} else {
+//			count.put(methodCall, 1);
+//		}
+//
+//		return true;
+//	}
 
 	@Override
 	public boolean visit(SuperMethodInvocation node) {

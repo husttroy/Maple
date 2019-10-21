@@ -27,7 +27,7 @@ public class BatchSampler {
 		File rootDir = new File(rootPath);
 		for(File apiDir : rootDir.listFiles()) {
 			String apiName = apiDir.getName();
-			if(!apiName.equals("EditText.setText")) continue;
+//			if(!apiName.equals("JsonElement.getAsString")) continue;
 			new File(outputDir.getAbsolutePath() + File.separator + apiName).mkdirs();
 			
 			// read previously learned API usage patterns from the patterns.txt and then sample

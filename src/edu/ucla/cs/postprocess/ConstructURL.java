@@ -17,8 +17,8 @@ public class ConstructURL {
 	String path;
 	ArrayList<AbstractedExample> examples;
 
-	final String template_path = "/home/troy/research/BOA/Maple/boa/template/url.boa";
-	final String output_dir = "/home/troy/research/BOA/Maple/boa/output";
+	final String template_path = "/home/troy/SO-Empirical-Study/code/Maple/boa/template/url.boa";
+	final String output_dir = "/home/troy/SO-Empirical-Study/code/Maple/boa/output";
 
 	public ConstructURL(String path) {
 		this.path = path;

@@ -19,7 +19,7 @@ public class MapleClient {
 	final String username = "husttroy";
 	final String password = "5887526";
 	
-	public void run(String script, String output_dir) {
+	public int run(String script, String output_dir) {
 		try (final BoaClient client = new BoaClient()) {
 			   client.login(username, password);
 
@@ -28,19 +28,16 @@ public class MapleClient {
 			   
 			   if(dataset == null) {
 				   System.err.println("Requested Boa dataset does not exist!");
-				   return;
+				   return -1;
 			   }
 			   
-			   byte[] encoded = Files.readAllBytes(Paths.get(script));
-			   String query = new String(encoded, Charset.defaultCharset());
-			   
 			   // submit the query
-			   JobHandle job = client.query(query, dataset);
+			   JobHandle job = client.query(script, dataset);
 			   
 			   CompileStatus cstatus = job.getCompilerStatus();
 			   while (cstatus == CompileStatus.RUNNING || cstatus == CompileStatus.WAITING) {
 				   cstatus = client.getJob(job.getId()).getCompilerStatus();
-				   System.out.println("Compilation Status: " + cstatus);
+				   //System.out.println("Compilation Status: " + cstatus);
 			   }
 			   
 			   if (cstatus == CompileStatus.ERROR) {
@@ -49,18 +46,18 @@ public class MapleClient {
 				   for(String error : errors) {
 					   System.err.println(error);
 				   }
-				   return;
+				   return -1;
 			   }
 			   			   
 			   ExecutionStatus estatus = job.getExecutionStatus();
 			   while (estatus == ExecutionStatus.RUNNING || estatus == ExecutionStatus.WAITING) {
 				   estatus = client.getJob(job.getId()).getExecutionStatus();
-				   System.out.println("Execution Status: " + estatus);
+				   //System.out.println("Execution Status: " + estatus);
 			   }
 			   
 			   if (estatus == ExecutionStatus.ERROR) {
 				   System.err.println("Execution Error!");
-				   return;
+				   return -1;
 			   }
 			   
 			   File oFile = new File(output_dir + "/output-" + job.getId() + ".txt");
@@ -71,6 +68,8 @@ public class MapleClient {
 			   
 			   // dump the output to the given output directory
 			   job.getOutput(oFile);
+			   
+			   return job.getId();
 		} catch (NotLoggedInException e) {
 			e.printStackTrace();
 		} catch (BoaException e) {
@@ -78,10 +77,15 @@ public class MapleClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return -1;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		MapleClient client = new MapleClient();
-		client.run("/home/troy/research/BOA/Maple/boa/template/url.boa", "/home/troy/research/BOA/Maple/boa/output");
+		final String script = "/home/troy/research/BOA/Maple/boa/template/url.boa";
+		byte[] encoded = Files.readAllBytes(Paths.get(script));
+		String query = new String(encoded, Charset.defaultCharset());
+		client.run(query, "/home/troy/research/BOA/Maple/boa/output");
 	}
 }

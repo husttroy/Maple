@@ -62,7 +62,7 @@ public class TraditionalPredicateMinerTest {
 		assertEquals(expected1, predicates1);
 		ArrayList<String> predicates2 = map.get("getBytes(0)");
 		ArrayList<String> expected2 = new ArrayList<String>();
-		expected2.add("true && !rcv.exists()");
+		expected2.add("!rcv.exists()");
 		assertEquals(expected2, predicates2);
 	}
 	
@@ -101,7 +101,7 @@ public class TraditionalPredicateMinerTest {
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
-		expected1.add("rcv.hasMoreTokens() && true");
+		expected1.add("rcv.hasMoreTokens()");
 		assertEquals(expected1, predicates.get("nextToken(0)"));
 		assertEquals(null, predicates.get("println"));
 	}
@@ -115,7 +115,7 @@ public class TraditionalPredicateMinerTest {
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected1 = new ArrayList<String>();
-		expected1.add("true && rcv.hasMoreTokens() && true");
+		expected1.add("rcv.hasMoreTokens()");
 		assertEquals(expected1, predicates.get("nextToken(0)"));
 		assertEquals(null, predicates.get("TL1Line(1)"));
 		assertEquals(null, predicates.get("trim(0)"));
@@ -173,7 +173,7 @@ public class TraditionalPredicateMinerTest {
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern, "", "");
 		HashMap<String, ArrayList<String>> predicates = pm.propagatePredicates(expr, expr, predicate);
 		ArrayList<String> expected = new ArrayList<String>();
-		expected.add("true && rcv.hasMoreTokens()");
+		expected.add("rcv.hasMoreTokens()");
 		assertEquals(expected, predicates.get("nextToken(0)"));
 		assertEquals(null, predicates.get("copyDocFiles"));
 	}
@@ -220,6 +220,15 @@ public class TraditionalPredicateMinerTest {
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
 		String rcv = pm.getReceiver(expr, api);
 		assertEquals("((File) value)", rcv);
+	}
+	
+	@Test
+	public void testExtractReceiverOfMethodCallInArgumentList() {
+		String expr = "color=new Color(Display.getCurrent(),rgb,)";
+		String api = "getCurrent";
+		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(new ArrayList<String>(), "", "");
+		String rcv = pm.getReceiver(expr, api);
+		assertEquals("Display", rcv);
 	}
 	
 	@Test

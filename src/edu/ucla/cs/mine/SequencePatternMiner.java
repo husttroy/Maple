@@ -80,7 +80,7 @@ public abstract class SequencePatternMiner {
 	protected boolean isLingering(ArrayList<String> pattern) {
 		for(int i = 0; i < pattern.size(); i++) {
 			String item = pattern.get(i);
-			if(item.equals("ELSE {") || item.equals("CATCH {")) {
+			if(item.equals("ELSE {") || item.contains("CATCH")) {
 				if(i == 0) {
 					return true;
 				} else {

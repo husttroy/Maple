@@ -360,4 +360,20 @@ public class SATTest {
 		SAT sat = new SAT();
 		assertFalse(sat.checkEquivalence("rcv.next() && true", "rcv.next()==candidate && rcv.hasNext()"));
 	}
+	
+	@Test
+	public void testStripOffStringLiteralsAndStringConcatenations() {
+		String expr = "rcv!=null && rcv.matches(\"^[\\\\\\\"\\\\'].*\",)";
+		SAT sat = new SAT();
+		String out = sat.stripOffStringLiteralsAndStringConcatenations(expr);
+		assertEquals("rcv!=null && rcv.matches(,)", out);
+	}
+	
+	@Test
+	public void testStripOffStringLiteralsAndStringConcatenations2() {
+		String expr = "rcv!=null && rcv.matches(\".*[\\\\\\\"\\\\']$\",)";
+		SAT sat = new SAT();
+		String out = sat.stripOffStringLiteralsAndStringConcatenations(expr);
+		assertEquals("rcv!=null && rcv.matches(,)", out);
+	}
 }

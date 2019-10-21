@@ -3,18 +3,18 @@ package edu.ucla.cs.evaluate.manual;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import edu.ucla.cs.main.AnomalyDetection;
+import edu.ucla.cs.check.APIMisuseDetection;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
 
-public class CreateNewFile {
+public class FileCreateNewFile {
 	public static void main(String[] args) {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(new APICall("createNewFile", "!rcv.exists()", 0));
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("createNewFile(0)", "true", 0));
+		pattern2.add(new APICall("createNewFile", "true", 0));
 		pattern2.add(ControlConstruct.IF);
 		pattern2.add(ControlConstruct.END_BLOCK);
 		
@@ -28,7 +28,7 @@ public class CreateNewFile {
 		apis.add("createNewFile(0)");
 		queries.add(apis);
 		
-		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);
+		APIMisuseDetection detect = new APIMisuseDetection(types, queries, patterns);
 		detect.run();
 	}
 }

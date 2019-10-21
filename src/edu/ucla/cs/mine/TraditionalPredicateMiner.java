@@ -300,6 +300,14 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 					receiver = receiver.substring(receiver.indexOf(')') + 1);
 					receiver = receiver.trim();
 				}
+				
+				if(!ProcessUtils.isBalanced(receiver)) {
+					// truncate the expression starting from the first unbalanced open parenthesis
+					int pos = ProcessUtils.findFirstUnbalancedOpenParenthesis(receiver);
+					if(pos != -1) {
+						receiver = receiver.substring(pos + 1);
+					}
+				}
 				receiver = SAT.stripUnbalancedParentheses(receiver);
 			}
 		}
@@ -332,13 +340,13 @@ public class TraditionalPredicateMiner extends PredicatePatternMiner {
 
 	public static void main(String[] args) {
 		ArrayList<String> pattern = new ArrayList<String>();
-		pattern.add("dismiss(0)");
-		String path = "/home/troy/research/BOA/Maple/example/ProgressDialog.dismiss/large-sequence.txt";
-		String sequence_path = "/home/troy/research/BOA/Maple/example/ProgressDialog.dismiss/large-output.txt";
+		pattern.add("get(1)");
+		String path = "/home/troy/research/BOA/example/HashMap.get/1/large-sequence-new.txt";
+		String sequence_path = "/home/troy/research/BOA/example/HashMap.get/1/large-output.txt";
 		TraditionalPredicateMiner pm = new TraditionalPredicateMiner(pattern,
 				path, sequence_path);
 		pm.process();
-		int min_support = (int) (0.05 * 9818);
+		int min_support = (int) (0.04 * 43769);
 		HashMap<String, HashMap<String, Integer>> predicates = pm.find_the_most_common_predicate(min_support);
 		for(String api : predicates.keySet()) {
 			System.out.println(api);

@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import edu.ucla.cs.mine.SequencePatternVerifier;
 import edu.ucla.cs.utils.FileUtils;
 
-public class RandomFileAccessRead {
+public class RandomAccessFileRead {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/RandomFileAccess.read/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/RandomAccessFile.read/INF/large-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
-		pattern1.add("read(0)");
+		pattern1.add("read(1)");
 		pattern1.add("close(0)");
 		
 		int size = FileUtils.countLines(seq_output);

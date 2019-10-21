@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import edu.ucla.cs.main.Utils;
+import edu.ucla.cs.check.UseChecker;
+import edu.ucla.cs.check.Utils;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
@@ -84,7 +85,7 @@ public class CountUnreliableSnippets {
 		pattern1.add(new APICall("createNewFile", "!rcv.exists()", 0));
 		
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("createNewFile(0)", "true", 0));
+		pattern2.add(new APICall("createNewFile", "true", 0));
 		pattern2.add(ControlConstruct.IF);
 		pattern2.add(ControlConstruct.END_BLOCK);
 		
@@ -154,13 +155,8 @@ public class CountUnreliableSnippets {
 		pattern1.add(new APICall("write", "true", 1));
 		pattern1.add(new APICall("close", "true", 0));
 		
-		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("write", "true", 1));
-		pattern2.add(new APICall("force", "true", 0));
-		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
-		patterns.add(pattern2);
 		
 		detectAPIMisuse(result, patterns);
 	}
@@ -228,19 +224,14 @@ public class CountUnreliableSnippets {
 		HashSet<Answer> result = search.search(types, queries);
 		
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("put", "true", 2));
-		pattern1.add(new APICall("firstKey", "true", 0));
-		
-		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("firstKey", "!rcv.isEmpty()", 0));
+		pattern1.add(new APICall("firstKey", "!rcv.isEmpty()", 0));
 				
-		ArrayList<APISeqItem> pattern3 = new ArrayList<APISeqItem>();
-		pattern3.add(new APICall("firstKey", "rcv.size() > 0", 0));
+		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
+		pattern2.add(new APICall("firstKey", "rcv.size() > 0", 0));
 			
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
 		patterns.add(pattern2);
-		patterns.add(pattern3);
 		
 		detectAPIMisuse(result, patterns);
 	}
@@ -328,13 +319,13 @@ public class CountUnreliableSnippets {
 		types.add("InputStream");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("read(0)");
+		apis.add("read(1)");
 		queries.add(apis);
 		
 		HashSet<Answer> result = search.search(types, queries);
 		
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("read", "true", 0));
+		pattern1.add(new APICall("read", "true", 1));
 		pattern1.add(new APICall("close", "true", 0));
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
@@ -356,7 +347,7 @@ public class CountUnreliableSnippets {
 		HashSet<Answer> result = search.search(types, queries);
 		
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
-		pattern1.add(new APICall("getAsString", "!rcv.isJsonNull() || rcv.isJsonPrimitive()", 0));
+		pattern1.add(new APICall("getAsString", "rcv.isJsonPrimitive()", 0));
 		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
@@ -379,13 +370,8 @@ public class CountUnreliableSnippets {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(new APICall("get", "arg0 < rcv.size()", 1));
 		
-		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("add", "true", 1));
-		pattern2.add(new APICall("get", "true", 1));
-		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
-		patterns.add(pattern2);
 		
 		detectAPIMisuse(result, patterns);
 	}
@@ -467,10 +453,16 @@ public class CountUnreliableSnippets {
 		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
 		pattern2.add(new APICall("doFinal", "true", 1));
 		pattern2.add(new APICall("new String", "true", 2));
+		
+		ArrayList<APISeqItem> pattern3 = new ArrayList<APISeqItem>();
+		pattern3.add(new APICall("doFinal", "true", 1));
+		pattern3.add(new APICall("encodeBase64", "true", 1));
+		pattern3.add(new APICall("new String", "true", 1));
 			
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
 		patterns.add(pattern2);
+		patterns.add(pattern3);
 		
 		detectAPIMisuse(result, patterns);
 	}
@@ -513,13 +505,8 @@ public class CountUnreliableSnippets {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(new APICall("next", "rcv.hasNext()", 0));
 		
-		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
-		pattern2.add(new APICall("add", "true", 1));
-		pattern2.add(new APICall("next", "true", 0));
-		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
-		patterns.add(pattern2);
 		
 		detectAPIMisuse(result, patterns);
 	}
@@ -539,8 +526,12 @@ public class CountUnreliableSnippets {
 		ArrayList<APISeqItem> pattern1 = new ArrayList<APISeqItem>();
 		pattern1.add(new APICall("nextToken", "rcv.hasMoreTokens()", 0));
 		
+		ArrayList<APISeqItem> pattern2 = new ArrayList<APISeqItem>();
+		pattern2.add(new APICall("nextToken", "rcv.hasMoreElements()", 0));
+		
 		HashSet<ArrayList<APISeqItem>> patterns = new HashSet<ArrayList<APISeqItem>>();
 		patterns.add(pattern1);
+		patterns.add(pattern2);
 		
 		detectAPIMisuse(result, patterns);
 	}

@@ -2,18 +2,18 @@ package edu.ucla.cs.verify.threshold;
 
 import java.util.ArrayList;
 
-import edu.ucla.cs.mine.PreconditionVerifier;
+import edu.ucla.cs.mine.PredicateVerifier;
 import edu.ucla.cs.mine.SequencePatternVerifier;
 import edu.ucla.cs.utils.FileUtils;
 
 public class HashMapGet {
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sequence-sample.txt";
-		String seq_output = "/home/troy/research/BOA/Maple/example/HashMap.get/large-sample-output.txt";
+		String raw_output = "/home/troy/research/BOA/example/HashMap.get/Small/small-sequence.txt";
+		String seq_output = "/home/troy/research/BOA/example/HashMap.get/Small/small-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("get(1)");
 		int size = FileUtils.countLines(seq_output);
-				
+			
 		// verify sequence
 		pattern.add("IF {");
 		pattern.add("}");
@@ -25,8 +25,8 @@ public class HashMapGet {
 		pattern.remove(1);
 		 
 		// verify precondition
-		PreconditionVerifier pv2 = new PreconditionVerifier(raw_output, seq_output, pattern);
-		int count = pv2.verify("get(1)", "rcv.containsKey()");
+		PredicateVerifier pv2 = new PredicateVerifier(raw_output, seq_output, pattern);
+		int count = pv2.verify("get(1)", "rcv.containsKey(arg0,)");
 		double r2 = ((double) count) / size;
 		System.out.println("precondition threshold: " + r2);			
 	}

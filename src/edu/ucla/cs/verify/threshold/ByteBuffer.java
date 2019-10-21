@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class ByteBuffer {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/ByteBuffer.getInt/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/ByteBuffer.getInt/2/large-output.txt";
 		ArrayList<String> pattern0 = new ArrayList<String>();
 		pattern0.add("put(1)");
 		pattern0.add("getInt(0)");

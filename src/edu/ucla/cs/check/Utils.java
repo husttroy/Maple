@@ -1,14 +1,14 @@
-package edu.ucla.cs.main;
+package edu.ucla.cs.check;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import edu.ucla.cs.check.UseChecker;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
 import edu.ucla.cs.model.Violation;
 import edu.ucla.cs.model.ViolationType;
+import edu.ucla.cs.utils.FileUtils;
 
 public class Utils {
 	/**
@@ -45,6 +45,36 @@ public class Utils {
 		System.out.println("Missing API Call: " + miss_api.size());
 		System.out.println("Disorder API Call: " + disorder_api.size());
 		System.out.println("Incorrect Predicates: " + wrong_precondition.size());
+	}
+	
+	public static void classify(
+			HashMap<Answer, ArrayList<Violation>> violations, String output) {
+		HashSet<Answer> miss_structure = new HashSet<Answer>();
+		HashSet<Answer> disorder_structure = new HashSet<Answer>();
+		HashSet<Answer> miss_api = new HashSet<Answer>();
+		HashSet<Answer> disorder_api = new HashSet<Answer>();
+		HashSet<Answer> wrong_precondition = new HashSet<Answer>();
+		for(Answer a : violations.keySet()) {
+			for(Violation v : violations.get(a)) {
+				if(v.type.equals(ViolationType.MissingStructure)) {
+					miss_structure.add(a);
+				} else if (v.type.equals(ViolationType.DisorderStructure)) {
+					disorder_structure.add(a);
+				} else if (v.type.equals(ViolationType.MissingMethodCall)) {
+					miss_api.add(a);
+				} else if (v.type.equals(ViolationType.DisorderMethodCall)) {
+					disorder_api.add(a);
+				} else if (v.type.equals(ViolationType.IncorrectPrecondition)) {
+					wrong_precondition.add(a);
+				}
+			}
+		}
+		
+		FileUtils.appendStringToFile("Missing Control-flow Structure: " + miss_structure.size() + System.lineSeparator(), output);
+		FileUtils.appendStringToFile("Disorder Control-flow Structure: " + disorder_structure.size() + System.lineSeparator(), output);
+		FileUtils.appendStringToFile("Missing API Call: " + miss_api.size() + System.lineSeparator(), output);
+		FileUtils.appendStringToFile("Disorder API Call: " + disorder_api.size() + System.lineSeparator(), output);
+		FileUtils.appendStringToFile("Incorrect Predicates: " + wrong_precondition.size() + System.lineSeparator(), output);
 	}
 	
 	/**

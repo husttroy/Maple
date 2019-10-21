@@ -3,14 +3,12 @@ package edu.ucla.cs.check;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import edu.ucla.cs.mine.PredicatePatternMiner;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
 import edu.ucla.cs.model.ControlConstruct;
-import edu.ucla.cs.model.MethodCall;
 import edu.ucla.cs.model.Violation;
 import edu.ucla.cs.model.ViolationType;
 import edu.ucla.cs.utils.SAT;
@@ -27,6 +25,11 @@ public class UseChecker {
 			HashSet<ArrayList<APISeqItem>> patterns, HashSet<Answer> answers) {
 		HashMap<Answer, ArrayList<Violation>> violations = new HashMap<Answer, ArrayList<Violation>>();
 		for (Answer answer : answers) {
+			if(answer.id == 17454006) {
+				// hanging on this post
+				continue;
+			}
+			System.out.println("Processing https://stackoverflow.com/questions/" + answer.id);
 			for (ArrayList<APISeqItem> seq : answer.seq.values()) {
 				ArrayList<Violation> vios = validate(patterns, seq);
 				if(vios != null && !vios.isEmpty()) {
@@ -69,7 +72,7 @@ public class UseChecker {
 		HashMap<ArrayList<APISeqItem>, ArrayList<APISeqItem>> closest_pattern_common = new HashMap<ArrayList<APISeqItem>, ArrayList<APISeqItem>>();
 		int diff = Integer.MAX_VALUE;
 		for(ArrayList<APISeqItem> pattern : patterns) {
-			// compute the longest common subseqeunce
+			// compute the longest common subsequence
 			ArrayList<APISeqItem> lcs = LCS(pattern, seq);
 			
 			// find the most similar pattern
@@ -193,7 +196,15 @@ public class UseChecker {
 	        		if (item1 instanceof APICall) {
 	        			APICall call1 = (APICall)item1;
 	        			APICall call2 = (APICall)item2;
-	        			if(call1.name.equals(call2.name)) {
+	        			String name1 = call1.name;
+	        			String name2 = call2.name;
+	        			
+	        			if(!name1.equals("getBytes(1)") && !name2.equals("getBytes(1)")) {
+	        				// an additional check to filter some potential false positive violations related to overriding method calls except in the String.getBytes API call
+	        				name1 = name1.substring(0, name1.indexOf('('));
+	        				name2 = name2.substring(0, name2.indexOf('('));
+	        			}
+	        			if(name1.equals(name2)) {
 	        				lengths[i+1][j+1] = lengths[i][j] + 1;
 	        			} else {
 	        				lengths[i+1][j+1] =

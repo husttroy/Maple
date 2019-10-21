@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class ProcessUtils {
 //	public static ArrayList<String> splitByArrow(String s) {
@@ -246,6 +247,76 @@ public class ProcessUtils {
 		// do not find the first unbalanced close parenthesis
 		return -1;
 	}
+	
+	public static int findFirstUnbalancedOpenParenthesis(String expr) {
+		boolean inSingleQuote = false;
+		boolean inDoubleQuote = false;
+		Stack<Integer> stack = new Stack<Integer>();
+		char[] chars = expr.toCharArray();
+		for(int i = 0; i < chars.length; i++) {
+			char cur = chars[i];
+			if(cur == '"' && i > 0 && chars[i-1] == '\\') {
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// double quote ends
+					inDoubleQuote = false;
+				} else {
+					// escape quote, not the end of the quote
+				}
+			} else if(cur == '"' && !inSingleQuote && !inDoubleQuote) {
+				// double quote starts
+				inDoubleQuote = true;
+			} else if(cur == '\'' && !inSingleQuote && !inDoubleQuote) {
+				// single quote starts
+				inSingleQuote = true;
+			} else if (cur == '\'' && i > 0 && chars[i-1] == '\\') {
+				// count the number of backslashes
+				int count = 0;
+				while(i - count - 1 >= 0) {
+					if(chars[i - count - 1] == '\\') {
+						count ++;
+					} else {
+						break;
+					}
+				} 
+				if(count % 2 == 0) {
+					// escape one or more backslashes instead of this quote, end of quote
+					// single quote ends
+					inSingleQuote = false;
+				} else {
+					// escape single quote, not the end of the quote
+				}
+			} else if(cur == '"' && !inSingleQuote && inDoubleQuote) {
+				// double quote ends
+				inDoubleQuote = false;
+			} else if (cur == '\'' && inSingleQuote && !inDoubleQuote) {
+				// single quote ends
+				inSingleQuote = false;
+			} else if (inSingleQuote || inDoubleQuote) {
+				// ignore all parentheses in quote
+			} else if (cur == '(') {
+				stack.push(i);
+			} else if (cur == ')') {
+				stack.pop();
+			}
+		}
+		
+		// do not find the first unbalanced close parenthesis
+		if(!stack.isEmpty()) {
+			return stack.pop();
+		} else {
+			return -1;
+		}
+	}
 
 	public static boolean isInQuote(String s, int index) {
 		if(s.contains("\"") || s.contains("'")) {
@@ -445,5 +516,37 @@ public class ProcessUtils {
 		
 		String[] arr2 = new String[ss.size()];
 		return ss.toArray(arr2);
+	}
+	
+	public static boolean isAnnotatedWithType(String s) {
+		if(!s.contains(":")) {
+			return false;
+		}
+		
+		int index = s.lastIndexOf(':');
+		for(int i = index + 1; i < s.length(); i++) {
+			char c = s.charAt(index);
+			if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '[' || c == ']' || c == '<' || c == '>') {
+				continue;
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public static ArrayList<String> stripOffArguments(ArrayList<String> pattern) {
+		ArrayList<String> patternWithoutArguments = new ArrayList<String>();
+		for(String element : pattern) {
+			if(element.contains("(") && element.contains(")")) {
+				// this is an API call
+				String apiName = element.substring(0, element.indexOf('('));
+				patternWithoutArguments.add(apiName);
+			} else {
+				patternWithoutArguments.add(element);
+			}
+		}
+		return patternWithoutArguments;
 	}
 }

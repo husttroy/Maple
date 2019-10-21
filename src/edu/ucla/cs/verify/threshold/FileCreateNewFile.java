@@ -2,14 +2,14 @@ package edu.ucla.cs.verify.threshold;
 
 import java.util.ArrayList;
 
-import edu.ucla.cs.mine.PreconditionVerifier;
+import edu.ucla.cs.mine.PredicateVerifier;
 import edu.ucla.cs.mine.SequencePatternVerifier;
 import edu.ucla.cs.utils.FileUtils;
 
 public class FileCreateNewFile {
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-sequence.txt";
-		String seq_output = "/home/troy/research/BOA/Maple/example/File.createNewFile/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/example/File.createNewFile/Small/small-sequence.txt";
+		String seq_output = "/home/troy/research/BOA/example/File.createNewFile/Small/small-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("createNewFile(0)");
 		int size = FileUtils.countLines(seq_output);
@@ -25,7 +25,7 @@ public class FileCreateNewFile {
 		pattern.remove(1);
 		 
 		// verify precondition
-		PreconditionVerifier pv2 = new PreconditionVerifier(raw_output, seq_output, pattern);
+		PredicateVerifier pv2 = new PredicateVerifier(raw_output, seq_output, pattern);
 		int count = pv2.verify("createNewFile(0)", "!rcv.exists()");
 		double r2 = ((double) count) / size;
 		System.out.println("precondition threshold: " + r2);			

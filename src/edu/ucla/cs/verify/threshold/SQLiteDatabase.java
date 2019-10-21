@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class SQLiteDatabase {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/SQLiteDatabase.query/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/SQLiteDatabase.query/Small/small-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("query(7)");
 		pattern1.add("close(0)");

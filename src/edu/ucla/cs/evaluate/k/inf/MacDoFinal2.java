@@ -29,5 +29,6 @@ public class MacDoFinal2 {
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
+		PatternMiner.sample(seq, raw_output, size, patterns, "/home/troy/research/BOA/patterns/Mac.doFinal2", 10);
 	}
 }

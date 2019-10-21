@@ -12,7 +12,7 @@ public class CatastrophicBacktrackingProcess {
 	
 	public static void main(String[] args) {
 		Process p = new Process();
-		String seq = "/home/troy/research/BOA/example/FileChannel.write/1/large-sequence.txt";
+		String seq = "/home/troy/research/BOA/Maple/res/test/createNewFile-new.txt";
 		try {
 			File f_seq = new File(seq);
 			String dir = f_seq.getParent();

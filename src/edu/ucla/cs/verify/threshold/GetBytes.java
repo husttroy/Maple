@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class GetBytes {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/String.getBytes/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/String.getBytes/Small/small-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("getBytes(1)");
 		

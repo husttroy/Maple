@@ -23,9 +23,10 @@ public class SimpleDateFormatNew {
 		queries.add(q2);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.16, size, 0.5);
+				raw_output, seq, queries, 0.1, size, 0.5);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
+		PatternMiner.sample(seq, raw_output, size, patterns, "/home/troy/research/BOA/patterns/SimpleDateFormat.new", 10);
 	}
 }

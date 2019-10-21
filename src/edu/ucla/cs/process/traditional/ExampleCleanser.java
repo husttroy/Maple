@@ -100,11 +100,13 @@ public class ExampleCleanser {
 	}
 	
 	public static void main(String[] args) {
-		String path = "/home/troy/research/BOA/example/FileChannel.write/1/large-output.txt";
+		String path = "/media/troy/Disk2/Boa/apis/FileChannel.write/large-output-resolved.txt";
 		ArrayList<String> query1 = new ArrayList<String>();
-		query1.add("write(1)");
+		query1.add("write(ByteBuffer)");
+//		query1.add("getInt(0)");
 //		ArrayList<String> query2 = new ArrayList<String>();
 //		query2.add("new SimpleDateFormat(2)");
+//		query2.add("new String(2)");
 //		ArrayList<ArrayList<String>> queries = new ArrayList<ArrayList<String>>();
 //		queries.add(query1);
 //		queries.add(query2);

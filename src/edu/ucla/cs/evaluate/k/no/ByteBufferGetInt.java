@@ -21,7 +21,7 @@ public class ByteBufferGetInt {
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.3, size, 0.5);
+				raw_output, seq, queries, 0.5, size, 0.5);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}

@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class FindViewById {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/Activity.findViewById/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/Activity.findViewById/3/large-output.txt";
 		ArrayList<String> pattern = new ArrayList<String>();
 		pattern.add("findViewById(1)");
 		pattern.add("IF {");

@@ -24,5 +24,6 @@ public class TypedArrrayGetString {
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
+		PatternMiner.sample(seq, raw_output, size, patterns, "/home/troy/research/BOA/patterns/TypedArray.getString", 10);
 	}
 }

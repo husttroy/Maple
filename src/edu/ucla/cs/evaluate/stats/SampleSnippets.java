@@ -199,7 +199,7 @@ public class SampleSnippets {
 		types.add("InputStream");
 		HashSet<ArrayList<String>> queries = new HashSet<ArrayList<String>>();
 		ArrayList<String> apis = new ArrayList<String>();
-		apis.add("read(0)");
+		apis.add("read(1)");
 		queries.add(apis);
 		
 		HashSet<Answer> result = search.search(types, queries);

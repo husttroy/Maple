@@ -3,7 +3,7 @@ package edu.ucla.cs.evaluate.manual;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import edu.ucla.cs.main.AnomalyDetection;
+import edu.ucla.cs.check.APIMisuseDetection;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.ControlConstruct;
@@ -30,7 +30,7 @@ public class FileInputStream {
 		apis.add("new FileInputStream(1)");
 		queries.add(apis);
 		
-		AnomalyDetection detect = new AnomalyDetection(types, queries, patterns);
+		APIMisuseDetection detect = new APIMisuseDetection(types, queries, patterns);
 		detect.run();
 	}
 }

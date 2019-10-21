@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class DataOutputStream {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/DataOutputStream.write/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/DataOutputStream.write/Small/small-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("write(1)");
 		pattern1.add("close(0)");

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import edu.ucla.cs.mine.SequencePatternVerifier;
 import edu.ucla.cs.utils.FileUtils;
 
-public class RandomFileAccessClose {
+public class RandomAccessFileClose {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/RandomFileAccess.close/large-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/RandomAccessFile.close/NO/large-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("FINALLY {");
 		pattern1.add("close(0)");

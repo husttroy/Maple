@@ -5,14 +5,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import edu.ucla.cs.main.Utils;
+import edu.ucla.cs.check.Utils;
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.model.Answer;
 import edu.ucla.cs.parse.APITypeVisitor;
 import edu.ucla.cs.parse.PartialProgramAnalyzer;
+import edu.ucla.cs.process.extension.ResolveTypeProcessor;
 
 public class Search {
+	// this flag is used to configure if we want to do interprocedural analysis or intraprocedural analysis
+	public static boolean classLevel = true;
+	
 	public HashSet<Answer> search(HashSet<String> typeQuery, HashSet<ArrayList<String>> apiQueries) {
 		MySQLAccess access = new MySQLAccess();
 		access.connect();
@@ -31,10 +35,12 @@ public class Search {
 		HashSet<Answer> answers = access.searchCodeSnippets(keywords);
 		access.close();
 		
+		APIOracleAccess resolver = new APIOracleAccess();
+		resolver.connect();
 		Iterator<Answer> iter1 = answers.iterator();
 		while(iter1.hasNext()) {
 			Answer answer = iter1.next();
-//			if(answer.id == 6896319) {
+//			if(answer.id == 11600102) {
 //				System.out.println();
 //			}
 			String content = answer.body;
@@ -44,7 +50,7 @@ public class Search {
 			while(iter2.hasNext()) {
 				String snippet = iter2.next();
 				// coarse-grained filtering by checking whether it is just a single code term
-				if(!snippet.contains(System.lineSeparator()) && !snippet.contains(";")) {
+				if(!snippet.contains(System.lineSeparator()) || !snippet.contains(";")) {
 					iter2.remove();
 					continue;
 				}
@@ -75,7 +81,12 @@ public class Search {
 				try {
 					analyzer = new PartialProgramAnalyzer(snippet);
 					answer.containsIncompleteSnippet = analyzer.isIncomplete;
-					seqs = analyzer.retrieveAPICallSequences();
+					if(classLevel) {
+						// perform light-weight inter-procedural analysis when extracting the API call sequences
+						seqs = analyzer.retrieveAPICallSequencesClassLevel();
+					} else {
+						seqs = analyzer.retrieveAPICallSequencesMethodLevel();
+					}
 				} catch (Exception e) {
 					// parse error
 					iter2.remove();
@@ -95,10 +106,14 @@ public class Search {
 						
 						// check whether the API call sequences contain all queried APIs in the same order
 						ArrayList<String> calls = new ArrayList<String>();
+						HashSet<String> receivers = new HashSet<String>();
 						for(APISeqItem item : seq) {
 							if(item instanceof APICall) {
 								APICall call = (APICall)item;
 								calls.add(call.name);
+								if(call.receiver!=null) {
+									receivers.add(call.receiver);
+								}
 							}
 						}
 						
@@ -118,36 +133,140 @@ public class Search {
 								// additional check on types to handle ambiguous API calls
 								APITypeVisitor tv = analyzer.resolveTypes();
 								HashSet<String> ts = tv.types;
+								// add all receivers as possible types in case there is a static call
+								ts.addAll(receivers);
 								HashMap<String, String> tm = tv.map;
-								if(!ts.containsAll(typeQuery)) {
-									continue;
-								} else {
-									boolean flag4 = true; // this flag indicates whether the matched API calls in this method are the API calls with the same queried type
-									// further check the receiver type of each searched API call to ensure it is the same API
-									for(APISeqItem item : seq) {
-										if(item instanceof APICall) {
-											APICall call = (APICall)item;
-											for(ArrayList<String> apis: apiQueries) {
-												if(apis.contains(call.name)) {
-													// look up the map to resolve the type of its receiver
-													if(tm.containsKey(call.receiver) && typeQuery.contains(tm.get(call.receiver))) {
-														// yes the receiver has the searched type
+								
+								boolean flag4 = true;
+								for (APISeqItem item : seq) {
+									if(item instanceof APICall) {
+										APICall call = (APICall)item;
+										for(ArrayList<String> apis: apiQueries) {
+											if(apis.contains(call.name)) {
+												// look up the map to resolve the type of its receiver
+												// consider three situations---(1) static method call, (2) constructor, (3) regular method call
+												if (call.receiver == null && call.name.startsWith("new ")) {
+													// constructor, no need to check 
+													continue;
+												} else if(call.receiver != null) {
+													if(tm.containsKey(call.receiver)) {
+														// this is a regular call and the type is resolved by the symbol table
+														if(typeQuery.contains(tm.get(call.receiver))) {
+															continue;
+														} else {
+															// ambiguous call
+															flag4 = false;
+															break;
+														}
+													} else if (typeQuery.contains(call.receiver)) {
+														// this is a static call and the receiver is the queried type
 														continue;
 													} else {
-														flag4 = false;
-														break;
+														// query the API oracle to resolve its type
+														String methodName = call.name;
+														if(methodName.contains("(")) {
+															methodName = methodName.substring(0, methodName.indexOf('('));
+														}
+														
+														// resolve argument types based on the symbol table
+														ArrayList<String> argType = new ArrayList<String>();
+														for(String arg : call.arguments) {
+															if(tm.containsKey(arg)) {
+																argType.add(tm.get(arg));
+															} else if (arg.startsWith("\"") || arg.endsWith("\"")){
+																// this is likely to be a String
+																argType.add("String");
+															} else {
+																// resolve primitive types
+																try{
+																	Integer.parseInt(arg);
+																	argType.add("int");
+																	continue;
+																} catch (NumberFormatException e) {
+																	// keep silent
+																}
+																
+																try{
+																	Float.parseFloat(arg);
+																	argType.add("float");
+																	continue;
+																} catch (NumberFormatException e) {
+																	// keep silent
+																}
+																
+																try{
+																	Double.parseDouble(arg);
+																	argType.add("double");
+																	continue;
+																} catch (NumberFormatException e) {
+																	// keep silent
+																}
+																
+																if(arg.equals("true") || arg.equals("false")) {
+																	argType.add("boolean");
+																} else {
+																	argType.add("*");
+																}
+															}
+														}
+														
+														HashSet<String> types = resolver.resolveType(methodName, argType);
+														types.removeAll(typeQuery);
+														if(types.isEmpty()) {
+															flag4 = false;
+															break;
+														}
 													}
+												} else {
+													flag4 = false;
+													break;
 												}
 											}
 										}
 									}
-									
-									if(flag4) {
-										answer.seq.put(snippet, seq);
-										flag1 = true;
-										flag3 = true;
-									}
 								}
+								
+								if(flag4) {
+									answer.seq.put(snippet, seq);
+									flag1 = true;
+									flag3 = true;
+								}
+								
+//								if(!ts.containsAll(typeQuery)) {
+//									continue;
+//								} else {
+//									boolean flag4 = true; // this flag indicates whether the matched API calls in this method are the API calls with the same queried type
+//									// further check the receiver type of each searched API call to ensure it is the same API
+//									for(APISeqItem item : seq) {
+//										if(item instanceof APICall) {
+//											APICall call = (APICall)item;
+//											for(ArrayList<String> apis: apiQueries) {
+//												if(apis.contains(call.name)) {
+//													// look up the map to resolve the type of its receiver
+//													// consider three situations---(1) static method call, (2) constructor, (3) regular method call
+//													if (call.receiver == null && call.name.startsWith("new ")) {
+//														// constructor, no need to check 
+//														continue;
+//													} else if(call.receiver != null && 
+//															((tm.containsKey(call.receiver) && typeQuery.contains(tm.get(call.receiver))
+//																	|| typeQuery.contains(call.receiver)))) {
+//														// static method call or regular method call
+//														continue;
+//													} else {
+//														flag4 = false;
+//														break;
+//													}
+//												}
+//											}
+//										}
+//									}
+//									
+//									if(flag4) {
+//										answer.seq.put(snippet, seq);
+//										flag1 = true;
+//										flag3 = true;
+//									}
+//								}
 							} else {
 								answer.seq.put(snippet, seq);
 								flag1 = true;
@@ -166,8 +285,12 @@ public class Search {
 			if(!flag1) {
 				// no code snippet in the post is satisfied, remove this post
 				iter1.remove();
+			} else {
+				answer.snippets.addAll(snippets);
 			}
 		}
+		
+		resolver.close();
 		
 		return answers;
 	}

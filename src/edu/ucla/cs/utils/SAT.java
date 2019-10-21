@@ -21,21 +21,12 @@ public class SAT {
 	private HashMap<String, String> bool_symbol_map;
 	private HashMap<String, String> int_symbol_map;
 	private HashMap<String, String> call_symbol_map;
-	private String temp;
+	public static String temp = "/home/troy/temp.z3";
 	
 	public SAT() {
 		bool_symbol_map = new HashMap<String, String>();
 		int_symbol_map = new HashMap<String, String>();
 		call_symbol_map = new HashMap<String, String>();
-//		int i = 0;
-//		temp = "/home/troy/temp" + i + ".z3";
-//		File f = new File(temp);
-//		while(f.exists()) {
-//			i++;
-//			temp = "/home/troy/temp" + i + ".z3";
-//			f = new File(temp);
-//		}
-		temp = "/home/troy/temp.z3";
 	}
 
 	/***** Check Equivalence *****/
@@ -76,6 +67,7 @@ public class SAT {
 			// conflicts. this because we cannot distinguish whether == and != are comparing two booleans or two integers
 			for(String name : set1) {
 				String symbol = int_symbol_map.get(name);
+				if(symbol == null) return false;
 				p1_sym = p1_sym.replace(symbol, bool_symbol_map.get(name));
 				p2_sym = p2_sym.replace(symbol, bool_symbol_map.get(name));
 				int_symbol_map.remove(name);
@@ -743,7 +735,11 @@ public class SAT {
 		return rel;
 	}
 
-	private String stripOffStringLiteralsAndStringConcatenations(String expr) {
+	public String stripOffStringLiteralsAndStringConcatenations(String expr) {
+//		if(expr.equals("rcv!=null && rcv.matches(\"^[\\\\\\\"\\\\'].*\",)") || expr.equals("rcv!=null && rcv.matches(\".*[\\\\\\\"\\\\']$\",)")) {
+//			// weird cases in String.substring, these expressions are not even syntactically correct.
+//			return "rcv!=null ";
+//		}
 		ArrayList<Point> ranges = new ArrayList<Point>();
 		char[] chars = expr.toCharArray();
 		boolean inSingleQuote = false;
@@ -789,6 +785,10 @@ public class SAT {
 				if(count % 2 == 0) {
 					// escape one or more backslashes instead of this quote, end of quote
 					// single quote ends
+					if(inDoubleQuote) {
+						// not in a single quote but in a double quote, single quote does not need to be escaped
+						continue;
+					}
 					ranges.add(new Point(current_quote_starts, i));
 					inSingleQuote = false;
 					// reset

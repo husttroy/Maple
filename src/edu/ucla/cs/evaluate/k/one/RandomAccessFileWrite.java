@@ -10,10 +10,10 @@ import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
 
-public class RandomFileAccessWrite {
+public class RandomAccessFileWrite {
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/example/RandomFileAccess.write/1/large-sequence.txt";
-		String seq = "/home/troy/research/BOA/example/RandomFileAccess.write/1/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/example/RandomAccessFile.write/1/large-sequence.txt";
+		String seq = "/home/troy/research/BOA/example/RandomAccessFile.write/1/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
 		q1.add("write(1)");

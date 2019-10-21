@@ -13,16 +13,17 @@ import edu.ucla.cs.utils.FileUtils;
 public class ApplicationInfoLoadIcon {
 	public static void main(String[] args) {
 		String raw_output = "/home/troy/research/BOA/example/ApplicationInfo.loadIcon/INF/large-sequence.txt";
-		String seq = "/home/troy/research/BOA/example/ApplicationInfo.loadIcon/INF/arge-output.txt";
+		String seq = "/home/troy/research/BOA/example/ApplicationInfo.loadIcon/INF/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
 		q1.add("loadIcon(1)");
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.5, size, 0.5);
+				raw_output, seq, queries, 0.4, size, 0.5);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
+		PatternMiner.sample(seq, raw_output, size, patterns, "/home/troy/research/BOA/patterns/ApplicationInfo.loadIcon", 10);
 	}
 }

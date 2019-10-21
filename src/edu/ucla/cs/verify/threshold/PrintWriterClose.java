@@ -7,7 +7,7 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class PrintWriterClose {
 	public static void main(String[] args) {
-		String seq_output = "/home/troy/research/BOA/Maple/example/PrintWriter.close/large-sample-output.txt";
+		String seq_output = "/home/troy/research/BOA/example/PrintWriter.close/NO/large-output.txt";
 		ArrayList<String> pattern1 = new ArrayList<String>();
 		pattern1.add("FINALLY {");
 		pattern1.add("close(0)");

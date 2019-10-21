@@ -16,11 +16,11 @@ public class InputStreamRead {
 		String seq = "/home/troy/research/BOA/example/InputStream.read/2/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
-		q1.add("read(0)");
+		q1.add("read(1)");
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.16, size, 0.5);
+				raw_output, seq, queries, 0.38, size, 0.5);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}

@@ -34,6 +34,10 @@ public class PredicateCluster {
 		}
 		
 		shortest = p1.shortest.length() > p2.shortest.length() ? p2.shortest : p1.shortest;
+		
+		if(shortest.equals("!(true")) {
+			shortest = p1.shortest.equals("!(true") ? p2.shortest : p1.shortest;
+		}
 	}
 	
 	@Override

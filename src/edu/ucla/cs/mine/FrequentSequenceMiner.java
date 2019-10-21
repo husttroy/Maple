@@ -22,11 +22,13 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 				
 				ArrayList<String> pattern = new ArrayList<String>();
 				sequence = sequence.substring(sequence.indexOf("(") + 1, sequence.lastIndexOf(")"));
-				String[] arr = sequence.split(",");
+				// cannot split by comma only since API call arguments are also split by comma
+				String[] arr = sequence.split("'");
 				for(String api : arr){
 					api = api.trim();
-					// strip ' '
-					api = api.substring(1, api.length()-1);
+					if(api.equals(",") || api.isEmpty()) {
+						continue;
+					}
 					pattern.add(api);
 				}
 				
@@ -59,11 +61,6 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 				remove.add(pattern);
 				continue;
 			}
-		}
-		
-		// remove unsatisfied patterns
-		for(ArrayList<String> pattern : remove) {
-			this.patterns.remove(pattern);
 		}
 		
 		// remove unsatisfied patterns
@@ -127,8 +124,8 @@ public class FrequentSequenceMiner extends SequencePatternMiner {
 		
 		// learn from the output of the traditional output
 		SequencePatternMiner pm = new FrequentSequenceMiner("/home/troy/research/BOA/Maple/mining/freq_seq.py", 
-				"/home/troy/research/BOA/Maple/example/ApplicationInfo.loadIcon/large-output.txt",
-				(int) (783 * 0.5),
+				"/home/troy/research/BOA/example/ApplicationInfo.loadIcon/1/large-output.txt",
+				(int) (780 * 0.5),
 				queries);
 
 		pm.mine();

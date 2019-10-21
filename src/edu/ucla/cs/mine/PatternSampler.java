@@ -15,8 +15,7 @@ import java.util.Map.Entry;
 
 import edu.ucla.cs.model.APICall;
 import edu.ucla.cs.model.APISeqItem;
-import edu.ucla.cs.model.ControlConstruct;
-import edu.ucla.cs.utils.ProcessUtils;
+import edu.ucla.cs.model.ExtendedAPICall;
 import edu.ucla.cs.utils.SAT;
 import edu.ucla.cs.utils.SubsequenceCounter;
 
@@ -39,8 +38,9 @@ public class PatternSampler {
 		SequencePatternVerifier verifyS = new SequencePatternVerifier(patternS);
 		verifyS.verify(seqFile);
 
-		TraditionalPredicateMiner minerP = new TraditionalPredicateMiner(
-				patternS, orgFile, seqFile);
+		ExtendedPredicateMiner minerP = new ExtendedPredicateMiner(patternS, orgFile, seqFile);
+		// TraditionalPredicateMiner minerP = new TraditionalPredicateMiner(
+		//		patternS, orgFile, seqFile);
 		minerP.loadAndFilterPredicate();
 		
 		// rank code examples that support the sequence ordering based on their
@@ -122,8 +122,8 @@ public class PatternSampler {
 				if (!flag) {
 					break;
 				}
-				if (item instanceof APICall) {
-					APICall call = (APICall) item;
+				if (item instanceof ExtendedAPICall) {
+					ExtendedAPICall call = (ExtendedAPICall) item;
 					if (call.condition.equals("true")) {
 						continue;
 					} else {
@@ -133,9 +133,18 @@ public class PatternSampler {
 							break;
 						}
 						for (String predicate : predicates) {
-							if (!sat.checkImplication(predicate, call.condition)) {
+							if(predicate.equals("true") && call.condition.equals("true")) {
+								// no need to check implication if both are true
+								continue;
+							} else if (predicate.equals("true") && !call.condition.equals("true")) {
+								// no need to check because true does not imply something that is not constantly true
 								flag = false;
 								break;
+							} else {
+								if (!sat.checkImplication(predicate, call.condition)) {
+									flag = false;
+									break;
+								}
 							}
 						}
 					}

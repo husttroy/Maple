@@ -10,19 +10,20 @@ import edu.ucla.cs.mine.PatternMiner;
 import edu.ucla.cs.model.APISeqItem;
 import edu.ucla.cs.utils.FileUtils;
 
-public class RandomFileAccessRead {
+public class RandomAccessFileRead {
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/example/RandomFileAccess.read/INF/large-sequence.txt";
-		String seq = "/home/troy/research/BOA/example/RandomFileAccess.read/INF/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/example/RandomAccessFile.read/INF/large-sequence.txt";
+		String seq = "/home/troy/research/BOA/example/RandomAccessFile.read/INF/large-output.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
 		q1.add("read(1)");
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.39, size, 0.5);
+				raw_output, seq, queries, 0.2, size, 0.5);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}
+		PatternMiner.sample(seq, raw_output, size, patterns, "/home/troy/research/BOA/patterns/RandomAccessFile.read", 10);
 	}
 }

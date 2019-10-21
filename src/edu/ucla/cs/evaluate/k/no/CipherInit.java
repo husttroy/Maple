@@ -12,15 +12,15 @@ import edu.ucla.cs.utils.FileUtils;
 
 public class CipherInit {
 	public static void main(String[] args) {
-		String raw_output = "/home/troy/research/BOA/example/Cipher.init/NO/large-sequence.txt";
-		String seq = "/home/troy/research/BOA/example/Cipher.init/NO/large-output.txt";
+		String raw_output = "/home/troy/research/BOA/example/Cipher.init/NO/large-sequence-old.txt";
+		String seq = "/home/troy/research/BOA/example/Cipher.init/NO/large-output-old.txt";
 		HashSet<HashSet<String>> queries = new HashSet<HashSet<String>>();
 		HashSet<String> q1 = new HashSet<String>();
 		q1.add("init(2)");
 		queries.add(q1);
 		int size = FileUtils.countLines(seq);
 		Map<ArrayList<APISeqItem>, MutablePair<Double, Double>> patterns = PatternMiner.mine(
-				raw_output, seq, queries, 0.3, size, 0.5);
+				raw_output, seq, queries, 0.5, size, 0.5);
 		for (ArrayList<APISeqItem> sp : patterns.keySet()) {
 			System.out.println(sp + ":" + patterns.get(sp));
 		}

@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import edu.ucla.cs.model.PredicateCluster;
 import edu.ucla.cs.utils.SAT;
 
-public class PreconditionVerifier{
+public class PredicateVerifier{
 	TraditionalPredicateMiner pm;
 	
-	public PreconditionVerifier (String raw_output, String seq_output, ArrayList<String> query) {
+	public PredicateVerifier (String raw_output, String seq_output, ArrayList<String> query) {
 		pm = new TraditionalPredicateMiner(query, raw_output, seq_output);
 		pm.process();
 	}
@@ -36,7 +36,7 @@ public class PreconditionVerifier{
 		String seq = "/home/troy/research/BOA/Maple/example/ProgressDialog.dismiss/large-output.txt";
 		ArrayList<String> query = new ArrayList<String>();
 		query.add("dismiss(0)");
-		PreconditionVerifier pv = new PreconditionVerifier(raw, seq, query);
+		PredicateVerifier pv = new PredicateVerifier(raw, seq, query);
 		int num = pv.verify("dismiss(0)", "rcv.isShowing()");
 		System.out.println(num);
 	}
